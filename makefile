@@ -4,7 +4,7 @@
 
 CXX = g++
 DEBUG = -g3 
-CXXFLAGS = $(DEBUG) -Wall -Wextra -std=c++17
+CXXFLAGS = $(DEBUG) -Wall -std=c++17
 
 # $@  - The name of the target of the rule
 # $<  - The name of the first prerequisite
@@ -19,7 +19,11 @@ TARGET = chocan
 # sources files, add more sources file here, use "\" to enter a newline
 SRCS = \
 	src/main.cpp \
-	src/terminals/TerminalSession.cpp	
+	src/terminals/TerminalSession.cpp \
+	src/terminals/ProviderTerminal.cpp \
+	src/models/Member.cpp \
+	src/models/Provider.cpp \
+	src/models/Service.cpp  
 
 
 # Object files

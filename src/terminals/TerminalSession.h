@@ -16,13 +16,14 @@ class TerminalSession {
         virtual ~TerminalSession();
         
         // This function will be inheritance by its child
-        void runSession();
+        void    runSession();
+        void    setCurrentUserID(const int ID);
 
         // virtual function that will be overwrite by its child class
-        virtual int showMenu();
-        virtual void commandHandler(int input);
-    private:
-        // BLANK
+        virtual int     showMenu() =0;
+        virtual void    commandHandler(int input) =0;
+    protected:
+        int userID;
 };
 
 #endif
