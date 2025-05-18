@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include "ChocAnSystem.h"
 #include "terminals\TerminalSession.h"
 #include "terminals\ProviderTerminal.h"
 #include "models\Member.h"

@@ -21,6 +21,7 @@ SRCS = \
 	src/main.cpp \
 	src/terminals/TerminalSession.cpp \
 	src/terminals/ProviderTerminal.cpp \
+	src/ChocAnSystem.cpp \
 	src/models/Member.cpp \
 	src/models/Provider.cpp \
 	src/models/Service.cpp  
