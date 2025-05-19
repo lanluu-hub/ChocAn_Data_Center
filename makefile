@@ -3,15 +3,20 @@
 # makefile for ChocAn Data Processing System
 
 CXX = g++
+CC = gcc
 DEBUG = -g3 
-CXXFLAGS = $(DEBUG) -Wall -std=c++17
+INCLUDES = -I src/sqlite
+CXXFLAGS = $(DEBUG) -Wall -std=c++17 $(INCLUDES)
 
 # $@  - The name of the target of the rule
 # $<  - The name of the first prerequisite
 # $^  - The names of all the prerequisites
 
 # Linker Flags (add SQLite)
-LDFLAGS = #-lsqlite3
+#LDFLAGS = -lsqlite3 -Llib -I src/sqlite
+
+SQLITE_SRC = src/sqlite/sqlite3.c
+SQLITE_OBJ = src/sqlite/sqlite3.o
 
 # Target executable
 TARGET = chocan
@@ -22,6 +27,7 @@ SRCS = \
 	src/terminals/TerminalSession.cpp \
 	src/terminals/ProviderTerminal.cpp \
 	src/ChocAnSystem.cpp \
+	src/Database.cpp \
 	src/models/Member.cpp \
 	src/models/Provider.cpp \
 	src/models/Service.cpp  
@@ -34,12 +40,15 @@ OBJS = $(SRCS:.cpp=.o)
 all: $(TARGET)
 
 # Rule to link object files into the target executable
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS)	-o $@ $(OBJS)	$(LDFLAGS)
+$(TARGET): $(OBJS) $(SQLITE_OBJ)
+	$(CXX) $(CXXFLAGS)	-o $@ $(OBJS)	$(SQLITE_OBJ)
 
 # Rule to compile .cpp files into .o files
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(SQLITE_OBJ): $(SQLITE_SRC)
+	$(CC) -c $(SQLITE_SRC) -o $(SQLITE_OBJ)
 
 # Rule to run the executable
 run: $(TARGET)
@@ -48,7 +57,7 @@ run: $(TARGET)
 # Clean rule to remove generated files
 clean:
 ifeq ($(OS),Windows_NT)
-	del /Q $(subst /,\,$(TARGET).exe) $(subst /,\,$(OBJS))
+	del /Q $(subst /,\,$(TARGET).exe) $(subst /,\,$(OBJS)) $(subst /,\,$(SQLITE_OBJ))
 else
-	rm -f $(TARGET) $(OBJS)
+	rm -f $(TARGET) $(OBJS) $(SQLITE_OBJ)
 endif
