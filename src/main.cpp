@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 #include "ChocAnSystem.h"
+#include "Database.h"
 #include "terminals\TerminalSession.h"
 #include "terminals\ProviderTerminal.h"
 #include "models\Member.h"
@@ -18,6 +19,7 @@ using namespace std;
 
 int
 main() {
+    int loop{};
     do {
     // Welcome message
 
@@ -29,7 +31,8 @@ main() {
     unique_ptr<TerminalSession> session;
 
     session = make_unique<ProviderTerminal>();
-
+    
+    Database& db = Database::getInstance();
     // if true: Database::getInstance.authenticateUser(userID) : return an int
         // switch (int): 
         // if int = 0: start Operator Terminal
@@ -48,7 +51,8 @@ main() {
     // if false: end session
 
     cout << "Looping" << endl;
-    } while (1);
+    loop++;
+    } while (loop < 5);
 
     return EXIT_SUCCESS;
 }

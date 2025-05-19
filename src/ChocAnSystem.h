@@ -27,12 +27,15 @@ class ChocAnSystem {
         // Syntax: ChocAnSystem::getInstance().[Public_Function_Here]();
         static ChocAnSystem& getInstance();
 
-        // Other Public Fucntion here:
-        void test_output() {std::cout << "Hello World!" << std::endl;}
+        // Other Public Fucntion here: 
+
+        // Test function, use ChocAnSystem::getIntance().test_output() in main, or any function to check it work
+        void test_output() {std::cout << "Hello World!" << std::endl;}  
 
     private:
         // Private Constructor
         ChocAnSystem();
+        ~ChocAnSystem();
 };
 
 #endif

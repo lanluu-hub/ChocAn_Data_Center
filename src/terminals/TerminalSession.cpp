@@ -37,13 +37,4 @@ void TerminalSession::setCurrentUserID(const int ID)
 }
 
 TerminalSession::~TerminalSession()
-{
-}
-
-int TerminalSession::showMenu()
-{
-}
-
-void TerminalSession::commandHandler(int input)
-{
-}
+{}

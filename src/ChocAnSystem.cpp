@@ -3,6 +3,9 @@
 ChocAnSystem::ChocAnSystem() 
 {}
 
+ChocAnSystem::~ChocAnSystem()
+{}
+
 ChocAnSystem& ChocAnSystem::getInstance()
 {
     static ChocAnSystem instance;
