@@ -22,8 +22,31 @@ The system uses a **terminal-based interface** and integrates with an **SQLite-b
 - Hunter Gambee-Iddings  
 
 ## 📁 Project Structure
-[ Will add later ]
-
+```bash 
+ChocAn_Data_Center/
+├── src/
+│ ├── database/
+│ │ └── chocan.db
+│ ├── models/
+│ │ ├── Member.h / Member.cpp
+│ │ ├── Provider.h / Provider.cpp
+│ │ └── Service.h / Service.cpp
+│ ├── sqlite/
+│ │ ├── shell.c
+│ │ ├── sqlite3.c
+│ │ ├── sqlite3.h
+│ │ └── sqlite3ext.h
+│ ├── terminals/
+│ │ ├── TerminalSession.h / TerminalSession.cpp
+│ │ ├── ProviderTerminal.h / ProviderTerminal.cpp
+│ │ ├── ManagerTerminal.h / ManagerTerminal.cpp
+│ │ └── OperatorTerminal.h / OperatorTerminal.cpp
+│ ├── ChocAnSystem.h / ChocAnSystem.cpp
+│ ├── Database.h / Database.cpp
+│ └── main.cpp
+├── Makefile
+└── README.md
+```
 
 ## 🧩 Features
 
@@ -42,8 +65,17 @@ The system uses a **terminal-based interface** and integrates with an **SQLite-b
 - `sqlite3` development libraries installed
 
 ### 🧪 Build
-> make
+1. Ensure a C++ compiler (e.g., `g++`) is installed.
+2. From the root directory, run the following command:
+```bash
+make
+```
 
+▶️ Run
+After building, run the application using:
+```bash
+./chocan
+```
 
 ### 📜 License
 This project was developed for educational purposes under Portland State University's CS314 course. Not for commercial use.
