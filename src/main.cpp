@@ -9,11 +9,11 @@
 #include <memory>
 #include "ChocAnSystem.h"
 #include "Database.h"
-#include "terminals\TerminalSession.h"
-#include "terminals\ProviderTerminal.h"
-#include "models\Member.h"
-#include "models\Provider.h"
-#include "models\Service.h"
+#include "terminals/TerminalSession.h"
+#include "terminals/ProviderTerminal.h"
+#include "models/Member.h"
+#include "models/Provider.h"
+#include "models/Service.h"
 
 using namespace std;
 
@@ -50,7 +50,7 @@ main() {
         // if int = -1: end session
     // if false: end session
 
-    cout << "Looping" << endl;
+    cout << "Session is Looping" << endl;
     loop++;
     } while (loop < 5);
 
