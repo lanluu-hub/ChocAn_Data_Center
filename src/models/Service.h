@@ -12,11 +12,11 @@
 
 class Service {
     public:
-        Service(int s_code, std::string s_name, float s_fee);
+        Service(std::string s_code, std::string s_name, float s_fee);
         ~Service();
 
     protected:
-        int serviceCode;    // 6 digits code
+        std::string serviceCode;    // 6 digits code
         std::string serviceName;
         float serviceFee;
 };
