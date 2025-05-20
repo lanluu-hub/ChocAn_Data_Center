@@ -13,13 +13,13 @@
 
 class Provider {
     public:
-        Provider(std::string p_name, int p_ID, std::string p_strAddr, std::string p_cty, std::string p_state, std::string p_zip);
+        Provider(std::string p_name, std::string p_ID, std::string p_strAddr, std::string p_cty, std::string p_state, std::string p_zip);
         ~Provider();
         void displayProvider() const;
 
     protected:
         std::string providerName;             // 25 Characters
-        int         providerID;               // 9 digits
+        std::string providerID;               // 9 digits
         std::string providerStreetAddress;    // 25 characters
         std::string providerCity;             // 14 characters
         std::string providerState;            // 2 letters
