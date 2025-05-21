@@ -9,6 +9,7 @@
 
 #ifndef TERMINAL_SESSION_H
 #define TERMINAL_SESSION_H
+#include <string>
 
 class TerminalSession {
     public:
@@ -17,13 +18,13 @@ class TerminalSession {
         
         // This function will be inheritance by its child
         void    runSession();
-        void    setCurrentUserID(const int ID);
+        void    setCurrentUserID(const std::string ID);
 
         // virtual function that will be overwrite by its child class
         virtual int     showMenu() =0;
         virtual void    commandHandler(int input) =0;
     protected:
-        int userID;
+        std::string userID;
 };
 
 #endif
