@@ -13,12 +13,20 @@ ProviderTerminal::~ProviderTerminal()
 
 int ProviderTerminal::showMenu() 
 {
-    // show menu option
-    // [VALIDATED]
-    // [Provider]
-    // 1. bill
-    // 2. Request Provider Directory
-    // > choice
+    if (isMemberValidated) {
+        // show menu option
+        // Prompt: Please scan/input memberID to continue. . . 
+        // >
+
+    } else {
+        // show menu option
+        // [VALIDATED]
+        // [Provider]
+        // 1. bill
+        // 2. Request Provider Directory
+        // > choice
+
+    }
 
     assert(isMemberValidated);  // prcondition isMemberValidate == true
     
@@ -27,6 +35,8 @@ int ProviderTerminal::showMenu()
 
 void ProviderTerminal::commandHandler(int input) 
 {
+    assert(input);
+    assert(input > 0 && input < 3);
 
 }
 
