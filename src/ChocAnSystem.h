@@ -13,6 +13,8 @@
 #ifndef CHOCAN_SYSTEM_H
 #define CHOCAN_SYSTEM_H
 #include <iostream>
+#include <string>
+#include "Database.h"
 
 class ChocAnSystem {
     public:
@@ -30,7 +32,11 @@ class ChocAnSystem {
         // Other Public Fucntion here: 
 
         // Test function, use ChocAnSystem::getIntance().test_output() in main, or any function to check it work
-        void test_output() {std::cout << "Hello World!" << std::endl;}  
+        void test_output() {std::cout << "Hello World!" << std::endl;} 
+        
+        // Authenticate userID for login to the terminal
+        // [need comment]
+        int authenticateUser (const std::string userID);
 
     private:
         // Private Constructor
