@@ -25,6 +25,8 @@ class TerminalSession {
         virtual void    commandHandler(int input) =0;
     protected:
         std::string userID;
+
+        int getInput() const;
 };
 
 #endif

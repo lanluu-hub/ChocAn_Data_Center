@@ -48,3 +48,13 @@ Database& Database::getInstance()
     static Database instance;
     return instance;
 }
+
+int Database::authenticateUser(const std::string userID) 
+{
+    // Database logic to get role based on userID;
+    // if int = 0: Operator Terminal
+    // if int = 1: Manager Terminal
+    // if int = 2: Provider Terminal
+    // if int = -1: invalid, no terminal, if userID not found 
+    return 2;
+}

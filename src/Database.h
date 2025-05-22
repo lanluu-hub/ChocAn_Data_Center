@@ -34,6 +34,7 @@ class Database {
         static Database& getInstance();
 
         // Other Public Function here
+        int authenticateUser(const std::string userID);
     
 
     private:

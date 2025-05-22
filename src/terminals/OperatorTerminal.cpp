@@ -2,6 +2,8 @@
 #include <cassert>
 #include "OperatorTerminal.h"
 
+using namespace std;
+
 OperatorTerminal::OperatorTerminal()
 {
 }
@@ -13,14 +15,17 @@ OperatorTerminal::~OperatorTerminal()
 int OperatorTerminal::showMenu() 
 {
     // show menu option
-    // [Operator]
-    // 1. Add Member
-    // 2. Update Member
-    // 3. Delete Member
-    // 4. Add Provider
-    // 5. Update Provider
-    // 6. Delete Provider
-    // > choice
+    cout << "[Operator Terminal]" << endl;
+    cout << "Possible Operatrion: " << endl;
+    cout << "/--------------------\\" << endl;
+    cout << "|  1. Add Member" << endl;
+    cout << "|  2. Update Member" << endl;
+    cout << "|  3. Delete Member" << endl;
+    cout << "|  4. Add Provider" << endl;
+    cout << "|  5. Update Provider" << endl;
+    cout << "|  6. Delete Provider" << endl;
+    cout << "|  0. End Session" << endl;
+    cout << "\\____________________/" << endl;
     
     return 0;
 }
