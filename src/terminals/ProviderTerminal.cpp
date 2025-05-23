@@ -47,9 +47,9 @@ void ProviderTerminal::commandHandler(int input)
         if (input == 1) {
             // call helper function
             validateMembership();
-        } else {
+        } else if (input != 0) {
             cout << "Invalid Option!" << endl;
-        }
+        } 
     } else {
         // 1. End Service, output bill, save record     
         // 2. request Provider Directory     
@@ -62,9 +62,9 @@ void ProviderTerminal::commandHandler(int input)
             break;
 
         case 0: // exit
-            break;
+            break; 
         default:
-            cout << "Invalid Option!" << endl;
+            cerr << "\nError: Unexpect case encounter!" << __FILE__ << __LINE__ << endl;
             break;
         }
     }
@@ -74,6 +74,8 @@ int ProviderTerminal::validateMembership()
 {
     int membershipStatus {-1};
     string ID {};
+
+    cout << "\n[Validate Membership System]" << endl;
 
     do {
         getMemberID(ID, "\nPlease Scan/key-in member id card number to continues. . .\n > ");
@@ -89,10 +91,15 @@ int ProviderTerminal::validateMembership()
         break;
 
     case 1:
+        cout << "\n[SUSPEND]" << endl;
+        break;
 
+    case (-1):
+        cout << "\n[INVALID]" << endl;
         break;
 
     default:
+        cerr << "\nError: Unexpect case encounter!" << __FILE__ << __LINE__ << endl;
         break;
     }
 
@@ -101,13 +108,38 @@ int ProviderTerminal::validateMembership()
 
 float ProviderTerminal::billService()
 {
+    cout << "\n[Bill Services System]" << endl;
+
+    string ID{"000000000"};
+
+    do {
+        getMemberID(ID, "\nPlease Scan/key-in member id card number to continues. . .\n > ");
+
+        if (ID != memberID && ID != ("000000000"))
+        {
+            cout << "Member ID does not match current session member ID." << endl;
+        }
+    } while (!(validateMemberIdFormat(ID)) || ID != memberID);
+
+    // Call to ChocAnSystem::getInstance().billService(str memberID); Return a float for fee
+
+
+    // clear memberID
+    memberID.clear();
+
+    // set isMemberValidated = false
+    isMemberValidated = false;
     return 0.0f;
 }
 
 void ProviderTerminal::requestProviderDirectory()
 {
+    cout << "\n[Request Provider Directory System]";
     ChocAnSystem::getInstance().getProviderDirectory();
 }
+
+
+////////// HELPER FUNCTION //////////   
 
 void ProviderTerminal::getMemberID(string &input, const string &prompt)
 {

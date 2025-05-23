@@ -35,3 +35,5 @@ void ChocAnSystem::getProviderDirectory()
     cout << "\nPROVIDER DIRECTORY" << endl;
     // display here
 }
+
+////////// Helper function /////////

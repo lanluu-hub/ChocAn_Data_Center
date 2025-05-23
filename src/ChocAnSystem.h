@@ -38,6 +38,7 @@ class ChocAnSystem {
         // [need comment]
         int authenticateUser (const std::string userID);
         int validateMembership(std::string memberID);
+        float billServices(std::string memberID);
         void getProviderDirectory();
 
     private:
