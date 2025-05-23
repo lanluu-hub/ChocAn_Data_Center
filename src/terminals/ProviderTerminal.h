@@ -11,7 +11,9 @@
  */
 #ifndef PROVIDER_TERMINAL_H
 #define PROVIDER_TERMINAL_H
+#include <string>
 #include "TerminalSession.h"
+#include "..\ChocAnSystem.h"
 
 class ProviderTerminal: public TerminalSession {
     public:
@@ -28,8 +30,13 @@ class ProviderTerminal: public TerminalSession {
         void    requestProviderDirectory();
 
     protected:
-        int memberID;                       // stores member id of the validate session
+        std::string memberID;                       // stores member id of the validate session
         bool isMemberValidated = false;     // check if member is validated
+
+        // Helper Function
+        void getMemberID(std::string &input, const std::string &prompt = "Enter a value: ");
+        bool validateMemberIdFormat(const std::string ID);
+        bool is_digits(const std::string &str);
 };
 
 #endif
