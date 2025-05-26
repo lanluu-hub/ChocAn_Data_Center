@@ -9,16 +9,20 @@
 #ifndef SERVICE_H
 #define SERVICE_H
 #include <string>
+#include "../ChocAnSystem.h"
 
 class Service {
     public:
-        Service(std::string s_code, std::string s_name, float s_fee);
+        Service(const std::string& s_code = "000000", const std::string& s_name = "DEFAULT_SERVICE", const float s_fee = 0.00);
         ~Service();
 
     protected:
         std::string serviceCode;    // 6 digits code
         std::string serviceName;
         float serviceFee;
+
+    // Friend
+    friend class ChocAnSystem;
 };
 
 #endif

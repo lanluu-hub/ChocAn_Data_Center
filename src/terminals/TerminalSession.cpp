@@ -30,7 +30,7 @@ void TerminalSession::runSession()
     } while (input != 0);
 }
 
-void TerminalSession::setCurrentUserID(const std::string ID)
+void TerminalSession::setCurrentUserID(const std::string& ID)
 {
     userID = ID;
 }

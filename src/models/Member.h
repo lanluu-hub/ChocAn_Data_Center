@@ -13,7 +13,8 @@
 
 class Member {
     public:
-        Member(std::string m_name, std::string m_ID, std::string m_strAddr, std::string m_cty, std::string m_state, std::string m_zip);
+        Member(const std::string& m_name, const std::string& m_ID, const std::string& m_strAddr
+                , const std::string& m_cty, const std::string& m_state, const std::string& m_zip);
         ~Member();
         void displayMember() const;
 
