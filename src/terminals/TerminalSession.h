@@ -18,7 +18,7 @@ class TerminalSession {
         
         // This function will be inheritance by its child
         void    runSession();
-        void    setCurrentUserID(const std::string ID);
+        void    setCurrentUserID(const std::string& ID);
 
         // virtual function that will be overwrite by its child class
         virtual int     showMenu() =0;

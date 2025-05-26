@@ -68,6 +68,7 @@ main() {
 
         // scan userID
         getInput(userID, "Please enter userID:\n > ");
+        cin.ignore(1024, '\n');
 
         // validateUserIDformat
         if (validateUserIdFormat(userID)) {
@@ -164,7 +165,7 @@ void getInput(T &input, const string &prompt)
 {
     cout << prompt;
     //cin >> input;
-    while (!(cin >> input)) {
+    while (!(cin >>input)) {
         cin.clear();
         cin.ignore(1024, '\n');
 

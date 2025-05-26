@@ -1,4 +1,5 @@
 #include <iostream>
+#include <regex>
 #include <string>
 #include <cassert>
 #include "ProviderTerminal.h"
@@ -73,29 +74,37 @@ void ProviderTerminal::commandHandler(int input)
 int ProviderTerminal::validateMembership()
 {
     int membershipStatus {-1};
+    bool isIdValidate {false};
     string ID {};
 
     cout << "\n[Validate Membership System]" << endl;
 
     do {
-        getMemberID(ID, "\nPlease Scan/key-in member id card number to continues. . .\n > ");
-    } while (!(validateMemberIdFormat(ID)));
+
+        getInput(ID, "\nPlease Scan/key-in member id card number to continues. . .\n > ");
+        
+        if (!(isIdValidate = validateMemberIdFormat(ID)))
+        {
+            cout << "Invalid Member ID format (9-digits ID), please try again." << endl;
+        }
+    } while (!isIdValidate);
 
     membershipStatus = ChocAnSystem::getInstance().validateMembership(ID);
     
     switch (membershipStatus)
     {
     case 0: // VALIDATED
+        cout << "\nMember Status: [VALIDATED]" << endl;
         isMemberValidated = true;
         memberID = ID;
         break;
 
     case 1:
-        cout << "\n[SUSPEND]" << endl;
+        cout << "\nMember Status: [SUSPEND]" << endl;
         break;
 
     case (-1):
-        cout << "\n[INVALID]" << endl;
+        cout << "\nMember Status: [INVALID]" << endl;
         break;
 
     default:
@@ -111,25 +120,101 @@ float ProviderTerminal::billService()
     cout << "\n[Bill Services System]" << endl;
 
     string ID{"000000000"};
+    string servCode {};
+    string servDate {};
+    string servComment{};
+    float fee {};
+    char userConfirm {};
+    bool isIdValid {false};
+    bool isServCodeValid {false};
+    bool isDateValid{false};
 
+    // re-enter member id
     do {
-        getMemberID(ID, "\nPlease Scan/key-in member id card number to continues. . .\n > ");
+        getInput(ID, "\nEnter Member ID:\n > ");
+        cin.ignore(1024, '\n');
 
-        if (ID != memberID && ID != ("000000000"))
+        if (!(isIdValid = validateMemberIdFormat(ID)))
+        {
+            cout << "Invalid Member ID format (9-digits ID), please try again." << endl;
+        } else if (ID != memberID && ID != ("000000000"))
         {
             cout << "Member ID does not match current session member ID." << endl;
         }
-    } while (!(validateMemberIdFormat(ID)) || ID != memberID);
+    } while (!(isIdValid) || ID != memberID);
 
-    // Call to ChocAnSystem::getInstance().billService(str memberID); Return a float for fee
+    if (ID == memberID) {
+        cout << "\nMember status: VALIDATED" << endl;
+    }
+    // End member id //
 
+    // Enter Service Code, and confirmation //
+    do {
+        userConfirm = 'N';
 
+        // get Service Code
+        do {
+            getInput(servCode, "\nEnter Service Code:\n > ");
+            cin.ignore(1024, '\n');
+
+            if (!(isServCodeValid = validateServiceCodeFormat(servCode))) {
+                cout << "Invalid Service code, please try again (6-digits code)" << endl;
+            }
+        } while (!isServCodeValid);
+        
+        // Get Service Fee
+        fee = ChocAnSystem::getInstance().getServiceFee(servCode);
+        cin >> userConfirm;
+        cin.ignore(1024, '\n');
+        cout << endl;
+    } while (toupper(userConfirm) != 'Y');
+    // End Service code //
+   
+    // get Service day
+    do {
+        getInput(servDate, "Enter Date of Service (MM-DD-YYYY):\n > "); 
+        cin.ignore(1024, '\n');
+        
+        if (!(isDateValid = validateServiceDateFormat(servDate))) {
+            cout << "Invalid Service Date, Please try again (MM-DD-YYYY)" << endl;
+        }
+    } while (!isDateValid);
+    // End Service day //
+
+    // Provider Comment //
+    cout << "\nDo you wannt to leave a comment? (100 Words)\n > ";
+    cin >> userConfirm;
+    cin.ignore(1024, '\n');
+
+    if (toupper(userConfirm) == 'Y') {
+        cout << "Enter Comment here:\n > ";
+        getline(cin, servComment);
+        //cin.ignore(1024, '\n');
+        if (servComment.size() > 100) {
+            servComment = servComment.substr(0, 100);
+        }
+    } else {
+        servComment.clear();
+    }
+    
+    if (ChocAnSystem::getInstance().serviceLog(userID, memberID, servCode, servDate, servComment)) {
+        // If true: output "Service Logged Successfully!"
+        cout << "\nService Logged Successfully" << endl;
+    } else {
+        // If false: output "Error: Failed to Log current service!"
+        cerr << "\nFailed to log current service" << endl;
+        exit(EXIT_FAILURE);
+    }
+
+    cout << "\nAmount of Fee: " << fee << endl;
+
+    // End current session with member ID
     // clear memberID
     memberID.clear();
 
     // set isMemberValidated = false
     isMemberValidated = false;
-    return 0.0f;
+    return fee;
 }
 
 void ProviderTerminal::requestProviderDirectory()
@@ -141,7 +226,7 @@ void ProviderTerminal::requestProviderDirectory()
 
 ////////// HELPER FUNCTION //////////   
 
-void ProviderTerminal::getMemberID(string &input, const string &prompt)
+void ProviderTerminal::getInput(string &input, const string &prompt)
 {
     cout << prompt;
     //cin >> input;
@@ -149,11 +234,11 @@ void ProviderTerminal::getMemberID(string &input, const string &prompt)
         cin.clear();
         cin.ignore(1024, '\n');
 
-        cout << "Invalid input format. please try again.\n > ";
+        cout << "\nInvalid input format. please try again.\n > ";
     }
 }
 
-bool ProviderTerminal::validateMemberIdFormat(const string ID)
+bool ProviderTerminal::validateMemberIdFormat(const string& ID)
 {
     bool validated {false};
 
@@ -164,6 +249,64 @@ bool ProviderTerminal::validateMemberIdFormat(const string ID)
     }
 
     return validated;
+}
+
+bool ProviderTerminal::validateServiceCodeFormat(const std::string& servCode)
+{
+    bool validated {false};
+
+    if (is_digits(servCode)) {
+        if (servCode.length() == 6) {
+            validated = true;
+        }
+    }
+    return validated;
+}
+
+bool ProviderTerminal::validateServiceDateFormat(const std::string &servDate)
+{
+    // Regular expression to match MM/DD/YYYY format
+    regex datePattern(R"(^\d{2}-\d{2}-\d{4}$)");
+    
+    if (!std::regex_match(servDate, datePattern)) {
+        return false; // Doesn't match the format
+    }
+
+    // Extract month, day, and year
+    string str_month = servDate.substr(0, 2);
+    string str_day = servDate.substr(3, 2);
+    string str_year = servDate.substr(6, 4);
+
+    if (!is_digits(str_month) 
+        || !is_digits(str_day) 
+        || !is_digits(str_year)) {
+            return false;
+    } 
+
+    // Convert to int
+    int month = std::stoi(str_month);
+    int day = std::stoi(str_day);
+    int year = std::stoi(str_year);
+
+    // Check valid ranges for month and day
+    if (month < 1 || month > 12 || day < 1 || day > 31) {
+        return false;
+    }
+
+    // Days in each month
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+    // Adjust for leap year
+    if (month == 2 && ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))) {
+        daysInMonth[1] = 29;
+    }
+
+    // Check if the day is valid for the given month
+    if (day > daysInMonth[month - 1]) {
+        return false;
+    }
+
+    return true;
 }
 
 bool ProviderTerminal::is_digits(const string &str)
