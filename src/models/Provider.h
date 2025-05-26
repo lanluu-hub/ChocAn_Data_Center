@@ -13,7 +13,12 @@
 
 class Provider {
     public:
-        Provider(std::string p_name, std::string p_ID, std::string p_strAddr, std::string p_cty, std::string p_state, std::string p_zip);
+        Provider(const std::string& p_name
+                 , const std::string& p_ID
+                 , const std::string& p_strAddr
+                 , const std::string& p_cty
+                 , const std::string& p_state
+                 , const std::string& p_zip);
         ~Provider();
         void displayProvider() const;
 

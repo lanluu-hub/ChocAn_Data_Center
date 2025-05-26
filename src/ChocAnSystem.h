@@ -12,9 +12,12 @@
  */
 #ifndef CHOCAN_SYSTEM_H
 #define CHOCAN_SYSTEM_H
+#include <ctime>
+#include <chrono>
 #include <iostream>
 #include <string>
 #include "Database.h"
+#include "models/Service.h"
 
 class ChocAnSystem {
     public:
@@ -36,15 +39,21 @@ class ChocAnSystem {
         
         // Authenticate userID for login to the terminal
         // [need comment]
-        int authenticateUser (const std::string userID);
-        int validateMembership(std::string memberID);
-        float billServices(std::string memberID);
+        int authenticateUser (const std::string& userID);
+        int validateMembership(std::string& memberID);
+        float getServiceFee(const std::string& servCode);
+        bool serviceLog(std::string& providerID, std::string& memberID
+                        , std::string& serviceCode, std::string& serviceDate, std::string& serviceComment);
         void getProviderDirectory();
 
     private:
         // Private Constructor
         ChocAnSystem();
         ~ChocAnSystem();
+
+        // Helper Function  //
+        std::string dateTime(const std::chrono::system_clock::time_point& timePoint,
+                        const std::string& format);
 };
 
 #endif

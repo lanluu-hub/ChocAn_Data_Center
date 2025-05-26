@@ -34,8 +34,10 @@ class ProviderTerminal: public TerminalSession {
         bool isMemberValidated = false;     // check if member is validated
 
         // Helper Function
-        void getMemberID(std::string &input, const std::string &prompt = "Enter a value: ");
-        bool validateMemberIdFormat(const std::string ID);
+        void getInput(std::string &input, const std::string &prompt = "Enter a value: ");
+        bool validateMemberIdFormat(const std::string& ID);
+        bool validateServiceCodeFormat(const std::string& servCode);
+        bool validateServiceDateFormat(const std::string& servDate);
         bool is_digits(const std::string &str);
 };
 
