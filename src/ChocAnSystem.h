@@ -37,6 +37,9 @@ class ChocAnSystem {
         // Authenticate userID for login to the terminal
         // [need comment]
         int authenticateUser (const std::string userID);
+        int validateMembership(std::string memberID);
+        float billServices(std::string memberID);
+        void getProviderDirectory();
 
     private:
         // Private Constructor
