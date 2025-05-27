@@ -10,11 +10,16 @@
  * 
  * Part of the Team Whitespace ChocAn Data Processing System – CS314 Project
  */
+
 #ifndef DATABASE_H
 #define DATABASE_H
 
 #include <string>
 #include <sqlite3.h>
+#include <vector>
+#include "models/Service.h"
+
+class Service;
 
 class Database {
     public:
@@ -34,8 +39,8 @@ class Database {
         static Database& getInstance();
 
         // Other Public Function here
-        int authenticateUser(const std::string userID);
-    
+        int authenticateUser(const std::string& userID);
+        std::vector<Service> getProviderDirectory();
 
     private:
         Database();

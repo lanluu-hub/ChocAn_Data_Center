@@ -1,17 +1,20 @@
--- Insert sample Members
+-- Insert Members (standalone)
 INSERT INTO Members (member_id, name, address, city, state, zip_code, status) VALUES
 (100000001, 'Alice Choco', '123 Sweet St', 'Portland', 'OR', '97201', 'Active'),
 (100000002, 'Bob Cocoa', '124 Sweet St', 'Portland', 'OR', '97201', 'Active'),
 (100000003, 'Charlie Dark', '125 Sweet St', 'Portland', 'OR', '97201', 'Suspended');
 
--- Insert sample Providers
-INSERT INTO Providers (provider_id, name, address, city, state, zip_code) VALUES
-(200000001, 'Dr. Cocoa Bean', '456 Bitter Blvd', 'Portland', 'OR', '97202'),
-(200000002, 'Dr. Dark Chocolate', '789 Sweet St', 'Portland', 'OR', '97203');
+-- Insert Users (only system users)
+INSERT INTO Users (user_id, username, password_hash, email, user_type) VALUES
+-- Providers
+(200000001, 'dr_cocoa', 'hash1', 'dr.cocoa@chocan.com', 'Provider'),
+(200000002, 'dr_dark', 'hash2', 'dr.dark@chocan.com', 'Provider'),
 
--- Insert sample Operators
-INSERT INTO Operators (operator_id, name, address, city, state, zip_code) VALUES
-(300000001, 'Operator One', '100 Admin Rd', 'Portland', 'OR', '97204');
+-- Operators
+(300000001, 'operator1', 'hash3', 'operator1@chocan.com', 'Operator'),
+
+-- Managers
+(400000001, 'manager1', 'hash4', 'manager1@chocan.com', 'Manager');
 
 -- Seed 30 Services
 INSERT INTO Services (service_code, name, fee) VALUES
