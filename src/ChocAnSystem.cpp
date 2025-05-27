@@ -82,18 +82,33 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
 void ChocAnSystem::getProviderDirectory()
 {
     // call to vector<service> list = Database::getInstance().getProviderDirectory()
-    // vector<Service> providerDirectory = Database::getInstance().getProviderDirectory();  // Uncomment this when Database is ready
-    vector<Service> providerDirectory; 
+    vector<Service> providerDirectory = Database::getInstance().getProviderDirectory();  // Uncomment this when Database is ready
+    //vector<Service> providerDirectory; 
 
     // Output the vector here (Provider Directory)
-    cout << "\n\tPROVIDER DIRECTORY" << endl;
-    // display here
+    cout << endl << string(56, '-') << endl;
+    cout << "\t\t   PROVIDER DIRECTORY" << endl;
     
-    cout << "\nService Code";
-    cout << "\tService Name";
-    cout << "\tService Fee";
-    cout << endl;
+    // Header
+    cout << endl << string(56, '-') << endl;
+    cout << left 
+         << setw(20) << "Service Code"
+         << setw(25) << "Service Name"
+         << "Service Fee" << endl;
 
+    // Data row
+    for (const auto& entry : providerDirectory) {
+        cout << left
+             << setw(20) << entry.serviceCode
+             << setw(25) << entry.serviceName
+             << "$" << fixed << setprecision(2) << entry.serviceFee
+             << endl;
+    }
+
+    // Footer 
+    cout << endl << string(56, '=') << endl;
+    cout << "\t     Copyright @ ChocAn Data Center" << endl;
+    cout << string(56, '=') << endl;
 }
 
 ////////// Helper function /////////
