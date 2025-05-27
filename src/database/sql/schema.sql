@@ -1,14 +1,23 @@
 PRAGMA foreign_keys = ON;
 
--- Drop existing tables for clean development setup
+-- Drop existing tables
 DROP TABLE IF EXISTS ServiceLogs;
 DROP TABLE IF EXISTS Reports;
+DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Members;
-DROP TABLE IF EXISTS Providers;
-DROP TABLE IF EXISTS Operators;
 DROP TABLE IF EXISTS Services;
 
--- Create Members table
+-- Create Users table (only for system users)
+CREATE TABLE Users (
+    user_id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    email TEXT UNIQUE,
+    user_type TEXT NOT NULL CHECK (user_type IN ('Provider', 'Operator', 'Manager')),
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create Members table (completely separate)
 CREATE TABLE Members (
     member_id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
@@ -19,29 +28,9 @@ CREATE TABLE Members (
     status TEXT NOT NULL CHECK (status IN ('Active', 'Suspended'))
 );
 
--- Create Providers table
-CREATE TABLE Providers (
-    provider_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    address TEXT NOT NULL,
-    city TEXT NOT NULL,
-    state TEXT NOT NULL,
-    zip_code TEXT NOT NULL
-);
-
--- Create Operators table
-CREATE TABLE Operators (
-    operator_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    address TEXT NOT NULL,
-    city TEXT NOT NULL,
-    state TEXT NOT NULL,
-    zip_code TEXT NOT NULL
-);
-
 -- Create Services table
 CREATE TABLE Services (
-    service_code INTEGER PRIMARY KEY,
+    service_code TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     fee REAL NOT NULL CHECK (fee >= 0)
 );

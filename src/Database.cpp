@@ -1,6 +1,10 @@
+
+#include <sqlite3.h>
+#include <fstream>
 #include <iostream>
-#include <vector>
+#include <sstream>
 #include "Database.h"
+
 
 Database::Database() : db(nullptr)
 {
@@ -8,7 +12,9 @@ Database::Database() : db(nullptr)
 }
 
 Database::~Database()
-{}
+{
+    CloseConnection();
+}
 
 bool Database::OpenConnection()
 {
@@ -49,7 +55,7 @@ Database& Database::getInstance()
     return instance;
 }
 
-int Database::authenticateUser(const std::string userID) 
+int Database::authenticateUser(const std::string& userID)
 {
     // Database logic to get role based on userID;
     // if int = 0: Operator Terminal
@@ -57,4 +63,29 @@ int Database::authenticateUser(const std::string userID)
     // if int = 2: Provider Terminal
     // if int = -1: invalid, no terminal, if userID not found 
     return 2;
+}
+
+std::vector<Service> Database::getProviderDirectory()
+{
+    std::vector<Service> services;
+
+    const char* query = "SELECT service_code, name, fee FROM Services ORDER BY service_code;";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Failed to prepare query: " << sqlite3_errmsg(db) << "\n";
+        return services;
+    }
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        std::string code     = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        std::string name     = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        double fee           = sqlite3_column_double(stmt, 2);
+
+        Service s(code, name, fee);
+        services.push_back(s);
+    }
+
+    sqlite3_finalize(stmt);
+    return services;
 }
