@@ -39,9 +39,10 @@ class Database {
         static Database& getInstance();
 
         // Other Public Function here
-        int authenticateUser(const std::string& userID);
+        int authenticateUser(const std::string userID);
         std::vector<Service> getProviderDirectory();
-
+        int validateMembership(const std::string& memberID);
+        
     private:
         Database();
         ~Database();
