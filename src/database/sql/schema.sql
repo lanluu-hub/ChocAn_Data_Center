@@ -8,13 +8,14 @@ DROP TABLE IF EXISTS Members;
 DROP TABLE IF EXISTS Services;
 
 -- Create Users table (only for system users)
-CREATE TABLE Users (
-    user_id INTEGER PRIMARY KEY,
-    username TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    email TEXT UNIQUE,
-    user_type TEXT NOT NULL CHECK (user_type IN ('Provider', 'Operator', 'Manager')),
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE IF NOT EXISTS Users (
+    user_id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL,
+    city TEXT NOT NULL,
+    state TEXT NOT NULL,
+    zip TEXT NOT NULL,
+    user_type TEXT CHECK(user_type IN ('Provider', 'Operator', 'Manager')) NOT NULL
 );
 
 -- Create Members table (completely separate)

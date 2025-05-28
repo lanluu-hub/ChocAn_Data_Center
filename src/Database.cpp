@@ -1,6 +1,7 @@
 
 #include <sqlite3.h>
 #include <fstream>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include "Database.h"
@@ -55,14 +56,49 @@ Database& Database::getInstance()
     return instance;
 }
 
-int Database::authenticateUser(const std::string& userID)
+int Database::authenticateUser(const std::string userID)
 {
     // Database logic to get role based on userID;
     // if int = 0: Operator Terminal
     // if int = 1: Manager Terminal
     // if int = 2: Provider Terminal
     // if int = -1: invalid, no terminal, if userID not found 
-    return 2;
+    int role = -1; 
+
+    const char * query = "SELECT user_type FROM Users WHERE user_id = ?;";
+
+    sqlite3_stmt* stmt; 
+
+    if(sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare query: " << sqlite3_errmsg(db) << "\n";
+        return -1;
+    }
+    //Bind userID to SQL query
+
+    if(sqlite3_bind_text(stmt, 1, userID.c_str(), -1, SQLITE_STATIC) != SQLITE_OK)
+    {
+        std::cerr << "Failed to bind user ID. \n";
+        sqlite3_finalize(stmt); 
+        return -1;
+    }
+
+    // combine or concate the query with userID passed in the argument
+    // Final: SELECT user_type FROM Users WHERE user_id = userID;
+
+    if(sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        std::string userType = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        if (userType == "Operator")
+            role = 0;
+        else if (userType == "Manager")
+            role = 1;   
+        else if (userType == "Provider")
+            role = 2;
+    }
+
+    sqlite3_finalize(stmt);
+    return role;
 }
 
 std::vector<Service> Database::getProviderDirectory()
@@ -88,4 +124,48 @@ std::vector<Service> Database::getProviderDirectory()
 
     sqlite3_finalize(stmt);
     return services;
+}
+
+
+//
+int Database::validateMembership(const std::string& memberID)
+{
+    const char * query = "SELECT status FROM Members Where member_id = ?;";
+    sqlite3_stmt* stmt; 
+
+     if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Failed to prepare query: " << sqlite3_errmsg(db) << "\n";
+        return -1;
+    }
+
+    // Bind the member ID to the query
+    if (sqlite3_bind_text(stmt, 1, memberID.c_str(), -1, SQLITE_STATIC) != SQLITE_OK) {
+        std::cerr << "Failed to bind member ID.\n";
+        sqlite3_finalize(stmt);
+        return -1;
+    }
+
+    int result = -1;
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        const unsigned char* statusText = sqlite3_column_text(stmt, 0);
+        std::string status = statusText ? reinterpret_cast<const char*>(statusText) : "";
+
+        if (status == "Active") {
+            std::cout << "[VALIDATED]\n";
+            result = 0;
+        } else if (status == "Suspended") {
+            std::cout << "[SUSPEND]\n";
+            result = 1;
+        } else {
+            std::cout << "[INVALID]\n";
+            result = -1;
+        }
+    } else {
+        std::cout << "[INVALID]\n";
+        result = -1;
+    }
+
+    sqlite3_finalize(stmt);
+    return result;
 }
