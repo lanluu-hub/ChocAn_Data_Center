@@ -1,50 +1,53 @@
 -- Insert Members (standalone)
 INSERT INTO Members (member_id, name, address, city, state, zip_code, status) VALUES
-(100000001, 'Alice Choco', '123 Sweet St', 'Portland', 'OR', '97201', 'Active'),
-(100000002, 'Bob Cocoa', '124 Sweet St', 'Portland', 'OR', '97201', 'Active'),
-(100000003, 'Charlie Dark', '125 Sweet St', 'Portland', 'OR', '97201', 'Suspended');
+(100000001, 'Son Phan', 'CS314 St', 'Whitespace', 'OR', '97201', 'Active'),
+(100000002, 'Lan Luu', 'CS314 St', 'Whitespace', 'OR', '97201', 'Active'),
+(100000003, 'Tin Duong', 'CS314 St', 'Portland', 'OR', '97201', 'Active'),
+(100000004, 'Hunter Gambee-Iddings', 'CS314 St', 'Whitespace', 'OR', '97201', 'Active'),
+(100000005, 'Piper Lake', 'CS314 St', 'Whitespace', 'OR', '97201', 'Active'),
+(100000006, 'Teacher', 'CS314 St', 'Portland', 'OR', '97201', 'Suspended');
 
 -- Insert Users (only system users)
-INSERT INTO Users (user_id, username, password_hash, email, user_type) VALUES
+INSERT INTO Users (user_id, name, address, city, state, zip_code, user_type) VALUES
 -- Providers
-(200000001, 'dr_cocoa', 'hash1', 'dr.cocoa@chocan.com', 'Provider'),
-(200000002, 'dr_dark', 'hash2', 'dr.dark@chocan.com', 'Provider'),
+(200000001, 'user1', 'CS314 St', 'Whitespace', 'OR', '97201', 'Provider'),
+(200000002, 'user1', 'CS314 St', 'Whitespace', 'OR', '97201', 'Provider'),
 
 -- Operators
-(300000001, 'operator1', 'hash3', 'operator1@chocan.com', 'Operator'),
+(300000001, 'operator1', 'CS314 St', 'Whitespace', 'OR', '97201', 'Provider'),
 
 -- Managers
-(400000001, 'manager1', 'hash4', 'manager1@chocan.com', 'Manager');
+(400000001, 'manager1', 'CS314 St', 'Whitespace', 'OR', '97201', 'Provider');
 
 -- Seed 30 Services
 INSERT INTO Services (service_code, name, fee) VALUES
-('HS001', 'Emergency Room Visit', 250.00),
-('HS002', 'Inpatient Consultation', 180.00),
-('HS003', 'Outpatient Follow-Up', 95.00),
-('HS004', 'MRI Scan', 600.00),
-('HS005', 'Physical Therapy Session', 85.00),
-('HS006', 'X-Ray Diagnostic', 120.00),
-('HS007', 'Blood Test Panel', 60.00),
-('HS008', 'Vaccination (General)', 35.00),
-('HS009', 'Cardiology Checkup', 210.00),
-('HS010', 'Mental Health Counseling', 150.00),
-('HS011', 'Dermatology Visit', 125.00),
-('HS012', 'Prenatal Checkup', 100.00),
-('HS013', 'Pediatric Exam', 90.00),
-('HS014', 'ENT Consultation', 130.00),
-('HS015', 'Nutrition Counseling', 70.00),
-('HS016', 'Chiropractic Adjustment', 65.00),
-('HS017', 'Vision Screening', 45.00),
-('HS018', 'Dental Cleaning', 110.00),
-('HS019', 'Oral Surgery Evaluation', 180.00),
-('HS020', 'Gastroenterology Visit', 195.00),
-('HS021', 'Orthopedic Assessment', 175.00),
-('HS022', 'Neurological Exam', 220.00),
-('HS023', 'Urinalysis', 50.00),
-('HS024', 'Allergy Testing', 145.00),
-('HS025', 'COVID-19 Test', 40.00),
-('HS026', 'Hearing Test', 55.00),
-('HS027', 'Stress Test (Cardio)', 250.00),
-('HS028', 'Smoking Cessation Program', 90.00),
-('HS029', 'Wellness Coaching', 75.00),
-('HS030', 'Diabetes Management Session', 105.00);
+(100001, 'Emergency Room Visit', 250.00),
+(100002, 'Inpatient Consultation', 180.00),
+(100003, 'Outpatient Follow-Up', 95.00),
+(100004, 'MRI Scan', 600.00),
+(100005, 'Physical Therapy Session', 85.00),
+(100006, 'X-Ray Diagnostic', 120.00),
+(100007, 'Blood Test Panel', 60.00),
+(100008, 'Vaccination (General)', 35.00),
+(100009, 'Cardiology Checkup', 210.00),
+(100010, 'Mental Health Counseling', 150.00),
+(100011, 'Dermatology Visit', 125.00),
+(100012, 'Prenatal Checkup', 100.00),
+(100013, 'Pediatric Exam', 90.00),
+(100014, 'ENT Consultation', 130.00),
+(100015, 'Nutrition Counseling', 70.00),
+(100016, 'Chiropractic Adjustment', 65.00),
+(100017, 'Vision Screening', 45.00),
+(100018, 'Dental Cleaning', 110.00),
+(100019, 'Oral Surgery Evaluation', 180.00),
+(100020, 'Gastroenterology Visit', 195.00),
+(100021, 'Orthopedic Assessment', 175.00),
+(100022, 'Neurological Exam', 220.00),
+(100023, 'Urinalysis', 50.00),
+(100024, 'Allergy Testing', 145.00),
+(100025, 'COVID-19 Test', 40.00),
+(100026, 'Hearing Test', 55.00),
+(100027, 'Stress Test (Cardio)', 250.00),
+(100028, 'Smoking Cessation Program', 90.00),
+(100029, 'Wellness Coaching', 75.00),
+(100030, 'Diabetes Management Session', 105.00);
