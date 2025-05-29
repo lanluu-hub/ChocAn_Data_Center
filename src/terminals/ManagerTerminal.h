@@ -23,6 +23,9 @@ class ManagerTerminal: public TerminalSession {
         void    commandHandler(int input);
 
         // unique function
+        void printMemberReport();
+        void printProviderReport();
+        void printSummaryReport();
 
 };
 

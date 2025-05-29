@@ -26,19 +26,17 @@
 
 using namespace std;
 
-// Prototype
+// ===============================
+//         FUNCTION HEADERS
+// ===============================
 
 /**
- * Displays the introductory message for the CHOCAN Data Processing System.
- *
- * This function outputs a welcome message to the console.
- * It does not take any parameters or return any values.
+ * @brief Displays the introductory message for the CHOCAN Data Processing System.
  */
 void intro();
 
 /**
- * Prompts the user for input and stores the result in the provided variable.
- *
+ * @brief Prompts the user for input and stores the result in the provided variable.
  * @tparam T The type of the input variable.
  * @param input A reference to the variable where the user input will be stored.
  * @param prompt An optional string that specifies the prompt message. Defaults to "Enter a value:".
@@ -47,43 +45,51 @@ template <typename T>
 void getInput(T &input, const string &prompt = "Enter a value: ");
 
 /**
- * Validates whether a user ID consists only of digits and is 8 or 9 characters long.
- *
+ * @brief Validates whether a user ID consists only of digits and is 8 or 9 characters long.
  * @param userID A string representing the user ID to validate.
- * @return True if the user ID is numeric and has a length of 8 or 9; otherwise, false.
+ * @return True if the user ID is numeric and valid; otherwise, false.
  */
 bool validateUserIdFormat(const string userID);
 
 /**
- * Checks if a given string consists only of digit characters.
- *
+ * @brief Checks if a given string consists only of digit characters.
  * @param str A reference to the string to check.
  * @return True if the string contains only digits; otherwise, false.
  */
 bool is_digits(const string &str);
 
+// ===============================
+//         MAIN FUNCTION
+// ===============================
+
+/**
+ * @brief Main driver for terminal session execution and authentication.
+ *
+ * Handles userID input, validates the format, authenticates against the ChocAn system,
+ * and starts the appropriate terminal session based on the user role.
+ *
+ * @return EXIT_SUCCESS on successful completion.
+ */
 int
 main() {
     do {
         string userID {};
        
-        // Welcome message
+        // Display welcome message
         intro();
 
-        // scan userID
+        // Request user ID
         getInput(userID, "Please enter userID:\n > ");
         cin.ignore(1024, '\n');
 
-        // validateUserIDformat
+        // Validate user ID format
         if (validateUserIdFormat(userID)) {
             int role {};
-            // Authenticate UserID, return the role (int)
             role = ChocAnSystem::getInstance().authenticateUser(userID);
 
-            // created unique_ptr<TerminalSession> 
             unique_ptr<TerminalSession> session {};
 
-            // determine which Terminal to start
+            // Launch appropriate terminal based on role
             switch (role) {
             case 0: // OperatorTerminal 
                 session = make_unique<OperatorTerminal>();
@@ -122,30 +128,12 @@ main() {
                 exit(EXIT_FAILURE);
             }
                
+            // Launch terminal session if role is valid
             if (role != (-1)) {
                 session->setCurrentUserID(userID);
                 session->runSession();
             }
             
-            // if true: ChocAnSystem::getInstance.authenticateUser(userID) : return an int
-                // switch (int): 
-                // if int = 0: start Operator Terminal
-                // if int = 1: start Manager Terminal
-                // if int = 2: start Provider Terminal
-                //      
-                //      auto session = make_unique<ProviderTerminal>();
-                //      int memberStatus = session->validateMember()
-                //      {
-                //          if memberStatus = 0: output [VALIDATED] and continue to menu
-                //          if memberStatus = 1: output [SUSPEND] if member id is corrected but balance is due -> end session
-                //          if memberStatus = -1: output [INVALID] if member id is not correct -> end session
-                //      }
-                // if int = -1: end session
-                // } end switch case
-                //
-                // session->setCurrentUserID(userID)   // this will be the ProviderID needed for the report
-                // session-> runSession() : This will run the main terminal of the correct role
-            // if false: end session
             cout << "Session End. . . " << endl;
         } else {
             cerr << "Error: invalid userID!" <<endl;
@@ -156,8 +144,10 @@ main() {
     return EXIT_SUCCESS;
 }
 
-// ------------------------------------------------ //
-/////// Function Defination ////////
+// ===============================
+//         FUNCTION DEFINITIONS
+// ===============================
+
 void intro()
 {
     cout << "\n\t\tCHOCAN DATA PROCESSING SYSTEM" << endl; 

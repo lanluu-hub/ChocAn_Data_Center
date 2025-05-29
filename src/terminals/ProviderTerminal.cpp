@@ -184,21 +184,12 @@ float ProviderTerminal::billService()
     // End Service day //
 
     // Provider Comment //
-    cout << "\nDo you wannt to leave a comment? (100 Words)\n > ";
-    cin >> userConfirm;
-    cin.ignore(1024, '\n');
-
-    if (toupper(userConfirm) == 'Y') {
-        cout << "Enter Comment here:\n > ";
-        getline(cin, servComment);
-        //cin.ignore(1024, '\n');
-        if (servComment.size() > 100) {
-            servComment = servComment.substr(0, 100);
-        }
-    } else {
-        servComment.clear();
+    cout << "Enter Comment here(100 Words - Optional):\n > ";
+    getline(cin, servComment);
+    if (servComment.size() > 100) {
+        servComment = servComment.substr(0, 100);
     }
-    
+
     if (ChocAnSystem::getInstance().serviceLog(userID, memberID, servCode, servDate, servComment)) {
         // If true: output "Service Logged Successfully!"
         cout << "\nService Logged Successfully" << endl;

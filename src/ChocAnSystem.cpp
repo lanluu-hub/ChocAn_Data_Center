@@ -3,9 +3,12 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <fstream>
 #include "ChocAnSystem.h"
 
 using namespace std;
+
+const string PROVIDDER_DIRECTORY_PATH = "src/reports/Provider_Directory.txt";
 
 ChocAnSystem::ChocAnSystem()
 {}
@@ -38,6 +41,9 @@ float ChocAnSystem::getServiceFee(const string& servCode)
 
     // Call to Database::getInstance().getService(servCode); Return a Service Obj assignt to ServObj
     // service = Database::getInstance().getService(servCode);
+    /*
+        if service.serviceName == "DEFAULT_SERVICE"
+    */
     cout << "\nService Name: " << service.serviceName << endl;
     cout << "Is it Correct? (Y/N) \n > ";
     
@@ -60,6 +66,7 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
     cout << "Member number: " << memberID << endl;
     cout << "Service code: " << serviceCode << endl;
     cout << "Comments: " << serviceComment << endl; 
+    // Delete this section or comment it after database is work.
 
     // Call to Database::getInstance().serviceLog(providerID, memberID, serviceCode
     //                                            , serviceDate, currentDate, serviceComment);
@@ -73,29 +80,14 @@ void ChocAnSystem::getProviderDirectory()
     vector<Service> providerDirectory = Database::getInstance().getProviderDirectory();  
 
     // Output the vector here (Provider Directory)
-    cout << endl << string(56, '-') << endl;
-    cout << "\t\t   PROVIDER DIRECTORY" << endl;
+    displayProviderDirectory(providerDirectory);
     
-    // Header
-    cout << endl << string(56, '-') << endl;
-    cout << left 
-         << setw(20) << "Service Code"
-         << setw(25) << "Service Name"
-         << "Service Fee" << endl;
-
-    // Data row
-    for (const auto& entry : providerDirectory) {
-        cout << left
-             << setw(20) << entry.serviceCode
-             << setw(25) << entry.serviceName
-             << "$" << fixed << setprecision(2) << entry.serviceFee
-             << endl;
+    // Save Provider Directory to file
+    if (writeProviderDirectoryToFile(providerDirectory, PROVIDDER_DIRECTORY_PATH)) {
+        cout << "Provider Directory saved, file path: " << PROVIDDER_DIRECTORY_PATH << endl;
+    } else {
+        cerr << "Failed to saved Provider Directory." << endl;
     }
-
-    // Footer 
-    cout << endl << string(56, '=') << endl;
-    cout << "\t     Copyright @ ChocAn Data Center" << endl;
-    cout << string(56, '=') << endl;
 }
 
 
@@ -181,4 +173,86 @@ string ChocAnSystem::dateTime(const chrono::system_clock::time_point &timePoint,
     strftime(buffer, sizeof(buffer), format.c_str(),
             timeinfo);
     return buffer;
+}
+
+string ChocAnSystem::getCurrentDate()
+{
+    time_t now = time(0);
+    tm* ltm = localtime(&now);
+    char buffer[20];
+    strftime(buffer, sizeof(buffer), "%m-%d-%Y", ltm);
+    return std::string(buffer);
+}
+
+string ChocAnSystem::formatFileName(const std::string fileName)
+{
+    string result{};
+    for (char c : fileName) {
+        if (isalnum(c) || c == '_') {
+            result += c;
+        } else if (c == ' ') {
+            result += '_';
+        }
+    }
+    return result;
+}
+
+void ChocAnSystem::displayProviderDirectory(std::vector<Service> &providerDirectory)
+{
+    cout << endl << string(56, '-') << endl;
+    cout << "\t\t   PROVIDER DIRECTORY" << endl;
+    
+    // Header
+    cout << endl << string(56, '-') << endl;
+    cout << left 
+         << setw(20) << "Service Code"
+         << setw(25) << "Service Name"
+         << "Service Fee" << endl;
+
+    // Data row
+    for (const auto& entry : providerDirectory) {
+        cout << left
+             << setw(20) << entry.serviceCode
+             << setw(25) << entry.serviceName
+             << "$" << fixed << setprecision(2) << entry.serviceFee
+             << endl;
+    }
+
+    // Footer 
+    cout << endl << string(56, '=') << endl;
+    cout << "\t     Copyright @ ChocAn Data Center" << endl;
+    cout << string(56, '=') << endl;
+}
+
+bool ChocAnSystem::writeProviderDirectoryToFile(vector<Service> &services, const string & filePath)
+{
+    ofstream writeToFile(filePath);
+
+    if (!writeToFile.is_open()) {
+        cerr << "Error: Could Open file " << filePath << endl;
+        return false;
+    }
+
+    writeToFile << string(56, '-') << "\n";
+    writeToFile << "\t\t   PROVIDER DIRECTORY\n";
+    writeToFile << string(56, '-') << "\n";
+    writeToFile << left 
+                << setw(20) << "Service Code"
+                << setw(25) << "Service Name"
+                << "Service Fee" << "\n";
+
+    for (const auto& entry : services) {
+        writeToFile << left
+                    << setw(20) << entry.serviceCode
+                    << setw(25) << entry.serviceName
+                    << "$" << fixed << setprecision(2) << entry.serviceFee
+                    << "\n";
+    }
+
+    writeToFile << string(56, '=') << "\n";
+    writeToFile << "\t     Copyright @ ChocAn Data Center\n";
+    writeToFile << string(56, '=') << "\n";
+
+    writeToFile.close();
+    return true;
 }
