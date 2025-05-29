@@ -13,12 +13,12 @@
 
 class Provider {
     public:
-        Provider(const std::string& p_name
-                 , const std::string& p_ID
-                 , const std::string& p_strAddr
-                 , const std::string& p_cty
-                 , const std::string& p_state
-                 , const std::string& p_zip);
+        Provider(const std::string& p_name = "Unkown"
+                 , const std::string& p_ID = "000000000"
+                 , const std::string& p_strAddr = "N/A"
+                 , const std::string& p_cty = "N/A"
+                 , const std::string& p_state = "N/A"
+                 , const std::string& p_zip = "00000");
         ~Provider();
         void displayProvider() const;
 
@@ -29,6 +29,9 @@ class Provider {
         std::string providerCity;             // 14 characters
         std::string providerState;            // 2 letters
         std::string providerZipCode;          // 5 digits
+
+        friend class ChocAnSystem;
+        friend class Database;
 };
 
 #endif

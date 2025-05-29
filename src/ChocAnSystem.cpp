@@ -5,7 +5,6 @@
 #include <vector>
 #include "ChocAnSystem.h"
 
-
 using namespace std;
 
 ChocAnSystem::ChocAnSystem()
@@ -13,16 +12,6 @@ ChocAnSystem::ChocAnSystem()
 
 ChocAnSystem::~ChocAnSystem()
 {}
-
-string ChocAnSystem::dateTime(const chrono::system_clock::time_point &timePoint, const string &format)
-{
-    time_t time = chrono::system_clock::to_time_t(timePoint);
-    tm* timeinfo = localtime(&time);
-    char buffer[70];
-    strftime(buffer, sizeof(buffer), format.c_str(),
-            timeinfo);
-    return buffer;
-}
 
 ChocAnSystem& ChocAnSystem::getInstance()
 {
@@ -32,15 +21,14 @@ ChocAnSystem& ChocAnSystem::getInstance()
 
 int ChocAnSystem::authenticateUser(const string& userID)
 {
-    // Call to Database::getInstance().authenticateUser(userID)
     return Database::getInstance().authenticateUser(userID);
 }
 
+// ---------- Provider Terminal ---------- //
+
 int ChocAnSystem::validateMembership(string& memberID)
 {
-    // Uncomment this when database ready
-    //Database::getInstance().validateMembership(memberID);
-    return 0;
+    return Database::getInstance().validateMembership(memberID);
 }
 
 float ChocAnSystem::getServiceFee(const string& servCode)
@@ -49,7 +37,7 @@ float ChocAnSystem::getServiceFee(const string& servCode)
     Service service;
 
     // Call to Database::getInstance().getService(servCode); Return a Service Obj assignt to ServObj
-    // Database::getInstance().getService(servCode);
+    // service = Database::getInstance().getService(servCode);
     cout << "\nService Name: " << service.serviceName << endl;
     cout << "Is it Correct? (Y/N) \n > ";
     
@@ -82,8 +70,7 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
 void ChocAnSystem::getProviderDirectory()
 {
     // call to vector<service> list = Database::getInstance().getProviderDirectory()
-    vector<Service> providerDirectory = Database::getInstance().getProviderDirectory();  // Uncomment this when Database is ready
-    //vector<Service> providerDirectory; 
+    vector<Service> providerDirectory = Database::getInstance().getProviderDirectory();  
 
     // Output the vector here (Provider Directory)
     cout << endl << string(56, '-') << endl;
@@ -111,4 +98,87 @@ void ChocAnSystem::getProviderDirectory()
     cout << string(56, '=') << endl;
 }
 
+
+// Operator Terminal //
+bool ChocAnSystem::addNewMember(const Member &newMember)
+{
+    // return a bool, true if successfully added new member
+    //return Database::getInstance().addNewMeber(newMember);   // UNCOMMENT WHEN DATABASE IS READY
+    return false;
+}
+
+bool ChocAnSystem::searchMember(const std::string &memberID)
+{
+    // Return a bool, true if member with "memberID" exist
+    //return Database::getInstance().searchMember(memberID); // UNCOMMENTS WHEN DATABASE IS READY
+    return true;
+}
+
+bool ChocAnSystem::deleteMember(const std::string &memberID)
+{
+    // Return a bool, true if successfully delete
+    //return Database::getInstance().deleteMember(memberID); // UNCOMMENTS WHEN DATABASE IS READY
+    return false;
+}
+
+bool ChocAnSystem::addNewProvider(const Provider &newProvider)
+{
+    // return bool, True if Added successfully
+    //return Database::getInstance().addNewProvider(newProvider);   // UNCOMMENT WHEN DATABASE IS READY
+    return false;
+}
+
+bool ChocAnSystem::searchProvider(const std::string &ProviderID)
+{
+    // Return a bool, true if provider with "ProviderID" exist
+    //return Database::getInstance().searchProvider(ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
+    return false;
+}
+
+Provider ChocAnSystem::getProvider(const std::string ProviderID)
+{
+    Provider updateProvider;
+    // return a Provider obj base on Provider id
+    //updateProvider = Database::getInstance().getProvider(ProviderID);   // UNCOMMENT WHEN DATABASE IS READY
+    return updateProvider;
+}
+
+bool ChocAnSystem::updateProvider(const std::string providerID, const std::string newAddrss, const std::string newCty, const std::string newState, const std::string newZip)
+{
+    // return bool, true if successful update.
+    //return Databse::getInstance().updateMember(providerID, newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
+    return false;
+}
+
+Member ChocAnSystem::getMember(const std::string memberID)
+{
+    Member updateMember;
+    // return a member obj base on Member id
+    //updateMember = Database::getInstance().getMember(memberID);   // UNCOMMENT WHEN DATABASE IS READY
+    return updateMember;
+}
+
+bool ChocAnSystem::updateMember(const std::string memberID, const std::string newAddrss, const std::string newCty, const std::string newState, const std::string newZip)
+{
+    // return bool, true if successful update.
+    //return Databse::getInstance().updateMember(memberID, newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
+    return false;
+}
+
+bool ChocAnSystem::deleteProvider(const std::string &ProviderID)
+{
+    // Return a bool
+    //return Database::getInstance().deleteProvider(ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
+    return false;
+}
+
 ////////// Helper function /////////
+string ChocAnSystem::dateTime(const chrono::system_clock::time_point &timePoint, const string &format)
+{
+    time_t time = chrono::system_clock::to_time_t(timePoint);
+    tm* timeinfo = localtime(&time);
+    char buffer[70];
+    strftime(buffer, sizeof(buffer), format.c_str(),
+            timeinfo);
+    return buffer;
+}

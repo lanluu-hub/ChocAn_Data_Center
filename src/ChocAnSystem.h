@@ -9,6 +9,19 @@
  * report generation, and coordination with the Database subsystem.
  *
  * Part of the Team Whitespace ChocAn Data Processing System – CS314 Project
+ *//*
+ * Created: May 17, 2025
+ *----------------------------- 
+ * @file ChocAnSystem.h
+ * 
+ * @brief Defines the ChocAnSystem class, which serves as the centralized control 
+ * system for the ChocAn Data Processing System.
+ * 
+ * The ChocAnSystem class manages member and provider operations, validates inputs, 
+ * processes service transactions, and interfaces with the underlying database. 
+ * It is implemented as a Singleton to ensure consistent state management across the application.
+ * 
+ * Part of the Team Whitespace ChocAn Data Processing System – CS314 Project
  */
 #ifndef CHOCAN_SYSTEM_H
 #define CHOCAN_SYSTEM_H
@@ -18,40 +31,165 @@
 #include <string>
 #include "Database.h"
 #include "models/Service.h"
+#include "models/Member.h"
+#include "models/Provider.h"
 
+/**
+ * @class ChocAnSystem
+ * @brief Singleton class providing centralized access to core system operations such as
+ *        user authentication, service logging, and management of members and providers.
+ */
 class ChocAnSystem {
     public:
-        // delete Copy constructor to prevent copy
+        /// @brief Deleted copy constructor to prevent duplicate instances.
         ChocAnSystem(const ChocAnSystem& obj) = delete;
         
-        // Returns the thread-safe, lazily-initialized Singleton instance.
-        // This ensures only one shared ChocAnSystem exists across the application. 
-        // Usage:
-        //     ChocAnSystem::getInstance().validateMember(...);
-        //     ChocAnSystem::getInstance().billService(...);
-        // Syntax: ChocAnSystem::getInstance().[Public_Function_Here]();
+        /**
+         * @brief Returns the Singleton instance of ChocAnSystem.
+         * @return Reference to the unique ChocAnSystem instance.
+         */ 
         static ChocAnSystem& getInstance();
 
-        // Other Public Fucntion here: 
+        // ---------------- Provider Terminal Functions ---------------- //
 
-        // Test function, use ChocAnSystem::getIntance().test_output() in main, or any function to check it work
-        void test_output() {std::cout << "Hello World!" << std::endl;} 
-        
-        // Authenticate userID for login to the terminal
-        // [need comment]
+        /**
+         * @brief Authenticates a user ID to determine terminal access.
+         * @param userID The user ID to authenticate.
+         * @return An integer representing the user's role (e.g., member, provider, operator).
+         */
         int authenticateUser (const std::string& userID);
+
+        /**
+         * @brief Validates a member’s active status.
+         * @param memberID The member ID to validate.
+         * @return Status code (e.g., valid, suspended, invalid).
+         */
         int validateMembership(std::string& memberID);
+
+        /**
+         * @brief Retrieves the service fee associated with a given service code.
+         * @param servCode The 6-digit service code.
+         * @return The fee associated with the service.
+         */
         float getServiceFee(const std::string& servCode);
+
+         /**
+         * @brief Logs a service transaction to the system database.
+         * @param providerID The ID of the provider delivering the service.
+         * @param memberID The ID of the member receiving the service.
+         * @param serviceCode The code identifying the service performed.
+         * @param serviceDate The date the service was provided.
+         * @param serviceComment Optional comment regarding the service.
+         * @return True if the service log was successfully recorded, false otherwise.
+         */
         bool serviceLog(std::string& providerID, std::string& memberID
                         , std::string& serviceCode, std::string& serviceDate, std::string& serviceComment);
+
+        /**
+         * @brief Displays the provider directory including available services and their codes.
+         */
         void getProviderDirectory();
 
+
+        // ---------------- Operator Terminal - Member Management ---------------- //
+        
+        /**
+         * @brief Adds a new member to the system.
+         * @param newMember The Member object containing member details.
+         * @return True if the member was successfully added, false otherwise.
+         */
+        bool addNewMember(const Member& newMember);
+
+        /**
+         * @brief Searches for a member by ID.
+         * @param memberID The 9-digit member ID to search for.
+         * @return True if the member exists, false otherwise.
+         */
+        bool searchMember(const std::string& memberID);
+
+        /**
+         * @brief Retrieves the member object given a member ID.
+         * @param memberID The 9-digit member ID.
+         * @return A Member object containing the member’s data.
+         */
+        Member getMember(const std::string memberID);
+
+        /**
+         * @brief Updates the address-related fields for a member.
+         * @param memberID The ID of the member to update.
+         * @param newAddress Updated street address.
+         * @param newCity Updated city name.
+         * @param newState Updated state abbreviation.
+         * @param newZip Updated 5-digit ZIP code.
+         * @return True if the update was successful, false otherwise.
+         */
+        bool updateMember(const std::string memberID, const std::string newAddrss
+                         , const std::string newCty, const std::string newState, const std::string newZip);
+
+        /**
+         * @brief Deletes a member from the system by ID.
+         * @param memberID The 9-digit ID of the member to delete.
+         * @return True if deletion was successful, false otherwise.
+         */
+        bool deleteMember(const std::string& memberID);
+
+        // ---------------- Operator Terminal - Provider Management ---------------- //
+
+        /**
+         * @brief Adds a new provider to the system.
+         * @param newProvider The Provider object containing provider details.
+         * @return True if the provider was successfully added, false otherwise.
+         */
+        bool addNewProvider(const Provider& newProvider);
+
+        /**
+         * @brief Searches for a provider by ID.
+         * @param providerID The 9-digit provider ID to search for.
+         * @return True if the provider exists, false otherwise.
+         */
+        bool searchProvider(const std::string& ProviderID);
+
+         /**
+         * @brief Retrieves a provider object by ID.
+         * @param providerID The 9-digit provider ID.
+         * @return A Provider object with full provider data.
+         */
+        Provider getProvider(const std::string ProviderID);
+
+        /**
+         * @brief Updates address-related fields for a provider.
+         * @param providerID The ID of the provider to update.
+         * @param newAddress Updated street address.
+         * @param newCity Updated city name.
+         * @param newState Updated state abbreviation.
+         * @param newZip Updated 5-digit ZIP code.
+         * @return True if the update was successful, false otherwise.
+         */
+        bool updateProvider(const std::string providerID, const std::string newAddrss
+                         , const std::string newCty, const std::string newState, const std::string newZip);
+
+         /**
+         * @brief Deletes a provider from the system by ID.
+         * @param providerID The 9-digit ID of the provider to delete.
+         * @return True if deletion was successful, false otherwise.
+         */
+        bool deleteProvider(const std::string& ProviderID);
+
     private:
-        // Private Constructor
+        /// @brief Private constructor for Singleton pattern.
         ChocAnSystem();
+
+        /// @brief Destructor.
         ~ChocAnSystem();
 
-        // Helper Function  //
+        // ---------------- Helper Function ---------------- //
+
+        /**
+         * @brief Converts a given time point into a formatted string representation.
+         * @param timePoint The time to be formatted.
+         * @param format The desired date/time format (e.g., "%Y-%m-%d").
+         * @return A string representation of the formatted date and time.
+         */
         std::string dateTime(const std::chrono::system_clock::time_point& timePoint,
                         const std::string& format);
 };

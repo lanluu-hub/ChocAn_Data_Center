@@ -64,8 +64,10 @@ void ProviderTerminal::commandHandler(int input)
 
         case 0: // exit
             break; 
+
         default:
             cerr << "\nError: Unexpect case encounter!" << __FILE__ << __LINE__ << endl;
+            exit(EXIT_FAILURE);
             break;
         }
     }
