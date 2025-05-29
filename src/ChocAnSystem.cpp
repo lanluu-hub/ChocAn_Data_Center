@@ -70,6 +70,7 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
 void ChocAnSystem::getProviderDirectory()
 {
     // call to vector<service> list = Database::getInstance().getProviderDirectory()
+
     vector<Service> providerDirectory = Database::getInstance().getProviderDirectory();  
 
     // Output the vector here (Provider Directory)
