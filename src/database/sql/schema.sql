@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Users (
     address TEXT NOT NULL,
     city TEXT NOT NULL,
     state TEXT NOT NULL,
-    zip TEXT NOT NULL,
+    zip_code TEXT NOT NULL,
     user_type TEXT CHECK(user_type IN ('Provider', 'Operator', 'Manager')) NOT NULL
 );
 

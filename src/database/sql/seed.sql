@@ -11,7 +11,7 @@ INSERT INTO Members (member_id, name, address, city, state, zip_code, status) VA
 INSERT INTO Users (user_id, name, address, city, state, zip_code, user_type) VALUES
 -- Providers
 (200000001, 'user1', 'CS314 St', 'Whitespace', 'OR', '97201', 'Provider'),
-(200000002, 'user1', 'CS314 St', 'Whitespace', 'OR', '97201', 'Provider'),
+(200000002, 'user2', 'CS314 St', 'Whitespace', 'OR', '97201', 'Provider'),
 
 -- Operators
 (300000001, 'operator1', 'CS314 St', 'Whitespace', 'OR', '97201', 'Provider'),
