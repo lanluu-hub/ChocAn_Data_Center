@@ -13,8 +13,9 @@
 
 class Member {
     public:
-        Member(const std::string& m_name, const std::string& m_ID, const std::string& m_strAddr
-                , const std::string& m_cty, const std::string& m_state, const std::string& m_zip);
+        Member(const std::string& m_name = "Unkown", const std::string& m_ID = "000000000"
+                , const std::string& m_strAddr = "N/A", const std::string& m_cty = "N/A"
+                , const std::string& m_state = "N/A", const std::string& m_zip = "00000");
         ~Member();
         void displayMember() const;
 
@@ -25,6 +26,9 @@ class Member {
         std::string memberCity;             // 14 characters
         std::string memberState;            // 2 letters
         std::string memberZipCode;          // 5 digits
+
+        friend class ChocAnSystem;
+        friend class Database;
 };
 
 #endif

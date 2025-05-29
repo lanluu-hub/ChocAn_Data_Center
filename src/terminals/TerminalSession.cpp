@@ -46,6 +46,7 @@ int TerminalSession::getInput() const
         std::cout << "Please enter a valid input option. [0, 1, 2, ...]" << std::endl;
         std::cout << "> ";
     }
+    std::cin.ignore(1024, '\n');
     return input;
 }
 

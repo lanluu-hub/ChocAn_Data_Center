@@ -1,9 +1,15 @@
 /*
- *  Created: May 16, 2025
- *-----------------------
- *  main.cpp
+ * Created: May 16, 2025
+ * -------------------------------------
+ * main.cpp
+ *
+ * Entry point of the ChocAn Data Processing System.
+ * Manages user login, authentication, and terminal routing for different user roles:
+ * Operator, Manager, and Provider.
  * 
-*/
+ * 
+ * Part of the Team Whitespace ChocAn Data Processing System – CS314 Project
+ */
 #include <cstdlib>
 #include <cctype>
 #include <iostream>
@@ -58,8 +64,6 @@ bool is_digits(const string &str);
 
 int
 main() {
-    int loop{};
-
     do {
         string userID {};
        
@@ -115,7 +119,7 @@ main() {
 
             default: // other case
                 cerr << "Error: undefined userID cases. End Terminal!" << endl;
-                return EXIT_FAILURE;
+                exit(EXIT_FAILURE);
             }
                
             if (role != (-1)) {
@@ -143,12 +147,11 @@ main() {
                 // session-> runSession() : This will run the main terminal of the correct role
             // if false: end session
             cout << "Session End. . . " << endl;
-            loop++;
         } else {
             cerr << "Error: invalid userID!" <<endl;
         }
         cout << endl;
-    } while (loop < 5);
+    } while (1);
 
     return EXIT_SUCCESS;
 }
