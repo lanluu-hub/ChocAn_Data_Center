@@ -85,7 +85,7 @@ int ProviderTerminal::validateMembership()
 
         getInput(ID, "\nPlease Scan/key-in member id card number to continues. . .\n > ");
         
-        if (!(isIdValidate = validateMemberIdFormat(ID)))
+        if (!(isIdValidate = validateIDFormat(ID)))
         {
             cout << "Invalid Member ID format (9-digits ID), please try again." << endl;
         }
@@ -135,7 +135,7 @@ float ProviderTerminal::billService()
     do {
         getInput(ID, "\nEnter Member ID:\n > ");
 
-        if (!(isIdValid = validateMemberIdFormat(ID)))
+        if (!(isIdValid = validateIDFormat(ID)))
         {
             cout << "Invalid Member ID format (9-digits ID), please try again." << endl;
         } else if (ID != memberID && ID != ("000000000"))
@@ -174,7 +174,7 @@ float ProviderTerminal::billService()
     do {
         getInput(servDate, "Enter Date of Service (MM-DD-YYYY):\n > "); 
         
-        if (!(isDateValid = validateServiceDateFormat(servDate))) {
+        if (!(isDateValid = validateIDFormat(servDate))) {
             cout << "Invalid Service Date, Please try again (MM-DD-YYYY)" << endl;
         }
     } while (!isDateValid);
@@ -215,19 +215,6 @@ void ProviderTerminal::requestProviderDirectory()
 
 
 ////////// HELPER FUNCTION //////////   
-
-bool ProviderTerminal::validateMemberIdFormat(const string& ID)
-{
-    bool validated {false};
-
-    if (is_digits(userID)) {
-        if (ID.length() == 9) {
-            validated = true;
-        }
-    }
-
-    return validated;
-}
 
 bool ProviderTerminal::validateServiceCodeFormat(const std::string& servCode)
 {

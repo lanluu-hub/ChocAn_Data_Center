@@ -80,7 +80,6 @@ class ProviderTerminal: public TerminalSession {
         bool isMemberValidated = false;     // check if member is validated
 
         // Helper Function
-        bool validateMemberIdFormat(const std::string& ID);
         bool validateServiceCodeFormat(const std::string& servCode);
         bool validateServiceDateFormat(const std::string& servDate);
 };

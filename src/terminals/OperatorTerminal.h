@@ -37,7 +37,6 @@ class OperatorTerminal: public TerminalSession {
     protected:
         // Helper Fucntion  //
         bool validateZipcodeFormat(const std::string &str);
-        bool validateIDFormat(const std::string &str);
 };
 
 #endif  // OPERATOR_TERMINAL_H

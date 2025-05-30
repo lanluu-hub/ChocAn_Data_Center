@@ -477,15 +477,3 @@ bool OperatorTerminal::validateZipcodeFormat(const std::string &str)
     }
     return validated;
 }
-
-bool OperatorTerminal::validateIDFormat(const std::string &str)
-{
-    bool validated {false};
-
-    if (is_digits(str)) {
-        if (str.length() == 9) {
-            validated = true;
-        }
-    }
-    return validated;
-}
