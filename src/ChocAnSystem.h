@@ -29,10 +29,13 @@
 #include <chrono>
 #include <iostream>
 #include <string>
+#include <vector>
 #include "Database.h"
 #include "models/Service.h"
 #include "models/Member.h"
 #include "models/Provider.h"
+
+class Service;  //  forward declaration
 
 /**
  * @class ChocAnSystem
@@ -86,7 +89,13 @@ class ChocAnSystem {
                         , std::string& serviceCode, std::string& serviceDate, std::string& serviceComment);
 
         /**
-         * @brief Displays the provider directory including available services and their codes.
+         * @brief Retrieves and displays the provider directory, then saves it to a file.
+         *
+         * This function fetches a list of services available in the provider directory
+         * from the database. It then prints this directory to the console and saves it
+         * to a formatted text file for provider reference.
+         *
+         * The output file path is defined by the constant `PROVIDDER_DIRECTORY_PATH`.
          */
         void getProviderDirectory();
 
@@ -192,6 +201,56 @@ class ChocAnSystem {
          */
         std::string dateTime(const std::chrono::system_clock::time_point& timePoint,
                         const std::string& format);
+        
+        /**
+         * @brief Retrieves the current system date in MM-DD-YYYY format.
+         *
+         * This utility function uses the system clock to obtain the current date 
+         * and formats it into a human-readable string.
+         *
+         * @return A std::string representing today's date in "MM-DD-YYYY" format.
+         */
+        std::string getCurrentDate();
+
+        /**
+         * @brief Formats a file name by removing invalid characters.
+         * 
+         * This function processes the input string by:
+         * - Keeping only alphanumeric characters and underscores.
+         * - Replacing spaces with underscores.
+         * - Ignoring any other special characters.
+         * 
+         * This ensures the resulting string is safe for use as a file name on most systems.
+         *
+         * @param fileName The original file name as a string.
+         * @return A formatted string safe for use as a file name.
+        */
+        std::string formatFileName(const std::string fileName);
+
+        /**
+         * @brief Displays the provider directory in a formatted table.
+         *
+         * This function prints a list of service entries to the console in a human-readable
+         * table format. It includes headers for service code, service name, and service fee,
+         * along with visual formatting for readability.
+         *
+         * @param providerDirectory A reference to a vector of Service objects representing
+         *        the provider directory to display.
+         */
+        void displayProviderDirectory(std::vector<Service> & providerDirectory);
+
+        /**
+         * @brief Writes the provider directory to a formatted text file.
+         *
+         * Outputs the list of services to a file at the given file path using a structured
+         * layout suitable for provider use. The function returns true if the operation
+         * succeeds, or false if the file cannot be opened.
+         *
+         * @param services A reference to a vector of Service objects to be written.
+         * @param filePath A string specifying the file path for saving the directory.
+         * @return True if the file was written successfully; false otherwise.
+         */
+        bool writeProviderDirectoryToFile(std::vector<Service> & services, const std::string & filePath);
 };
 
 #endif
