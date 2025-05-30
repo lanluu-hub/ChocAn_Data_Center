@@ -133,7 +133,7 @@ int Database::validateMembership(const std::string& memberID)
     const char * query = "SELECT status FROM Members Where member_id = ?;";
     sqlite3_stmt* stmt; 
 
-     if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
         std::cerr << "Failed to prepare query: " << sqlite3_errmsg(db) << "\n";
         return -1;
     }
@@ -168,4 +168,37 @@ int Database::validateMembership(const std::string& memberID)
 
     sqlite3_finalize(stmt);
     return result;
+}
+
+
+Service Database::getService(const std::string serviceCode)
+{
+    Service s;
+    
+    const char* query = "SELECT service_code, name, fee FROM Services WHERE service_code = ?;";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Failed to prepare query: " << sqlite3_errmsg(db) << "\n";
+        return s;
+    }
+    
+    // Bind the member ID to the query
+    if (sqlite3_bind_text(stmt, 1, serviceCode.c_str(), -1, SQLITE_STATIC) != SQLITE_OK) {
+        std::cerr << "Failed to bind serviceCode.\n";
+        sqlite3_finalize(stmt);
+        return s;
+    }
+
+
+    if(sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        std::string s_code = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        std::string s_name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
+        float s_fee  = sqlite3_column_double(stmt, 2);
+        Service result(s_code, s_name, s_fee);
+        s = result;
+    }
+    sqlite3_finalize(stmt);
+    return s;
 }

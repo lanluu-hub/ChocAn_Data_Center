@@ -42,7 +42,10 @@ class Database {
         int authenticateUser(const std::string userID);
         std::vector<Service> getProviderDirectory();
         int validateMembership(const std::string& memberID);
-        
+
+        Service getService(const std::string serviceCode);
+
+
     private:
         Database();
         ~Database();
