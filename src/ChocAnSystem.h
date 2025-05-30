@@ -103,11 +103,16 @@ class ChocAnSystem {
         // ---------------- Operator Terminal - Member Management ---------------- //
         
         /**
-         * @brief Adds a new member to the system.
-         * @param newMember The Member object containing member details.
-         * @return True if the member was successfully added, false otherwise.
+         * @brief Adds a new member to the system using individual attribute values.
+         * @param newName The full name of the new member.
+         * @param newAddr The street address of the new member.
+         * @param newCity The city of residence for the new member.
+         * @param newState The state of residence for the new member.
+         * @param newZip The ZIP code of the new member's address.
+         * @return True if the member was successfully added; false otherwise.
          */
-        bool addNewMember(const Member& newMember);
+        bool addNewMember(const std::string newName, const std::string newAddr
+                         , const std::string newCity, const std::string newState, const std::string newZip);
 
         /**
          * @brief Searches for a member by ID.
@@ -145,11 +150,16 @@ class ChocAnSystem {
         // ---------------- Operator Terminal - Provider Management ---------------- //
 
         /**
-         * @brief Adds a new provider to the system.
-         * @param newProvider The Provider object containing provider details.
-         * @return True if the provider was successfully added, false otherwise.
+         * @brief Adds a new provider to the system using individual attribute values.
+         * @param newName The full name of the new provider.
+         * @param newAddr The street address of the new provider.
+         * @param newCity The city in which the provider operates.
+         * @param newState The state in which the provider operates.
+         * @param newZip The ZIP code associated with the provider's address.
+         * @return True if the provider was successfully added; false otherwise.
          */
-        bool addNewProvider(const Provider& newProvider);
+        bool addNewProvider(const std::string newName, const std::string newAddr
+                         , const std::string newCity, const std::string newState, const std::string newZip);
 
         /**
          * @brief Searches for a provider by ID.
@@ -208,7 +218,7 @@ class ChocAnSystem {
          * This utility function uses the system clock to obtain the current date 
          * and formats it into a human-readable string.
          *
-         * @return A std::string representing today's date in "MM-DD-YYYY" format.
+         * @return A std::string representing today's date in "YYYY-MM-DD" format.
          */
         std::string getCurrentDate();
 

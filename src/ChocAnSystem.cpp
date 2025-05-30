@@ -76,8 +76,6 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
 
 void ChocAnSystem::getProviderDirectory()
 {
-    // call to vector<service> list = Database::getInstance().getProviderDirectory()
-
     vector<Service> providerDirectory = Database::getInstance().getProviderDirectory();  
 
     // Output the vector here (Provider Directory)
@@ -92,11 +90,12 @@ void ChocAnSystem::getProviderDirectory()
 }
 
 
-// Operator Terminal //
-bool ChocAnSystem::addNewMember(const Member &newMember)
+/////////// Operator Terminal //////////
+
+bool ChocAnSystem::addNewMember(const std::string newName, const std::string newAddr, const std::string newCity, const std::string newState, const std::string newZip)
 {
     // return a bool, true if successfully added new member
-    //return Database::getInstance().addNewMeber(newMember);   // UNCOMMENT WHEN DATABASE IS READY
+    //return Database::getInstance().addNewMeber(newName, newAddr, newCity, newState, newZip);   // UNCOMMENT WHEN DATABASE IS READY
     return false;
 }
 
@@ -114,10 +113,10 @@ bool ChocAnSystem::deleteMember(const std::string &memberID)
     return false;
 }
 
-bool ChocAnSystem::addNewProvider(const Provider &newProvider)
+bool ChocAnSystem::addNewProvider(const std::string newName, const std::string newAddr, const std::string newCity, const std::string newState, const std::string newZip)
 {
     // return bool, True if Added successfully
-    //return Database::getInstance().addNewProvider(newProvider);   // UNCOMMENT WHEN DATABASE IS READY
+    //return Database::getInstance().addNewProvider(newName, newAddr, newCity, newState, newZip);    // UNCOMMENT WHEN DATABASE IS READY
     return false;
 }
 
@@ -178,11 +177,11 @@ string ChocAnSystem::dateTime(const chrono::system_clock::time_point &timePoint,
 
 string ChocAnSystem::getCurrentDate()
 {
-    time_t now = time(0);
-    tm* ltm = localtime(&now);
-    char buffer[20];
-    strftime(buffer, sizeof(buffer), "%m-%d-%Y", ltm);
-    return std::string(buffer);
+    const string format = "%Y-%m-%d";
+    auto now = std::chrono::system_clock::now();
+    string formattedTime = dateTime(now, format);
+
+    return formattedTime; 
 }
 
 string ChocAnSystem::formatFileName(const std::string fileName)

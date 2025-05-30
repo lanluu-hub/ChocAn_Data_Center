@@ -54,6 +54,18 @@ void ManagerTerminal::commandHandler(int input)
 
 void ManagerTerminal::printMemberReport()
 {
+    /*
+        Logic Flow
+        Prompt: "Enter Member ID:"
+        call to ChocAnSystem.searchMember(memberID)
+        if yes: call ChocAnSytem.getMember(MemberID) -> target (MemberObj)
+            if no: If not found → print "Invalid Member ID", return
+
+        call generateMemberReport(target); return a path to that file
+
+        display that file by reading the file_path
+        
+    */
 }
 
 void ManagerTerminal::printProviderReport()
