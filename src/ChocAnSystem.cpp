@@ -89,6 +89,35 @@ void ChocAnSystem::getProviderDirectory()
     }
 }
 
+void ChocAnSystem::generateMemberReport(const std::string &memberID)
+{
+    /*
+        workflow
+        2. ChocAnSystem
+        member <- Database::getMemberByID(memberID)
+        If member == null:
+            Output "Member does not exist"
+            return
+
+        Output:
+            "Member ID: " + member.ID
+            "Member Name: " + member.Name
+        Prompt: "Is this the correct member? (Y/N)"
+        If input != 'Y':
+            Output "Try again with another ID"
+            return
+
+        currentDate = getCurrentDate()
+        bestDate = currentDate - 7 days
+        rawFilename = member.Name + "_" + currentDate
+        formattedFilename = sanitizeFileName(rawFilename)
+        filePath = MEMBER_REPORT_FOLDER + formattedFilename + ".txt"
+
+        Call Database::generateMemberReport(member, bestDate, filePath)
+
+        call printMemberReport(filepath);
+    */
+}
 
 /////////// Operator Terminal //////////
 

@@ -39,11 +39,6 @@
  * void requestProviderDirectory()
  *    Requests and outputs the Provider Directory by calling ChocAnSystem.
  *
- * void getInput(std::string &input, const std::string &prompt = "Enter a value: ")
- *    Prompts the user for input using a custom prompt.
- *    @param input Reference to the string where input will be stored.
- *    @param prompt Optional string to display before input.
- *
  * bool validateMemberIdFormat(const std::string& ID)
  *    Validates whether the given member ID is a 9-digit number.
  *    @param ID A string representing the member ID.
@@ -59,10 +54,6 @@
  *    @param servDate A string representing the date of service.
  *    @return True if the date is valid, false otherwise.
  *
- * bool is_digits(const std::string &str)
- *    Checks whether a string consists only of digits.
- *    @param str A string to be checked.
- *    @return True if the string contains only digits, false otherwise.
  */
 #ifndef PROVIDER_TERMINAL_H
 #define PROVIDER_TERMINAL_H
@@ -89,11 +80,9 @@ class ProviderTerminal: public TerminalSession {
         bool isMemberValidated = false;     // check if member is validated
 
         // Helper Function
-        void getInput(std::string &input, const std::string &prompt = "Enter a value: ");
         bool validateMemberIdFormat(const std::string& ID);
         bool validateServiceCodeFormat(const std::string& servCode);
         bool validateServiceDateFormat(const std::string& servDate);
-        bool is_digits(const std::string &str);
 };
 
 #endif

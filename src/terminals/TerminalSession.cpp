@@ -50,5 +50,22 @@ int TerminalSession::getInput() const
     return input;
 }
 
+void TerminalSession::getInput(std::string &input, const std::string &prompt) 
+{
+    std::cout << prompt;
+    while (!(std::cin >> input)) {
+        std::cin.clear();
+        std::cin.ignore(1024, '\n');
+
+        std::cout << "\nInvalid input format. please try again.\n > ";
+    }
+    std::cin.ignore();
+}
+
+bool TerminalSession::is_digits(const std::string &str)
+{
+    return str.find_first_not_of("0123456789") == std::string::npos;
+}
+
 TerminalSession::~TerminalSession()
 {}

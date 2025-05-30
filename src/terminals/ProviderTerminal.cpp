@@ -134,7 +134,6 @@ float ProviderTerminal::billService()
     // re-enter member id
     do {
         getInput(ID, "\nEnter Member ID:\n > ");
-        cin.ignore(1024, '\n');
 
         if (!(isIdValid = validateMemberIdFormat(ID)))
         {
@@ -157,7 +156,6 @@ float ProviderTerminal::billService()
         // get Service Code
         do {
             getInput(servCode, "\nEnter Service Code:\n > ");
-            cin.ignore(1024, '\n');
 
             if (!(isServCodeValid = validateServiceCodeFormat(servCode))) {
                 cout << "Invalid Service code, please try again (6-digits code)" << endl;
@@ -175,7 +173,6 @@ float ProviderTerminal::billService()
     // get Service day
     do {
         getInput(servDate, "Enter Date of Service (MM-DD-YYYY):\n > "); 
-        cin.ignore(1024, '\n');
         
         if (!(isDateValid = validateServiceDateFormat(servDate))) {
             cout << "Invalid Service Date, Please try again (MM-DD-YYYY)" << endl;
@@ -218,18 +215,6 @@ void ProviderTerminal::requestProviderDirectory()
 
 
 ////////// HELPER FUNCTION //////////   
-
-void ProviderTerminal::getInput(string &input, const string &prompt)
-{
-    cout << prompt;
-    //cin >> input;
-    while (!(cin >> input)) {
-        cin.clear();
-        cin.ignore(1024, '\n');
-
-        cout << "\nInvalid input format. please try again.\n > ";
-    }
-}
 
 bool ProviderTerminal::validateMemberIdFormat(const string& ID)
 {
@@ -300,9 +285,4 @@ bool ProviderTerminal::validateServiceDateFormat(const std::string &servDate)
     }
 
     return true;
-}
-
-bool ProviderTerminal::is_digits(const string &str)
-{
-    return str.find_first_not_of("0123456789") == std::string::npos;
 }

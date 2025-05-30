@@ -465,17 +465,6 @@ void OperatorTerminal::deleteProvider()
 }
 
 ////////// HELPER FUNCTION //////////
-void OperatorTerminal::getInput(string &input, const string &prompt)
-{
-    cout << prompt;
-    while (!(cin >> input)) {
-        cin.clear();
-        cin.ignore(1024, '\n');
-
-        cout << "\nInvalid input format. please try again.\n > ";
-    }
-    cin.ignore(1024, '\n');
-}
 
 bool OperatorTerminal::validateZipcodeFormat(const std::string &str)
 {
@@ -499,8 +488,4 @@ bool OperatorTerminal::validateIDFormat(const std::string &str)
         }
     }
     return validated;
-}
-
-bool OperatorTerminal::is_digits(const std::string &str) {
-    return str.find_first_not_of("0123456789") == std::string::npos;;
 }
