@@ -55,17 +55,64 @@ void ManagerTerminal::commandHandler(int input)
 void ManagerTerminal::printMemberReport()
 {
     /*
-        Logic Flow
-        Prompt: "Enter Member ID:"
-        call to ChocAnSystem.searchMember(memberID)
-        if yes: call ChocAnSytem.getMember(MemberID) -> target (MemberObj)
-            if no: If not found → print "Invalid Member ID", return
+        Function: printMemberReport()
+        1. ManagerTerminal
+        Prompt: "Enter Member ID: "
+        memberID <- Input
+        isValid <- validateFormat(memberID)
+        If not isValid:
+            Repeat input
+        Else:
+            Call ChocAnSystem::generateMemberReport(memberID)
 
-        call generateMemberReport(target); return a path to that file
+        2. ChocAnSystem
+        member <- Database::getMemberByID(memberID)
+        If member == null:
+            Output "Member does not exist"
+            return
 
-        display that file by reading the file_path
-        
+        Output:
+            "Member ID: " + member.ID
+            "Member Name: " + member.Name
+        Prompt: "Is this the correct member? (Y/N)"
+        If input != 'Y':
+            Output "Try again with another ID"
+            return
+
+        currentDate = getCurrentDate()
+        bestDate = currentDate - 7 days
+        rawFilename = member.Name + "_" + currentDate
+        formattedFilename = sanitizeFileName(rawFilename)
+        filePath = MEMBER_REPORT_FOLDER + formattedFilename + ".txt"
+
+        Call Database::generateMemberReport(member, bestDate, filePath)
+
+        3. Database::generateMemberReport(member, bestDate, filePath)
+        Open file at filePath
+        If file not open:
+            Output error and return
+
+        Write header:
+            Member info (name, address, etc.)
+            "Services Provided:"
+
+        Execute SQL query:
+            SELECT s.ServiceDate, p.Name, sv.Name
+            FROM ServiceLog s
+            JOIN Provider p ON s.ProviderID = p.ID
+            JOIN Service sv ON s.ServiceCode = sv.Code
+            WHERE s.MemberID = member.ID AND s.ServiceDate >= bestDate
+
+        For each row in result:
+            Write:
+                Provider Name
+                Service Name
+                Service Date
+
+        Close file
+        Return
     */
+
 }
 
 void ManagerTerminal::printProviderReport()

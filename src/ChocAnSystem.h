@@ -99,6 +99,9 @@ class ChocAnSystem {
          */
         void getProviderDirectory();
 
+        
+        // ---------------- Manager Terminal Functions ---------------- //      
+        void generateMemberReport(const std::string & memberID);
 
         // ---------------- Operator Terminal - Member Management ---------------- //
         
@@ -111,8 +114,8 @@ class ChocAnSystem {
          * @param newZip The ZIP code of the new member's address.
          * @return True if the member was successfully added; false otherwise.
          */
-        bool addNewMember(const std::string newName, const std::string newAddr
-                         , const std::string newCity, const std::string newState, const std::string newZip);
+        bool addNewMember(const std::string & newName, const std::string & newAddr
+                         , const std::string & newCity, const std::string & newState, const std::string & newZip);
 
         /**
          * @brief Searches for a member by ID.
@@ -126,7 +129,7 @@ class ChocAnSystem {
          * @param memberID The 9-digit member ID.
          * @return A Member object containing the member’s data.
          */
-        Member getMember(const std::string memberID);
+        Member getMember(const std::string & memberID);
 
         /**
          * @brief Updates the address-related fields for a member.
@@ -137,8 +140,8 @@ class ChocAnSystem {
          * @param newZip Updated 5-digit ZIP code.
          * @return True if the update was successful, false otherwise.
          */
-        bool updateMember(const std::string memberID, const std::string newAddrss
-                         , const std::string newCty, const std::string newState, const std::string newZip);
+        bool updateMember(const std::string & memberID, const std::string & newAddrss
+                         , const std::string & newCty, const std::string & newState, const std::string & newZip);
 
         /**
          * @brief Deletes a member from the system by ID.
@@ -158,8 +161,8 @@ class ChocAnSystem {
          * @param newZip The ZIP code associated with the provider's address.
          * @return True if the provider was successfully added; false otherwise.
          */
-        bool addNewProvider(const std::string newName, const std::string newAddr
-                         , const std::string newCity, const std::string newState, const std::string newZip);
+        bool addNewProvider(const std::string & newName, const std::string & newAddr
+                         , const std::string & newCity, const std::string & newState, const std::string & newZip);
 
         /**
          * @brief Searches for a provider by ID.
@@ -173,7 +176,7 @@ class ChocAnSystem {
          * @param providerID The 9-digit provider ID.
          * @return A Provider object with full provider data.
          */
-        Provider getProvider(const std::string ProviderID);
+        Provider getProvider(const std::string & ProviderID);
 
         /**
          * @brief Updates address-related fields for a provider.
@@ -184,8 +187,8 @@ class ChocAnSystem {
          * @param newZip Updated 5-digit ZIP code.
          * @return True if the update was successful, false otherwise.
          */
-        bool updateProvider(const std::string providerID, const std::string newAddrss
-                         , const std::string newCty, const std::string newState, const std::string newZip);
+        bool updateProvider(const std::string & providerID, const std::string & newAddrss
+                         , const std::string & newCty, const std::string & newState, const std::string & newZip);
 
          /**
          * @brief Deletes a provider from the system by ID.
@@ -235,7 +238,7 @@ class ChocAnSystem {
          * @param fileName The original file name as a string.
          * @return A formatted string safe for use as a file name.
         */
-        std::string formatFileName(const std::string fileName);
+        std::string formatFileName(const std::string & fileName);
 
         /**
          * @brief Displays the provider directory in a formatted table.

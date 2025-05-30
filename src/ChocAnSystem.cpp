@@ -92,7 +92,8 @@ void ChocAnSystem::getProviderDirectory()
 
 /////////// Operator Terminal //////////
 
-bool ChocAnSystem::addNewMember(const std::string newName, const std::string newAddr, const std::string newCity, const std::string newState, const std::string newZip)
+bool ChocAnSystem::addNewMember(const std::string & newName, const std::string & newAddr
+                                , const std::string & newCity, const std::string & newState, const std::string & newZip)
 {
     // return a bool, true if successfully added new member
     //return Database::getInstance().addNewMeber(newName, newAddr, newCity, newState, newZip);   // UNCOMMENT WHEN DATABASE IS READY
@@ -113,7 +114,8 @@ bool ChocAnSystem::deleteMember(const std::string &memberID)
     return false;
 }
 
-bool ChocAnSystem::addNewProvider(const std::string newName, const std::string newAddr, const std::string newCity, const std::string newState, const std::string newZip)
+bool ChocAnSystem::addNewProvider(const std::string &newName, const std::string &newAddr
+                                 , const std::string &newCity, const std::string &newState, const std::string &newZip)
 {
     // return bool, True if Added successfully
     //return Database::getInstance().addNewProvider(newName, newAddr, newCity, newState, newZip);    // UNCOMMENT WHEN DATABASE IS READY
@@ -127,7 +129,7 @@ bool ChocAnSystem::searchProvider(const std::string &ProviderID)
     return false;
 }
 
-Provider ChocAnSystem::getProvider(const std::string ProviderID)
+Provider ChocAnSystem::getProvider(const std::string &ProviderID)
 {
     Provider updateProvider;
     // return a Provider obj base on Provider id
@@ -135,14 +137,15 @@ Provider ChocAnSystem::getProvider(const std::string ProviderID)
     return updateProvider;
 }
 
-bool ChocAnSystem::updateProvider(const std::string providerID, const std::string newAddrss, const std::string newCty, const std::string newState, const std::string newZip)
+bool ChocAnSystem::updateProvider(const std::string &providerID, const std::string &newAddrss
+                                 , const std::string &newCty, const std::string &newState, const std::string &newZip)
 {
     // return bool, true if successful update.
     //return Databse::getInstance().updateMember(providerID, newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
     return false;
 }
 
-Member ChocAnSystem::getMember(const std::string memberID)
+Member ChocAnSystem::getMember(const std::string & memberID)
 {
     Member updateMember;
     // return a member obj base on Member id
@@ -150,7 +153,8 @@ Member ChocAnSystem::getMember(const std::string memberID)
     return updateMember;
 }
 
-bool ChocAnSystem::updateMember(const std::string memberID, const std::string newAddrss, const std::string newCty, const std::string newState, const std::string newZip)
+bool ChocAnSystem::updateMember(const std::string &memberID, const std::string &newAddrss
+                                , const std::string &newCty, const std::string &newState, const std::string &newZip)
 {
     // return bool, true if successful update.
     //return Databse::getInstance().updateMember(memberID, newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
@@ -184,7 +188,7 @@ string ChocAnSystem::getCurrentDate()
     return formattedTime; 
 }
 
-string ChocAnSystem::formatFileName(const std::string fileName)
+string ChocAnSystem::formatFileName(const std::string &fileName)
 {
     string result{};
     for (char c : fileName) {
