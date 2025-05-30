@@ -18,6 +18,7 @@ class Member {
                 , const std::string& m_state = "N/A", const std::string& m_zip = "00000");
         ~Member();
         void displayMember() const;
+        bool isEmpty() const;
 
     protected:
         std::string memberName;             // 25 Characters

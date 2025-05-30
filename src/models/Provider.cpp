@@ -25,3 +25,11 @@ void Provider::displayProvider() const
     std::cout << "Provider state: " << providerState << std::endl;
     std::cout << "Provider zip code: " << providerZipCode << std::endl;
 }
+
+bool Provider::isEmpty() const 
+{
+    if (!(providerID == "000000000")) {
+        return false;
+    }
+    return true;
+}

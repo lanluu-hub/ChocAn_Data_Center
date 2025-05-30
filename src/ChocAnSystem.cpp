@@ -76,8 +76,6 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
 
 void ChocAnSystem::getProviderDirectory()
 {
-    // call to vector<service> list = Database::getInstance().getProviderDirectory()
-
     vector<Service> providerDirectory = Database::getInstance().getProviderDirectory();  
 
     // Output the vector here (Provider Directory)
@@ -91,12 +89,43 @@ void ChocAnSystem::getProviderDirectory()
     }
 }
 
+void ChocAnSystem::generateMemberReport(const std::string &memberID)
+{
+    /*
+        workflow
+        2. ChocAnSystem
+        member <- Database::getMemberByID(memberID)
+        If member == null:
+            Output "Member does not exist"
+            return
 
-// Operator Terminal //
-bool ChocAnSystem::addNewMember(const Member &newMember)
+        Output:
+            "Member ID: " + member.ID
+            "Member Name: " + member.Name
+        Prompt: "Is this the correct member? (Y/N)"
+        If input != 'Y':
+            Output "Try again with another ID"
+            return
+
+        currentDate = getCurrentDate()
+        bestDate = currentDate - 7 days
+        rawFilename = member.Name + "_" + currentDate
+        formattedFilename = sanitizeFileName(rawFilename)
+        filePath = MEMBER_REPORT_FOLDER + formattedFilename + ".txt"
+
+        Call Database::generateMemberReport(member, bestDate, filePath)
+
+        call printMemberReport(filepath);
+    */
+}
+
+/////////// Operator Terminal //////////
+
+bool ChocAnSystem::addNewMember(const std::string & newName, const std::string & newAddr
+                                , const std::string & newCity, const std::string & newState, const std::string & newZip)
 {
     // return a bool, true if successfully added new member
-    //return Database::getInstance().addNewMeber(newMember);   // UNCOMMENT WHEN DATABASE IS READY
+    //return Database::getInstance().addNewMeber(newName, newAddr, newCity, newState, newZip);   // UNCOMMENT WHEN DATABASE IS READY
     return false;
 }
 
@@ -114,10 +143,11 @@ bool ChocAnSystem::deleteMember(const std::string &memberID)
     return false;
 }
 
-bool ChocAnSystem::addNewProvider(const Provider &newProvider)
+bool ChocAnSystem::addNewProvider(const std::string &newName, const std::string &newAddr
+                                 , const std::string &newCity, const std::string &newState, const std::string &newZip)
 {
     // return bool, True if Added successfully
-    //return Database::getInstance().addNewProvider(newProvider);   // UNCOMMENT WHEN DATABASE IS READY
+    //return Database::getInstance().addNewProvider(newName, newAddr, newCity, newState, newZip);    // UNCOMMENT WHEN DATABASE IS READY
     return false;
 }
 
@@ -128,7 +158,7 @@ bool ChocAnSystem::searchProvider(const std::string &ProviderID)
     return false;
 }
 
-Provider ChocAnSystem::getProvider(const std::string ProviderID)
+Provider ChocAnSystem::getProvider(const std::string &ProviderID)
 {
     Provider updateProvider;
     // return a Provider obj base on Provider id
@@ -136,14 +166,15 @@ Provider ChocAnSystem::getProvider(const std::string ProviderID)
     return updateProvider;
 }
 
-bool ChocAnSystem::updateProvider(const std::string providerID, const std::string newAddrss, const std::string newCty, const std::string newState, const std::string newZip)
+bool ChocAnSystem::updateProvider(const std::string &providerID, const std::string &newAddrss
+                                 , const std::string &newCty, const std::string &newState, const std::string &newZip)
 {
     // return bool, true if successful update.
     //return Databse::getInstance().updateMember(providerID, newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
     return false;
 }
 
-Member ChocAnSystem::getMember(const std::string memberID)
+Member ChocAnSystem::getMember(const std::string & memberID)
 {
     Member updateMember;
     // return a member obj base on Member id
@@ -151,7 +182,8 @@ Member ChocAnSystem::getMember(const std::string memberID)
     return updateMember;
 }
 
-bool ChocAnSystem::updateMember(const std::string memberID, const std::string newAddrss, const std::string newCty, const std::string newState, const std::string newZip)
+bool ChocAnSystem::updateMember(const std::string &memberID, const std::string &newAddrss
+                                , const std::string &newCty, const std::string &newState, const std::string &newZip)
 {
     // return bool, true if successful update.
     //return Databse::getInstance().updateMember(memberID, newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
@@ -178,14 +210,14 @@ string ChocAnSystem::dateTime(const chrono::system_clock::time_point &timePoint,
 
 string ChocAnSystem::getCurrentDate()
 {
-    time_t now = time(0);
-    tm* ltm = localtime(&now);
-    char buffer[20];
-    strftime(buffer, sizeof(buffer), "%m-%d-%Y", ltm);
-    return std::string(buffer);
+    const string format = "%Y-%m-%d";
+    auto now = std::chrono::system_clock::now();
+    string formattedTime = dateTime(now, format);
+
+    return formattedTime; 
 }
 
-string ChocAnSystem::formatFileName(const std::string fileName)
+string ChocAnSystem::formatFileName(const std::string &fileName)
 {
     string result{};
     for (char c : fileName) {
