@@ -10,6 +10,7 @@
 using namespace std;
 
 const string MEMBER_REPORT_FOLDER = "src/reports/members/";
+const string PROVIDER_REPORT_FOLDER = "src/reports/providers/";
 
 const string PROVIDDER_DIRECTORY_PATH = "src/reports/Provider_Directory.txt";
 
@@ -187,8 +188,119 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
 
 void ChocAnSystem::printMemberReport(const std::string &filePath)
 {
-    /// @todo Impplement Read from file to output the Member Report
-    cout << "MEMBER REPORT HERE" << endl;
+    ifstream file(filePath);
+
+    if (!file.is_open()) {
+        cerr << "\nFailed to open file " << filePath << endl;
+        return;
+    }
+    
+    string line;
+
+    while(getline(file, line)) {
+        cout << line << endl;
+    }
+
+    file.close();
+}
+
+void ChocAnSystem::generateProviderReport(const std::string &providerID)
+{
+    /*
+        providerObj <- Database::getInstance().getProviderByID(providerID)
+        if (providerObj is null):
+            Output: "Provider not found."
+            return
+
+        Output:
+            "Provider ID: " + providerObj.ID
+            "Provider Name: " + providerObj.Name
+        Prompt: "Is this the correct provider? (Y/N) >"
+        if input != 'Y':
+            Output: "Please try again with another ID"
+            return
+
+        currentDate <- getCurrentDate()                      // YYYY-MM-DD
+        cutoffDate <- currentDate - 7 days                   // for weekly report
+
+        rawFileName <- providerObj.Name + "_" + currentDate
+        formattedFileName <- sanitizeFileName(rawFileName)
+        filePath <- PROVIDER_REPORT_FOLDER + formattedFileName + ".txt"
+
+        Call Database::generateProviderReport(providerObj, cutoffDate, filePath)
+
+        Call ManagerTerminal::printReport(filePath)
+    */
+    
+    Provider provider = getProvider(providerID);
+    char confirm {};
+    string  currentDate {},
+            bestDate {},
+            rawFilename {},
+            formattedFilename {},
+            filePath {};
+
+    const string format = "%Y-%m-%d";
+
+    if (provider.isEmpty()) {
+        cout << "\nProvider does not exist" << endl;
+        return;
+    }
+
+    // Confirmation
+    cout << "\nConfirmation:" << endl;
+    cout << "Provider ID: " << provider.providerID << endl
+         << "Provider Name: " << provider.providerName << endl;
+    cout << "\nIs this the correct Provider? (Y/N)\n > ";
+    cin >> confirm;
+
+    if (toupper(confirm) != 'Y') {
+        cout << "\nTry again with another ID" << endl;
+        return;
+    }
+
+    currentDate = getCurrentDate();
+
+    // Get the bestDate //
+    // parse the date
+    chrono::system_clock::time_point parsedDate = parseDate(currentDate, format);
+
+    // subtract 7 days
+    chrono::system_clock::time_point cutoffDate = parsedDate - chrono::hours(24 * 7);
+
+    // Format the date back to string
+    bestDate = dateTime(cutoffDate, format);
+    // End of get bestDate //
+
+    // Get Clean filePath for generated report //
+    rawFilename = provider.providerName + "_" + currentDate;
+    formattedFilename = formatFileName(rawFilename);
+    filePath = PROVIDER_REPORT_FOLDER + formattedFilename + ".txt";
+    // End of filePath //
+
+    // Temporary Ouput - Delete this when database ready
+    cout << "\nTemporary output" << endl
+         << "Provider Name: " << provider.providerName << endl
+         << "Provider Number: " << providerID << endl
+         << "Provider street address: " << provider.providerStreetAddress << endl
+         << "Provider city: " << provider.providerCity << endl
+         << "Provider State: " << provider.providerState << endl
+         << "Provider Zip code: " << provider.providerZipCode << endl;
+    
+    cout << "Current Date: " << currentDate << endl;
+    cout << "Best date: " << bestDate << endl;
+    cout << "fileName: " << formattedFilename << endl;
+    cout << "FilePath: " << filePath << endl;
+    // End of temporary output - delete this when database is ready 
+
+    //Database::getInstance().generateProviderReport(provider, bestDate, filePath);   // UNCOMMENTS THIS WHEN DATABASE READY
+    printProviderReport(filePath);
+    return;
+}
+
+void ChocAnSystem::printProviderReport(const std::string &filePath)
+{
+    /// @todo need display
 }
 
 /////////// Operator Terminal //////////

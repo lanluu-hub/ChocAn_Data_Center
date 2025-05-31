@@ -1,16 +1,5 @@
-/*
- * Created: May 17, 2025
- *----------------------------- 
- * ChocAnSystem.h
- * 
- * This file defines the ChocAnSystem class, which serves as the core controller
- * for the ChocAn Data Processing System. It provides centralized access to 
- * business logic and system operations such as member validation, service logging, 
- * report generation, and coordination with the Database subsystem.
- *
- * Part of the Team Whitespace ChocAn Data Processing System – CS314 Project
- *//*
- * Created: May 17, 2025
+/**
+ * @date Created: May 17, 2025
  *----------------------------- 
  * @file ChocAnSystem.h
  * 
@@ -98,6 +87,31 @@ class ChocAnSystem {
          * The output file path is defined by the constant `PROVIDDER_DIRECTORY_PATH`.
          */
         void getProviderDirectory();
+        
+        /**
+         * @brief Displays the provider directory in a formatted table.
+         *
+         * This function prints a list of service entries to the console in a human-readable
+         * table format. It includes headers for service code, service name, and service fee,
+         * along with visual formatting for readability.
+         *
+         * @param providerDirectory A reference to a vector of Service objects representing
+         *        the provider directory to display.
+         */
+        void displayProviderDirectory(std::vector<Service> & providerDirectory);
+
+        /**
+         * @brief Writes the provider directory to a formatted text file.
+         *
+         * Outputs the list of services to a file at the given file path using a structured
+         * layout suitable for provider use. The function returns true if the operation
+         * succeeds, or false if the file cannot be opened.
+         *
+         * @param services A reference to a vector of Service objects to be written.
+         * @param filePath A string specifying the file path for saving the directory.
+         * @return True if the file was written successfully; false otherwise.
+         */
+        bool writeProviderDirectoryToFile(std::vector<Service> & services, const std::string & filePath);
 
         
         // ---------------- Manager Terminal Functions ---------------- //      
@@ -110,6 +124,12 @@ class ChocAnSystem {
 
         // [comments]
         void printMemberReport(const std::string & filePath);
+        
+        // [comments]
+        void generateProviderReport(const std::string & providerID);
+
+        // [comments]
+        void printProviderReport(const std::string & filePath);
 
         // ---------------- Operator Terminal - Member Management ---------------- //
         
@@ -258,30 +278,6 @@ class ChocAnSystem {
         */
         std::string formatFileName(const std::string & fileName);
 
-        /**
-         * @brief Displays the provider directory in a formatted table.
-         *
-         * This function prints a list of service entries to the console in a human-readable
-         * table format. It includes headers for service code, service name, and service fee,
-         * along with visual formatting for readability.
-         *
-         * @param providerDirectory A reference to a vector of Service objects representing
-         *        the provider directory to display.
-         */
-        void displayProviderDirectory(std::vector<Service> & providerDirectory);
-
-        /**
-         * @brief Writes the provider directory to a formatted text file.
-         *
-         * Outputs the list of services to a file at the given file path using a structured
-         * layout suitable for provider use. The function returns true if the operation
-         * succeeds, or false if the file cannot be opened.
-         *
-         * @param services A reference to a vector of Service objects to be written.
-         * @param filePath A string specifying the file path for saving the directory.
-         * @return True if the file was written successfully; false otherwise.
-         */
-        bool writeProviderDirectoryToFile(std::vector<Service> & services, const std::string & filePath);
 };
 
 #endif

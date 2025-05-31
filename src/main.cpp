@@ -1,9 +1,9 @@
-/*
+/**
  * Created: May 16, 2025
  * -------------------------------------
- * main.cpp
+ * @file main.cpp
  *
- * Entry point of the ChocAn Data Processing System.
+ * @brief Entry point of the ChocAn Data Processing System.
  * Manages user login, authentication, and terminal routing for different user roles:
  * Operator, Manager, and Provider.
  * 
