@@ -102,10 +102,13 @@ class ChocAnSystem {
         
         // ---------------- Manager Terminal Functions ---------------- //      
         
-        /// @brief 
-        /// @param memberID 
+        /**
+         * @brief Generates a detailed report for a specific member.
+         * @param memberID The unique ID of the member whose report is to be generated.
+         */
         void generateMemberReport(const std::string & memberID);
 
+        // [comments]
         void printMemberReport(const std::string & filePath);
 
         // ---------------- Operator Terminal - Member Management ---------------- //
@@ -211,7 +214,14 @@ class ChocAnSystem {
 
         // ---------------- Helper Function ---------------- //
 
-        // [comment]
+        /**
+         * @brief Parses a date string into a std::chrono::system_clock::time_point.
+         * @param dateString The date string to parse (e.g., "2025-05-29").
+         * @param format The format string used to interpret the date (e.g., "%Y-%m-%d").
+         * @return A time_point representing the parsed date.
+         *
+         * @note If parsing fails, the resulting time_point may be undefined.
+         */
         std::chrono::system_clock::time_point parseDate(const std::string& dateString, const std::string& format);
 
         /**

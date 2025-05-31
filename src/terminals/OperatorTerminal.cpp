@@ -79,7 +79,6 @@ void OperatorTerminal::addMember()
             , new_city{}
             , new_state{}
             , new_zip{};
-    bool isValidZipcode {false};
 
     cout << "\n[Add new Member]" << endl;
 
@@ -90,41 +89,11 @@ void OperatorTerminal::addMember()
         if (new_name.length() > 25) {
             new_name = new_name.substr(0, 25);
         }
-
-        // member address
-        cout << "Enter New Member street Address: ";
-        getline(cin, new_address);
-        if (new_address.length() > 25) {
-            new_address = new_address.substr(0, 25);
-        }
-
-        // member city
-        cout << "Enter New Member city: ";
-        getline(cin, new_city);
-        if (new_city.length() > 14) {
-            new_city = new_city.substr(0, 14);
-        }
-
-        // member state
-        cout << "Enter New Member State (e.g. OR, WA,...): ";
-        getline(cin, new_state);
-        if (new_state.length() > 2) {
-            new_state = new_state.substr(0, 2);
-        }
-
-        // member zipcode
-        do {
-            getInput(new_zip, "Enter New Member Zipcode: ");
-            
-            if (!(isValidZipcode = validateZipcodeFormat(new_zip))) {
-                cout << "Invalid zipcode format, please try again (5-digit)" << endl;
-            } 
-        } while(!isValidZipcode);
+        
+        getAddressInput(new_address, new_city, new_state, new_zip, "Member");
     }   // End of input scope
 
     {   // Confirm block
-        bool confirm{false};
-
         cout << "Please confirm if this is the correct information: " << endl;
         cout << "Member Name: " << new_name << endl
              << "Member Adress: " << new_address << endl
@@ -132,11 +101,7 @@ void OperatorTerminal::addMember()
              << "Member State: " << new_state << endl
              << "Member Zipcode: " << new_zip << endl;
 
-        cout << "\nIs this information correct? (Y/N) \n > ";
-        cin >> confirm;
-        cin.ignore();
-
-        if (!confirm) {
+        if (confirmPrompt("\nIs this information correct?")) {
             cout << "\nPlease try again with add new Member" << endl;
             return;
         }
@@ -154,11 +119,10 @@ void OperatorTerminal::addMember()
 void OperatorTerminal::updateMember()
 {
     Member memberToUpdate;
-    char confirm {};
+    bool confirm {false};
     string memberID{};
     string new_address{}, new_city{}, new_state{}, new_zip {};
     bool isValidID{false};
-    bool isValidZipcode{false};
 
     cout << "\n[MEMBER UPDATE]" << endl;
 
@@ -179,44 +143,16 @@ void OperatorTerminal::updateMember()
         } else {
             cout << "\nPlease review the member info:" << endl;
             memberToUpdate.displayMember(); 
-            cout << "\nIs this the correct member? (Y/N)\n > ";
-            cin >> confirm;
-            cin.ignore();
+            if (confirmPrompt("\nIs this the correct member?")){
+                cout << "Please try again with other Member ID" << endl;
+            }
         }
-    } while (toupper(confirm) != 'Y');
+    } while (!confirm);
 
     // Actual update input field
     {
         // Scope for user input
-         // member address
-        cout << "Enter New street Address: ";
-        getline(cin, new_address);
-        if (new_address.length() > 25) {
-            new_address = new_address.substr(0, 25);
-        }
-
-        // member city
-        cout << "Enter New city: ";
-        getline(cin, new_city);
-        if (new_city.length() > 14) {
-            new_city = new_city.substr(0, 14);
-        }
-
-        // member state
-        cout << "Enter New State (e.g. OR, WA,...): ";
-        getline(cin, new_state);
-        if (new_state.length() > 2) {
-            new_state = new_state.substr(0, 2);
-        }
-
-        // member zipcode
-        do {
-            getInput(new_zip, "Enter New Zipcode: ");
-            
-            if (!(isValidZipcode = validateZipcodeFormat(new_zip))) {
-                cout << "Invalid zipcode format, please try again (5-digit)" << endl;
-            } 
-        } while(!isValidZipcode); 
+        getAddressInput(new_address, new_city, new_state, new_zip, "Member");
     } // end of input scope
 
     {   // Member Information confirmation scope
@@ -227,11 +163,7 @@ void OperatorTerminal::updateMember()
              << "New State: " << new_state << endl
              << "New Zipcode: " << new_zip << endl; 
 
-        cout << "\nIs this information correct? (Y/N) \n > ";
-        cin >> confirm;
-        cin.ignore();
-
-        if (!confirm) {
+        if (!confirmPrompt("\nIs this information correct?")) {
             cout << "\nPlease try again with update Member" << endl;
             return;
         }
@@ -262,7 +194,7 @@ void OperatorTerminal::deleteMember()
     if (!(ChocAnSystem::getInstance().searchMember(memberID))) {
         cout << "\nCannot delete member: No such member exist" << endl;
     } else {
-        if (!(ChocAnSystem::getInstance().deleteMember(memberID))) {
+        if ((ChocAnSystem::getInstance().deleteMember(memberID))) {
             cout << "\nMember is deleted successfully" << endl;
         } else {
             cout << "\nCannot deleted Member with MemberID: " << memberID << endl;
@@ -278,7 +210,6 @@ void OperatorTerminal::addProvider()
           , new_city{}
           , new_state{}
           , new_zip{};
-    bool isValidZipcode {false};
 
     cout << "\n[Add new Provider]" << endl;
 
@@ -289,41 +220,12 @@ void OperatorTerminal::addProvider()
         if (new_name.length() > 25) {
             new_name = new_name.substr(0, 25);
         }
-
-        // Provider address
-        cout << "Enter New Provider street Address: ";
-        getline(cin, new_address);
-        if (new_address.length() > 25) {
-            new_address = new_address.substr(0, 25);
-        }
-
-        // Provider city
-        cout << "Enter New Provider city: ";
-        getline(cin, new_city);
-        if (new_city.length() > 14) {
-            new_city = new_city.substr(0, 14);
-        }
-
-        // Provider state
-        cout << "Enter New Provider State (e.g. OR, WA,...): ";
-        getline(cin, new_state);
-        if (new_state.length() > 2) {
-            new_state = new_state.substr(0, 2);
-        }
-
-        // Provider zipcode
-        do {
-            getInput(new_zip, "Enter New Provider Zipcode: ");
-            
-            if (!(isValidZipcode = validateZipcodeFormat(new_zip))) {
-                cout << "Invalid zipcode format, please try again (5-digit)" << endl;
-            } 
-        } while(!isValidZipcode);
+        
+        // get Provider Address
+        getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
     }
 
     {   // Confirm block
-        bool confirm{false};
-
         cout << "Please confirm if this is the correct information: " << endl;
         cout << "Provider Name: " << new_name << endl
              << "Provider Adress: " << new_address << endl
@@ -331,11 +233,7 @@ void OperatorTerminal::addProvider()
              << "Provider State: " << new_state << endl
              << "Provider Zipcode: " << new_zip << endl;
 
-        cout << "\nIs this information correct? (Y/N) \n > ";
-        cin >> confirm;
-        cin.ignore();
-
-        if (!confirm) {
+        if (!confirmPrompt("\nIs this information correct?")) {
             cout << "\nPlease try again with add new Provider" << endl;
             return;
         }
@@ -352,11 +250,10 @@ void OperatorTerminal::addProvider()
 void OperatorTerminal::updateProvider()
 {
     Provider providerToUpdate;
-    char confirm {};
+    bool confirm {false};
     string providerID{};
     string new_address{}, new_city{}, new_state{}, new_zip {};
     bool isValidID{false};
-    bool isValidZipcode{false};
 
     cout << "\n[PROVIDER UPDATE]" << endl;
 
@@ -376,41 +273,16 @@ void OperatorTerminal::updateProvider()
         } else {
             cout << "\nPlease review the provider info:" << endl;
             providerToUpdate.displayProvider(); 
-            cout << "\nIs this the correct provider? (Y/N)\n > ";
-            cin >> confirm;
-            cin.ignore();
+
+            if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
+                cout << "Please try again with different Provider ID" << endl;
+            }
         }
-    } while (toupper(confirm) != 'Y');
+    } while (!confirm);
     
     {
-        // Input new address
-        cout << "Enter New street Address: ";
-        getline(cin, new_address);
-        if (new_address.length() > 25) {
-            new_address = new_address.substr(0, 25);
-        }
-
-        // New city
-        cout << "Enter New city: ";
-        getline(cin, new_city);
-        if (new_city.length() > 14) {
-            new_city = new_city.substr(0, 14);
-        }
-
-        // New state
-        cout << "Enter New State (e.g. OR, WA,...): ";
-        getline(cin, new_state);
-        if (new_state.length() > 2) {
-            new_state = new_state.substr(0, 2);
-        }
-
-        // New zip code
-        do {
-            getInput(new_zip, "Enter New Zipcode: ");
-            if (!(isValidZipcode = validateZipcodeFormat(new_zip))) {
-                cout << "Invalid zipcode format, please try again (5-digit)" << endl;
-            } 
-        } while (!isValidZipcode); 
+        // input scope, get Provider input
+        getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
     }
 
     {   // Member Information confirmation scope
@@ -421,11 +293,7 @@ void OperatorTerminal::updateProvider()
              << "New State: " << new_state << endl
              << "New Zipcode: " << new_zip << endl; 
 
-        cout << "\nIs this information correct? (Y/N) \n > ";
-        cin >> confirm;
-        cin.ignore();
-
-        if (!confirm) {
+        if (!confirmPrompt("\nIs this information correct?")) {
             cout << "\nPlease try again with update Provider" << endl;
             return;
         }
@@ -456,7 +324,7 @@ void OperatorTerminal::deleteProvider()
     if (!(ChocAnSystem::getInstance().searchProvider(providerID))) {
         cout << "\nCannot delete provider: No such provider exists" << endl;
     } else {
-        if (!(ChocAnSystem::getInstance().deleteProvider(providerID))) {
+        if ((ChocAnSystem::getInstance().deleteProvider(providerID))) {
             cout << "\nProvider is deleted successfully" << endl;
         } else {
             cout << "\nCannot delete Provider with ProviderID: " << providerID << endl;
@@ -468,12 +336,49 @@ void OperatorTerminal::deleteProvider()
 
 bool OperatorTerminal::validateZipcodeFormat(const std::string &str)
 {
-    bool validated {false};
+    return is_digits(str) && str.length() == 5;
+}
 
-    if (is_digits(str)) {
-        if (str.length() == 5) {
-            validated = true;
-        }
+void OperatorTerminal::getAddressInput(std::string &address, std::string &city, std::string &state
+                                      , std::string &zip, const std::string &role)
+{
+    bool isValidZipcode{false};
+
+    // Input new address
+    cout << "Enter " << role << " street Address: ";
+    getline(cin, address);
+    if (address.length() > 25) {
+        address = address.substr(0, 25);
     }
-    return validated;
+
+    // New city
+    cout << "Enter " << role << " city: ";
+    getline(cin, city);
+    if (city.length() > 14) {
+        city = city.substr(0, 14);
+    }
+
+    // New state
+    cout << "Enter " << role << " State (e.g. OR, WA,...): ";
+    getline(cin, state);
+    if (state.length() > 2) {
+        state = state.substr(0, 2);
+    }
+
+    // New zip code
+    do {
+        getInput(zip, "Enter " + role + " Zipcode: ");
+        if (!(isValidZipcode = validateZipcodeFormat(zip))) {
+            cout << "Invalid zipcode format, please try again (5-digit)" << endl;
+        } 
+    } while (!isValidZipcode); 
+}
+
+bool OperatorTerminal::confirmPrompt(const std::string &message)
+{
+    char confirm {};
+    cout << message << " (Y/N)\n > ";
+    cin >> confirm;
+    cin.ignore();
+    return toupper(confirm) == 'Y';
 }
