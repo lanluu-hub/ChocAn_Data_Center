@@ -1,16 +1,5 @@
-/*
- * Created: May 17, 2025
- *----------------------------- 
- * ChocAnSystem.h
- * 
- * This file defines the ChocAnSystem class, which serves as the core controller
- * for the ChocAn Data Processing System. It provides centralized access to 
- * business logic and system operations such as member validation, service logging, 
- * report generation, and coordination with the Database subsystem.
- *
- * Part of the Team Whitespace ChocAn Data Processing System – CS314 Project
- *//*
- * Created: May 17, 2025
+/**
+ * @date Created: May 17, 2025
  *----------------------------- 
  * @file ChocAnSystem.h
  * 
@@ -98,10 +87,49 @@ class ChocAnSystem {
          * The output file path is defined by the constant `PROVIDDER_DIRECTORY_PATH`.
          */
         void getProviderDirectory();
+        
+        /**
+         * @brief Displays the provider directory in a formatted table.
+         *
+         * This function prints a list of service entries to the console in a human-readable
+         * table format. It includes headers for service code, service name, and service fee,
+         * along with visual formatting for readability.
+         *
+         * @param providerDirectory A reference to a vector of Service objects representing
+         *        the provider directory to display.
+         */
+        void displayProviderDirectory(std::vector<Service> & providerDirectory);
+
+        /**
+         * @brief Writes the provider directory to a formatted text file.
+         *
+         * Outputs the list of services to a file at the given file path using a structured
+         * layout suitable for provider use. The function returns true if the operation
+         * succeeds, or false if the file cannot be opened.
+         *
+         * @param services A reference to a vector of Service objects to be written.
+         * @param filePath A string specifying the file path for saving the directory.
+         * @return True if the file was written successfully; false otherwise.
+         */
+        bool writeProviderDirectoryToFile(std::vector<Service> & services, const std::string & filePath);
 
         
         // ---------------- Manager Terminal Functions ---------------- //      
+        
+        /**
+         * @brief Generates a detailed report for a specific member.
+         * @param memberID The unique ID of the member whose report is to be generated.
+         */
         void generateMemberReport(const std::string & memberID);
+
+        // [comments]
+        void printMemberReport(const std::string & filePath);
+        
+        // [comments]
+        void generateProviderReport(const std::string & providerID);
+
+        // [comments]
+        void printProviderReport(const std::string & filePath);
 
         // ---------------- Operator Terminal - Member Management ---------------- //
         
@@ -207,6 +235,16 @@ class ChocAnSystem {
         // ---------------- Helper Function ---------------- //
 
         /**
+         * @brief Parses a date string into a std::chrono::system_clock::time_point.
+         * @param dateString The date string to parse (e.g., "2025-05-29").
+         * @param format The format string used to interpret the date (e.g., "%Y-%m-%d").
+         * @return A time_point representing the parsed date.
+         *
+         * @note If parsing fails, the resulting time_point may be undefined.
+         */
+        std::chrono::system_clock::time_point parseDate(const std::string& dateString, const std::string& format);
+
+        /**
          * @brief Converts a given time point into a formatted string representation.
          * @param timePoint The time to be formatted.
          * @param format The desired date/time format (e.g., "%Y-%m-%d").
@@ -216,7 +254,7 @@ class ChocAnSystem {
                         const std::string& format);
         
         /**
-         * @brief Retrieves the current system date in MM-DD-YYYY format.
+         * @brief Retrieves the current system date in YYYY-MM-DD format.
          *
          * This utility function uses the system clock to obtain the current date 
          * and formats it into a human-readable string.
@@ -240,30 +278,6 @@ class ChocAnSystem {
         */
         std::string formatFileName(const std::string & fileName);
 
-        /**
-         * @brief Displays the provider directory in a formatted table.
-         *
-         * This function prints a list of service entries to the console in a human-readable
-         * table format. It includes headers for service code, service name, and service fee,
-         * along with visual formatting for readability.
-         *
-         * @param providerDirectory A reference to a vector of Service objects representing
-         *        the provider directory to display.
-         */
-        void displayProviderDirectory(std::vector<Service> & providerDirectory);
-
-        /**
-         * @brief Writes the provider directory to a formatted text file.
-         *
-         * Outputs the list of services to a file at the given file path using a structured
-         * layout suitable for provider use. The function returns true if the operation
-         * succeeds, or false if the file cannot be opened.
-         *
-         * @param services A reference to a vector of Service objects to be written.
-         * @param filePath A string specifying the file path for saving the directory.
-         * @return True if the file was written successfully; false otherwise.
-         */
-        bool writeProviderDirectoryToFile(std::vector<Service> & services, const std::string & filePath);
 };
 
 #endif

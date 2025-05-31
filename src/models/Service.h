@@ -16,6 +16,8 @@ class Service {
         Service(const std::string& s_code = "000000", const std::string& s_name = "DEFAULT_SERVICE", const float s_fee = 0.00);
         ~Service();
 
+        bool isEmpty() const;
+
     protected:
         std::string serviceCode;    // 6 digits code
         std::string serviceName;

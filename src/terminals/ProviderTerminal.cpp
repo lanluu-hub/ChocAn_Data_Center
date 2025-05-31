@@ -174,7 +174,7 @@ float ProviderTerminal::billService()
     do {
         getInput(servDate, "Enter Date of Service (MM-DD-YYYY):\n > "); 
         
-        if (!(isDateValid = validateIDFormat(servDate))) {
+        if (!(isDateValid = validateServiceDateFormat(servDate))) {
             cout << "Invalid Service Date, Please try again (MM-DD-YYYY)" << endl;
         }
     } while (!isDateValid);
