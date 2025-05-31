@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "ManagerTerminal.h"
+#include "../ChocAnSystem.h"
 
 using namespace std;
 
@@ -66,9 +67,20 @@ void ManagerTerminal::printMemberReport()
             Call ChocAnSystem::generateMemberReport(memberID)
         
     */
-   cout << "\n\t[PRINT MEMBER REPORT]" << endl;
-   cout << "Enter Member ID: \n > ";
+   
+    string  memberID{};
+    bool isValidateID {false};
 
+    cout << "\n\t[PRINT MEMBER REPORT]" << endl;
+    do {
+        getInput(memberID, "Enter member ID:\n > ");
+
+        if (!(isValidateID = validateIDFormat(memberID))) {
+            cout << "Invalid Member ID format (9-digit), please try again.";
+        }
+    } while (!isValidateID);
+
+    ChocAnSystem::getInstance().generateMemberReport(memberID);
 }
 
 void ManagerTerminal::printProviderReport()

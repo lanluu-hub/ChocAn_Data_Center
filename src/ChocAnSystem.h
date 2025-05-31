@@ -101,7 +101,12 @@ class ChocAnSystem {
 
         
         // ---------------- Manager Terminal Functions ---------------- //      
+        
+        /// @brief 
+        /// @param memberID 
         void generateMemberReport(const std::string & memberID);
+
+        void printMemberReport(const std::string & filePath);
 
         // ---------------- Operator Terminal - Member Management ---------------- //
         
@@ -206,6 +211,9 @@ class ChocAnSystem {
 
         // ---------------- Helper Function ---------------- //
 
+        // [comment]
+        std::chrono::system_clock::time_point parseDate(const std::string& dateString, const std::string& format);
+
         /**
          * @brief Converts a given time point into a formatted string representation.
          * @param timePoint The time to be formatted.
@@ -216,7 +224,7 @@ class ChocAnSystem {
                         const std::string& format);
         
         /**
-         * @brief Retrieves the current system date in MM-DD-YYYY format.
+         * @brief Retrieves the current system date in YYYY-MM-DD format.
          *
          * This utility function uses the system clock to obtain the current date 
          * and formats it into a human-readable string.

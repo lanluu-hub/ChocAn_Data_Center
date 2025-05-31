@@ -3,10 +3,13 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <sstream>
 #include <fstream>
 #include "ChocAnSystem.h"
 
 using namespace std;
+
+const string MEMBER_REPORT_FOLDER = "src/reports/members/";
 
 const string PROVIDDER_DIRECTORY_PATH = "src/reports/Provider_Directory.txt";
 
@@ -40,10 +43,8 @@ float ChocAnSystem::getServiceFee(const string& servCode)
     Service service;
 
     // Call to Database::getInstance().getService(servCode); Return a Service Obj assignt to ServObj
-    // service = Database::getInstance().getService(servCode);
-    /*
-        if service.serviceName == "DEFAULT_SERVICE"
-    */
+    service = Database::getInstance().getService(servCode);
+
     cout << "\nService Name: " << service.serviceName << endl;
     cout << "Is it Correct? (Y/N) \n > ";
     
@@ -69,7 +70,7 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
     // Delete this section or comment it after database is work.
 
     // Call to Database::getInstance().serviceLog(providerID, memberID, serviceCode
-    //                                            , serviceDate, currentDate, serviceComment);
+    //                                            , serviceDate, formattedTime, serviceComment);
     // return a bool: result of the service Log
     return false;
 }
@@ -117,6 +118,77 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
 
         call printMemberReport(filepath);
     */
+
+    Member member = getMember(memberID);
+    char confirm {};
+    string  currentDate {},
+            bestDate {},
+            rawFilename {},
+            formattedFilename {},
+            filePath {};
+
+    const string format = "%Y-%m-%d";
+
+    if (member.isEmpty()) {
+        cout << "\nMember does not exist" << endl;
+        return;
+    }
+
+    // Confirmation
+    cout << "\nConfirmation:" << endl;
+    cout << "Member ID: " << member.memberID << endl
+         << "Member Name: " << member.memberName << endl;
+    cout << "\nIs this the correct member? (Y/N)\n > ";
+    cin >> confirm;
+
+    if (toupper(confirm) != 'Y') {
+        cout << "\nTry again with another ID" << endl;
+        return;
+    }
+
+    currentDate = getCurrentDate();
+
+    // Get the bestDate //
+    // parse the date
+    chrono::system_clock::time_point parsedDate = parseDate(currentDate, format);
+
+    // subtract 7 days
+    chrono::system_clock::time_point cutoffDate = parsedDate - chrono::hours(24 * 7);
+
+    // Format the date back to string
+    bestDate = dateTime(cutoffDate, format);
+    // End of get bestDate //
+
+    // Get Clean filePath for generated report //
+    rawFilename = member.memberName + "_" + currentDate;
+    formattedFilename = formatFileName(rawFilename);
+    filePath = MEMBER_REPORT_FOLDER + formattedFilename + ".txt";
+    // End of filePath //
+
+    // Temporary Ouput - Delete this when database ready
+    cout << "\nTemporary output" << endl
+         << "Member Name: " << member.memberName << endl
+         << "Member Number: " << memberID << endl
+         << "Member street address: " << member.memberStreetAddress << endl
+         << "Member city: " << member.memberCity << endl
+         << "Member State: " << member.memberState << endl
+         << "Memeber Zip code: " << member.memberZipCode << endl;
+    
+    cout << "Current Date: " << currentDate << endl;
+    cout << "Best date: " << bestDate << endl;
+    cout << "fileName: " << formattedFilename << endl;
+    cout << "FilePath: " << filePath << endl;
+    // End of temporary output - delete this when database is ready 
+
+    //Database::getInstance().generateMemberReport(member, bestDate, filePath);   // UNCOMMENTS THIS WHEN DATABASE READY
+    printMemberReport(filePath);
+    return;
+}
+
+void ChocAnSystem::printMemberReport(const std::string &filePath)
+{
+    /// @todo Impplement Read from file to output the Member Report
+    cout << "MEMBER REPORT HERE" << endl;
 }
 
 /////////// Operator Terminal //////////
@@ -198,6 +270,15 @@ bool ChocAnSystem::deleteProvider(const std::string &ProviderID)
 }
 
 ////////// Helper function /////////
+
+chrono::system_clock::time_point ChocAnSystem::parseDate(const string &dateString, const string &format)
+{
+    tm tmStruct = {};
+    istringstream ss(dateString);
+    ss >> get_time(&tmStruct, format.c_str());
+    return chrono::system_clock::from_time_t(mktime(&tmStruct));
+}
+
 string ChocAnSystem::dateTime(const chrono::system_clock::time_point &timePoint, const string &format)
 {
     time_t time = chrono::system_clock::to_time_t(timePoint);
