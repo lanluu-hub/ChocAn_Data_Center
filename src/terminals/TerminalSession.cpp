@@ -15,16 +15,15 @@ void TerminalSession::runSession()
     
     do { 
         numberOfOption = showMenu();    // Call to child class showMenu, and return the number of menu options
-        std::cout << "Please choose your option: " << std::endl;
-        std::cout << "> ";
-        input = getInput();
-
-        while (input < 0 || input > numberOfOption) {       // validate the input of user
-            std::cout << "Invalid option, please choose again: \n> ";
-            std::cin.clear();
-            std::cin.ignore(1024, '\n');
+        do {
+            std::cout << "Please choose your option: " << std::endl;
+            std::cout << "> ";
             input = getInput();
-        }
+
+            if (input < 0 || input > numberOfOption) {
+                std::cout << "Invalid option, please choose again: \n";
+            }
+        } while (input < 0 || input > numberOfOption);
         
         commandHandler(input);
     } while (input != 0);
@@ -48,6 +47,35 @@ int TerminalSession::getInput() const
     }
     std::cin.ignore(1024, '\n');
     return input;
+}
+
+void TerminalSession::getInput(std::string &input, const std::string &prompt) 
+{
+    std::cout << prompt;
+    while (!(std::cin >> input)) {
+        std::cin.clear();
+        std::cin.ignore(1024, '\n');
+
+        std::cout << "\nInvalid input format. please try again.\n > ";
+    }
+    std::cin.ignore();
+}
+
+bool TerminalSession::validateIDFormat(const std::string &ID) const
+{
+    bool validated {false};
+
+    if (is_digits(userID)) {
+        if (ID.length() == 9 || ID.length() == 8) {
+            validated = true;
+        }
+    }
+    return validated;
+}
+
+bool TerminalSession::is_digits(const std::string &str) const
+{
+    return str.find_first_not_of("0123456789") == std::string::npos;
 }
 
 TerminalSession::~TerminalSession()

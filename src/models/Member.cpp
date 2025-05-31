@@ -25,3 +25,11 @@ void Member::displayMember() const
     std::cout << "Member state: " << memberState << std::endl;
     std::cout << "Member zip code: " << memberZipCode << std::endl;
 }
+
+bool Member::isEmpty() const
+{ 
+  if (!(memberID == "000000000")) {
+    return false;
+  }
+  return true;
+}

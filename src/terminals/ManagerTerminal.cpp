@@ -54,6 +54,21 @@ void ManagerTerminal::commandHandler(int input)
 
 void ManagerTerminal::printMemberReport()
 {
+    /*
+        Function: printMemberReport()
+        1. ManagerTerminal
+        Prompt: "Enter Member ID: "
+        memberID <- Input
+        isValid <- validateFormat(memberID)
+        If not isValid:
+            Repeat input
+        Else:
+            Call ChocAnSystem::generateMemberReport(memberID)
+        
+    */
+   cout << "\n\t[PRINT MEMBER REPORT]" << endl;
+   cout << "Enter Member ID: \n > ";
+
 }
 
 void ManagerTerminal::printProviderReport()

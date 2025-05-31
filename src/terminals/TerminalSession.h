@@ -27,6 +27,9 @@ class TerminalSession {
         std::string userID;
 
         int getInput() const;
+        void getInput(std::string &input, const std::string &prompt = "Enter a value: ");
+        bool validateIDFormat(const std::string & ID) const;
+        bool is_digits(const std::string &str) const;
 };
 
 #endif

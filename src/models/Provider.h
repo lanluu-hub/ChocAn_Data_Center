@@ -21,6 +21,7 @@ class Provider {
                  , const std::string& p_zip = "00000");
         ~Provider();
         void displayProvider() const;
+        bool isEmpty() const;
 
     protected:
         std::string providerName;             // 25 Characters

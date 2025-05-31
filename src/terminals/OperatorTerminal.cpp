@@ -122,51 +122,42 @@ void OperatorTerminal::addMember()
         } while(!isValidZipcode);
     }   // End of input scope
 
-    //new_id = ChocAnSystem()::getInstance().getNewMemberID(); // Uncomment this when Database is READY
-    new_id = "100001";
+    {   // Confirm block
+        bool confirm{false};
 
-    // Put the info user input into a Member class
-    Member newMember(new_name, new_id, new_address, new_city, new_state, new_zip);
+        cout << "Please confirm if this is the correct information: " << endl;
+        cout << "Member Name: " << new_name << endl
+             << "Member Adress: " << new_address << endl
+             << "Member City: " << new_city << endl
+             << "Member State: " << new_state << endl
+             << "Member Zipcode: " << new_zip << endl;
+
+        cout << "\nIs this information correct? (Y/N) \n > ";
+        cin >> confirm;
+        cin.ignore();
+
+        if (!confirm) {
+            cout << "\nPlease try again with add new Member" << endl;
+            return;
+        }
+    } 
 
     // Called to ChocAn to add new member, a bool is being return, true = successfull, false otherwise
-    if (ChocAnSystem::getInstance().addNewMember(newMember)) {
+    if (ChocAnSystem::getInstance().addNewMember(new_name, new_address, new_city, new_state, new_zip)) {
         cout << "\nMember added successfully." << endl;
     } else {
         cout << "\nFailed to add new Member." << endl;
     }
+    return;
 }
 
 void OperatorTerminal::updateMember()
 {
-    /*
-    Prompt user for memberID to be update
-    memberID <- input
-    validate member id in correct format
-    if yes:
-        call chocan.getMember(memberID) return a Member Obj
-        display {
-            Member ID: #########
-            Member Name: Joe
-        }
-        loop:
-            Prompt: is this correct?
-            if no -> loop back to enter ID
-        if yes: 
-        Prompt: Please enter new address: 
-        ...
-
-        ChocAnSystem::getInstance().updateMember(memberID, u_addr, u_city, u_state, u_zip); 
-        // name and ID not change, Id for update
-
-        check if update success -> outpu successful
-        if fail -> output fail
-    */
-    // New Member Obj
+    Member memberToUpdate;
     char confirm {};
     string memberID{};
     string new_address{}, new_city{}, new_state{}, new_zip {};
     bool isValidID{false};
-    bool isMemberExist{false};
     bool isValidZipcode{false};
 
     cout << "\n[MEMBER UPDATE]" << endl;
@@ -174,23 +165,24 @@ void OperatorTerminal::updateMember()
     do {
         do {
             getInput(memberID, "\nEnter member Id for update:\n > ");
+
             if (!(isValidID = validateIDFormat(memberID))) {
                 cout << "\nInvalid ID format (9-digit), please try again." << endl;
-            } else if (!(isMemberExist = ChocAnSystem::getInstance().searchMember(memberID))) {
-                cout << "\nMember with member ID " << memberID << " is not found, please try another ID." 
-                     << endl;
             }
-        } while (!isValidID || !isMemberExist);
+        } while (!isValidID);
         
-        //TODO: call ChocAnSystem::getInstance().getMember(memberID); return a Member Obj
-        
-        Member memberToUpdate = ChocAnSystem::getInstance().getMember(memberID);
+        memberToUpdate = ChocAnSystem::getInstance().getMember(memberID);
 
-        cout << "\nPlease review the member info:" << endl;
-        memberToUpdate.displayMember(); 
-        cout << "\nIs this the correct member? (Y/N)\n > ";
-        cin >> confirm;
-        cin.ignore();
+        if (memberToUpdate.isEmpty()) {
+            cout << "No member with Member ID " << memberID << "Exist" << endl;
+            return; 
+        } else {
+            cout << "\nPlease review the member info:" << endl;
+            memberToUpdate.displayMember(); 
+            cout << "\nIs this the correct member? (Y/N)\n > ";
+            cin >> confirm;
+            cin.ignore();
+        }
     } while (toupper(confirm) != 'Y');
 
     // Actual update input field
@@ -225,10 +217,25 @@ void OperatorTerminal::updateMember()
                 cout << "Invalid zipcode format, please try again (5-digit)" << endl;
             } 
         } while(!isValidZipcode); 
-
-        // considering adding a infomation confirmation before calling addMewMember
-        
     } // end of input scope
+
+    {   // Member Information confirmation scope
+        cout << "Please make sure the following information is correct: " << endl;
+        cout << "MemberID: " << memberID << endl
+             << "New Address: " << new_address << endl
+             << "New City: " << new_city << endl
+             << "New State: " << new_state << endl
+             << "New Zipcode: " << new_zip << endl; 
+
+        cout << "\nIs this information correct? (Y/N) \n > ";
+        cin >> confirm;
+        cin.ignore();
+
+        if (!confirm) {
+            cout << "\nPlease try again with update Member" << endl;
+            return;
+        }
+    }
 
     // Call actual update function from chocan
     if (ChocAnSystem::getInstance().updateMember(memberID, new_address, new_city, new_state, new_zip)) {
@@ -314,14 +321,28 @@ void OperatorTerminal::addProvider()
         } while(!isValidZipcode);
     }
 
-    //new_id = ChocAnSystem::getInstance().getNewProviderID(); // Uncomment when database ID system is ready
-    new_id = "200001";
+    {   // Confirm block
+        bool confirm{false};
 
-    // Put the input into a Provider class
-    Provider newProvider(new_name, new_id, new_address, new_city, new_state, new_zip);
+        cout << "Please confirm if this is the correct information: " << endl;
+        cout << "Provider Name: " << new_name << endl
+             << "Provider Adress: " << new_address << endl
+             << "Provider City: " << new_city << endl
+             << "Provider State: " << new_state << endl
+             << "Provider Zipcode: " << new_zip << endl;
+
+        cout << "\nIs this information correct? (Y/N) \n > ";
+        cin >> confirm;
+        cin.ignore();
+
+        if (!confirm) {
+            cout << "\nPlease try again with add new Provider" << endl;
+            return;
+        }
+    } 
 
     // Call to ChocAnSystem to add the new provider
-    if (ChocAnSystem::getInstance().addNewProvider(newProvider)) {
+    if (ChocAnSystem::getInstance().addNewProvider(new_name, new_address, new_city, new_state, new_zip)) {
         cout << "\nProvider added successfully." << endl;
     } else {
         cout << "\nFailed to add new Provider." << endl;
@@ -330,11 +351,11 @@ void OperatorTerminal::addProvider()
 
 void OperatorTerminal::updateProvider()
 {
+    Provider providerToUpdate;
     char confirm {};
     string providerID{};
     string new_address{}, new_city{}, new_state{}, new_zip {};
     bool isValidID{false};
-    bool isProviderExist{false};
     bool isValidZipcode{false};
 
     cout << "\n[PROVIDER UPDATE]" << endl;
@@ -344,20 +365,23 @@ void OperatorTerminal::updateProvider()
             getInput(providerID, "\nEnter provider Id for update:\n > ");
             if (!(isValidID = validateIDFormat(providerID))) {
                 cout << "\nInvalid ID format (9-digit), please try again." << endl;
-            } else if (!(isProviderExist = ChocAnSystem::getInstance().searchProvider(providerID))) {
-                cout << "\nProvider with ID " << providerID << " not found, please try another ID." << endl;
-            }
-        } while (!isValidID || !isProviderExist);
+            } 
+        } while (!isValidID);
         
-        Provider providerToUpdate = ChocAnSystem::getInstance().getProvider(providerID);
+        providerToUpdate = ChocAnSystem::getInstance().getProvider(providerID);
 
-        cout << "\nPlease review the provider info:" << endl;
-        providerToUpdate.displayProvider(); 
-        cout << "\nIs this the correct provider? (Y/N)\n > ";
-        cin >> confirm;
-        cin.ignore();
+        if (providerToUpdate.isEmpty()) {
+            cout << "No Provider with Provider ID " << providerID << "Exist" << endl;
+            return; 
+        } else {
+            cout << "\nPlease review the provider info:" << endl;
+            providerToUpdate.displayProvider(); 
+            cout << "\nIs this the correct provider? (Y/N)\n > ";
+            cin >> confirm;
+            cin.ignore();
+        }
     } while (toupper(confirm) != 'Y');
-
+    
     {
         // Input new address
         cout << "Enter New street Address: ";
@@ -387,6 +411,24 @@ void OperatorTerminal::updateProvider()
                 cout << "Invalid zipcode format, please try again (5-digit)" << endl;
             } 
         } while (!isValidZipcode); 
+    }
+
+    {   // Member Information confirmation scope
+        cout << "Please make sure the following information is correct: " << endl;
+        cout << "ProviderID: " << providerID << endl
+             << "New Address: " << new_address << endl
+             << "New City: " << new_city << endl
+             << "New State: " << new_state << endl
+             << "New Zipcode: " << new_zip << endl; 
+
+        cout << "\nIs this information correct? (Y/N) \n > ";
+        cin >> confirm;
+        cin.ignore();
+
+        if (!confirm) {
+            cout << "\nPlease try again with update Provider" << endl;
+            return;
+        }
     }
 
     // Update provider info in system
@@ -423,17 +465,6 @@ void OperatorTerminal::deleteProvider()
 }
 
 ////////// HELPER FUNCTION //////////
-void OperatorTerminal::getInput(string &input, const string &prompt)
-{
-    cout << prompt;
-    while (!(cin >> input)) {
-        cin.clear();
-        cin.ignore(1024, '\n');
-
-        cout << "\nInvalid input format. please try again.\n > ";
-    }
-    cin.ignore(1024, '\n');
-}
 
 bool OperatorTerminal::validateZipcodeFormat(const std::string &str)
 {
@@ -445,20 +476,4 @@ bool OperatorTerminal::validateZipcodeFormat(const std::string &str)
         }
     }
     return validated;
-}
-
-bool OperatorTerminal::validateIDFormat(const std::string &str)
-{
-    bool validated {false};
-
-    if (is_digits(str)) {
-        if (str.length() == 9) {
-            validated = true;
-        }
-    }
-    return validated;
-}
-
-bool OperatorTerminal::is_digits(const std::string &str) {
-    return str.find_first_not_of("0123456789") == std::string::npos;;
 }
