@@ -10,3 +10,11 @@ Service::Service(const std::string& s_code, const std::string& s_name, const flo
 Service::~Service()
 {
 }
+
+bool Service::isEmpty() const 
+{
+    if (serviceCode == "000000") {
+        return true;
+    }
+    return false;
+}

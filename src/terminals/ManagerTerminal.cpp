@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "ManagerTerminal.h"
+#include "../ChocAnSystem.h"
 
 using namespace std;
 
@@ -54,25 +55,43 @@ void ManagerTerminal::commandHandler(int input)
 
 void ManagerTerminal::printMemberReport()
 {
-    /*
-        Function: printMemberReport()
-        1. ManagerTerminal
-        Prompt: "Enter Member ID: "
-        memberID <- Input
-        isValid <- validateFormat(memberID)
-        If not isValid:
-            Repeat input
-        Else:
-            Call ChocAnSystem::generateMemberReport(memberID)
-        
-    */
-   cout << "\n\t[PRINT MEMBER REPORT]" << endl;
-   cout << "Enter Member ID: \n > ";
+    string  memberID{};
+    bool isValidateID {false};
 
+    cout << "\n\t[PRINT MEMBER REPORT]" << endl;
+    do {
+        getInput(memberID, "Enter member ID:\n > ");
+
+        if (!(isValidateID = validateIDFormat(memberID))) {
+            cout << "Invalid Member ID format (9-digit), please try again.";
+        }
+    } while (!isValidateID);
+
+    ChocAnSystem::getInstance().generateMemberReport(memberID);
 }
 
 void ManagerTerminal::printProviderReport()
 {
+    /*
+        Prompt: "Enter Provider ID:"
+        providerID <- Input
+        if (!validateFormat(providerID)):
+        return with message "Invalid format. Please try again."
+        Call ChocAnSystem::generateProviderReport(providerID)
+    */
+    string  providerID{};
+    bool isValidateID {false};
+
+    cout << "\n\t[PRINT PROVIDER REPORT]" << endl;
+    do {
+        getInput(providerID, "Enter Provider ID:\n > ");
+
+        if (!(isValidateID = validateIDFormat(providerID))) {
+            cout << "Invalid Provider ID format (9-digit), please try again.";
+        }
+    } while (!isValidateID);
+
+    ChocAnSystem::getInstance().generateProviderReport(providerID);
 }
 
 void ManagerTerminal::printSummaryReport()
