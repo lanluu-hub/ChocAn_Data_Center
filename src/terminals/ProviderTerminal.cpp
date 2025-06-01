@@ -1,8 +1,10 @@
 #include <iostream>
+#include <iomanip>
 #include <regex>
 #include <string>
 #include <cassert>
 #include "ProviderTerminal.h"
+#include "../Utils.h"
 
 using namespace std;
 
@@ -19,17 +21,16 @@ int ProviderTerminal::showMenu()
 {
     int numOfOption {};
 
-    cout << "\n[Provider Terminal]" << endl;
+    cout << "[Provider Terminal]" << endl;
     if (!isMemberValidated) {
         // show menu option
-        cout << "Possible Operatrion: " << endl;
+        cout << "[NOT VALIDATED]" << endl;
         cout << "/--------------------" << endl;
         cout << "|  1. Start new Service (validateMembership)" << endl;
         numOfOption = 1;
     } else {
         // show menu option
         cout << "[VALIDATED]" << endl;
-        cout << "Possible Operatrion: " << endl;
         cout << "/--------------------" << endl;
         cout << "|  1. End Service and output Bill" << endl;
         cout << "|  2. Request Provider Directory" << endl;
@@ -79,12 +80,14 @@ int ProviderTerminal::validateMembership()
     bool isIdValidate {false};
     string ID {};
 
-    cout << "\n[Validate Membership System]" << endl;
+    cout << "[Validate Membership System]\n";
+    cout << "----------------------------\n";
 
     do {
 
         getInput(ID, "\nPlease Scan/key-in member id card number to continues. . .\n > ");
-        
+        clearScreen();
+
         if (!(isIdValidate = validateIDFormat(ID)))
         {
             cout << "Invalid Member ID format (9-digits ID), please try again." << endl;
@@ -99,18 +102,22 @@ int ProviderTerminal::validateMembership()
         cout << "\nMember Status: [VALIDATED]" << endl;
         isMemberValidated = true;
         memberID = ID;
+        pressEnterToContinue();
         break;
 
     case 1:
         cout << "\nMember Status: [SUSPEND]" << endl;
+        pressEnterToContinue();
         break;
 
     case (-1):
         cout << "\nMember Status: [INVALID]" << endl;
+        pressEnterToContinue();
         break;
 
     default:
         cerr << "\nError: Unexpect case encounter!" << __FILE__ << __LINE__ << endl;
+        pressEnterToContinue();
         break;
     }
 
@@ -119,12 +126,13 @@ int ProviderTerminal::validateMembership()
 
 float ProviderTerminal::billService()
 {
-    cout << "\n[Bill Services System]" << endl;
+    cout << "[Bill Services System]" << endl;
 
     string ID{"000000000"};
     string servCode {};
     string servDate {};
     string servComment{};
+    string inputLog = "";
     float fee {};
     char userConfirm {};
     bool isIdValid {false};
@@ -137,9 +145,11 @@ float ProviderTerminal::billService()
 
         if (!(isIdValid = validateIDFormat(ID)))
         {
+            clearScreen();
             cout << "Invalid Member ID format (9-digits ID), please try again." << endl;
         } else if (ID != memberID && ID != ("000000000"))
         {
+            clearScreen();
             cout << "Member ID does not match current session member ID." << endl;
         }
     } while (!(isIdValid) || ID != memberID);
@@ -147,6 +157,10 @@ float ProviderTerminal::billService()
     if (ID == memberID) {
         cout << "\nMember status: VALIDATED" << endl;
     }
+
+    inputLog = "Enter Member ID:\n > " + ID + "\n\n";
+    inputLog += "Member status: VALIDATED\n\n";
+
     // End member id //
 
     // Enter Service Code, and confirmation //
@@ -158,30 +172,43 @@ float ProviderTerminal::billService()
             getInput(servCode, "\nEnter Service Code:\n > ");
 
             if (!(isServCodeValid = validateServiceCodeFormat(servCode))) {
+                clearScreen();
                 cout << "Invalid Service code, please try again (6-digits code)" << endl;
+                cout << inputLog;
             }
         } while (!isServCodeValid);
-        
+
         // Get Service Fee
         fee = ChocAnSystem::getInstance().getServiceFee(servCode);
         cin >> userConfirm;
         cin.ignore(1024, '\n');
-        cout << endl;
+        //clearScreen();
+        //cout << inputLog;
     } while (toupper(userConfirm) != 'Y');
+
+    string serviceName = ChocAnSystem::getInstance().getServiceName(servCode);
+    ostringstream roundedFee;
+    roundedFee << fixed << setprecision(2) << fee;
+    inputLog += "Enter Service Code:\n > " + servCode + "\n\n";
+    inputLog += "Service Name: " + serviceName + "\n";
+    inputLog += "Service Fee: $" + roundedFee.str() + "\n";
+    inputLog += "Is this correct? (Y/N)\n > " + string(1, toupper(userConfirm)) + "\n\n";
     // End Service code //
    
     // get Service day
     do {
-        getInput(servDate, "Enter Date of Service (MM-DD-YYYY):\n > "); 
+        getInput(servDate, "\nEnter Date of Service (MM-DD-YYYY):\n > ");
         
         if (!(isDateValid = validateServiceDateFormat(servDate))) {
+            clearScreen();
             cout << "Invalid Service Date, Please try again (MM-DD-YYYY)" << endl;
+            cout << inputLog;
         }
     } while (!isDateValid);
     // End Service day //
 
     // Provider Comment //
-    cout << "Enter Comment here(100 Words - Optional):\n > ";
+    cout << "\nEnter Comment here(100 Words - Optional):\n > ";
     getline(cin, servComment);
     if (servComment.size() > 100) {
         servComment = servComment.substr(0, 100);
@@ -193,11 +220,11 @@ float ProviderTerminal::billService()
     } else {
         // If false: output "Error: Failed to Log current service!"
         cerr << "\nFailed to log current service" << endl;
-        exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE);
     }
 
     cout << "\nAmount of Fee: " << fee << endl;
-
+    pressEnterToContinue();
     // End current session with member ID
     // clear memberID
     memberID.clear();
@@ -209,8 +236,10 @@ float ProviderTerminal::billService()
 
 void ProviderTerminal::requestProviderDirectory()
 {
+    clearScreen();
     cout << "\n[Request Provider Directory System]";
     ChocAnSystem::getInstance().getProviderDirectory();
+    pressEnterToContinue();
 }
 
 
@@ -273,3 +302,4 @@ bool ProviderTerminal::validateServiceDateFormat(const std::string &servDate)
 
     return true;
 }
+

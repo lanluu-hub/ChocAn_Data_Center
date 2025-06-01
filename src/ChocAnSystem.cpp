@@ -46,9 +46,18 @@ float ChocAnSystem::getServiceFee(const string& servCode)
     service = Database::getInstance().getService(servCode);
 
     cout << "\nService Name: " << service.serviceName << endl;
+    cout << "Service Fee: $" << fixed << setprecision(2) << service.serviceFee << "\n";
     cout << "Is it Correct? (Y/N) \n > ";
     
     return service.serviceFee;
+}
+
+string ChocAnSystem::getServiceName(const string& servCode) {
+    Service service;
+
+    service = Database::getInstance().getService(servCode);
+
+    return service.serviceName;
 }
 
 bool ChocAnSystem::serviceLog(string &providerID, string &memberID
@@ -60,7 +69,7 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
     string formattedTime = dateTime(now, format);
 
     // Temporary output
-    cout << "\nSave this service:" << endl;
+    cout << "[Saving service]\n" << endl;
     cout << "Current date and time: " << formattedTime << endl;
     cout << "Date service was provided: " << serviceDate << endl;
     cout << "Provider number: " << providerID << endl;
@@ -356,10 +365,7 @@ bool ChocAnSystem::updateProvider(const std::string &providerID, const std::stri
 
 Member ChocAnSystem::getMember(const std::string & memberID)
 {
-    Member updateMember;
-    // return a member obj base on Member id
-    //updateMember = Database::getInstance().getMember(memberID);   // UNCOMMENT WHEN DATABASE IS READY
-    return updateMember;
+    return Database::getInstance().getMember(memberID);
 }
 
 bool ChocAnSystem::updateMember(const std::string &memberID, const std::string &newAddrss
@@ -478,3 +484,4 @@ bool ChocAnSystem::writeProviderDirectoryToFile(vector<Service> &services, const
     writeToFile.close();
     return true;
 }
+

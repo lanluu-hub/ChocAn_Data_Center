@@ -23,7 +23,7 @@
 #include "models/Member.h"
 #include "models/Provider.h"
 #include "models/Service.h"
-
+#include "Utils.h"
 using namespace std;
 
 // ===============================
@@ -81,6 +81,7 @@ main() {
         // Request user ID
         getInput(userID, "Please enter userID:\n > ");
         cin.ignore(1024, '\n');
+        clearScreen();
 
         // Validate user ID format
         if (validateUserIdFormat(userID)) {
@@ -135,10 +136,9 @@ main() {
             }
             
             cout << "Session End. . . " << endl;
-        } else {
-            cerr << "Error: invalid userID!" <<endl;
         }
-        cout << endl;
+        else
+            cerr << "Error: invalid userID!" <<endl;
     } while (1);
 
     return EXIT_SUCCESS;
@@ -150,7 +150,13 @@ main() {
 
 void intro()
 {
-    cout << "\n\t\tCHOCAN DATA PROCESSING SYSTEM" << endl; 
+    clearScreen();
+    cout << "\n\t***************************************\n";
+    cout << "\t*    Welcome to the ChocAn System    *\n";
+    cout << "\t*    Developed by Team WhiteSpace    *\n";
+    cout << "\t***************************************\n\n";
+    cout << "\t   ChocAn Data Processing Portal\n";
+    cout << "\t   ----------------------------\n\n";
 }
 
 template <typename T>
@@ -183,4 +189,5 @@ bool is_digits(const string &str)
 {
     return str.find_first_not_of("0123456789") == std::string::npos;
 }
+
 
