@@ -25,6 +25,10 @@ The system uses a **terminal-based interface** and integrates with an **SQLite-b
 ```bash 
 ChocAn_Data_Center/
 ├── src/
+| ├── reports/
+| | ├── members/
+| | ├── providers/
+| | └── provider_directory.txt
 │ ├── database/
 │ │ └── chocan.db
 │ ├── models/
