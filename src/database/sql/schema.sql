@@ -57,3 +57,21 @@ CREATE TABLE Reports (
     generated_date TEXT NOT NULL,
     content TEXT NOT NULL
 );
+
+-- VIEW: Member Report View
+CREATE VIEW IF NOT EXISTS MemberReportView AS
+SELECT
+    m.member_id as ID,
+    m.name as MemberName,
+    m.address as MemberAddress,
+    m.city as City,
+    m.state as State,
+    m.zip_code as Zipcode,
+    sl.date_of_service as DateOfService,
+    p.name as ProviderName,
+    s.name as ServiceName
+FROM SERIVCELOGS AS sl
+    JOIN MEMBERS m ON sl.member_id = m.member_id
+    JOIN PROVIDERS p ON sl.provider_id = p.provider_id
+    JOIN SERVICES s ON sl.service_code = s.service_code
+ORDER BY m.member_id;
