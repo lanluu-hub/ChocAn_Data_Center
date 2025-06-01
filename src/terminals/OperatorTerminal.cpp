@@ -79,33 +79,37 @@ void OperatorTerminal::addMember()
             , new_city{}
             , new_state{}
             , new_zip{};
+    bool confirm{false};
 
     cout << "\n[Add new Member]" << endl;
+    
+    cout << "Please enter new Member information" << endl;
 
-    {   // Scope for user input //
-        // member name
-        cout << "Enter New Member Name: ";
-        getline(cin, new_name);
-        if (new_name.length() > 25) {
-            new_name = new_name.substr(0, 25);
+    do {
+        {   // Scope for user input //
+            // member name
+            cout << "Enter New Member Name: ";
+            getline(cin, new_name);
+            if (new_name.length() > 25) {
+                new_name = new_name.substr(0, 25);
+            }
+            
+            getAddressInput(new_address, new_city, new_state, new_zip, "Member");
+        }   // End of input scope
+
+        {   // Confirm block
+            cout << "\nPlease confirm if this is the correct information: " << endl;
+            cout << "Member Name: " << new_name << endl
+                << "Member Adress: " << new_address << endl
+                << "Member City: " << new_city << endl
+                << "Member State: " << new_state << endl
+                << "Member Zipcode: " << new_zip << endl;
+
+            if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
+                cout << "\nPlease try again with add new Member" << endl;
+            }
         }
-        
-        getAddressInput(new_address, new_city, new_state, new_zip, "Member");
-    }   // End of input scope
-
-    {   // Confirm block
-        cout << "Please confirm if this is the correct information: " << endl;
-        cout << "Member Name: " << new_name << endl
-             << "Member Adress: " << new_address << endl
-             << "Member City: " << new_city << endl
-             << "Member State: " << new_state << endl
-             << "Member Zipcode: " << new_zip << endl;
-
-        if (confirmPrompt("\nIs this information correct?")) {
-            cout << "\nPlease try again with add new Member" << endl;
-            return;
-        }
-    } 
+    } while (!confirm); 
 
     // Called to ChocAn to add new member, a bool is being return, true = successfull, false otherwise
     if (ChocAnSystem::getInstance().addNewMember(new_name, new_address, new_city, new_state, new_zip)) {
@@ -127,51 +131,44 @@ void OperatorTerminal::updateMember()
     cout << "\n[MEMBER UPDATE]" << endl;
 
     do {
-        do {
-            getInput(memberID, "\nEnter member Id for update:\n > ");
+        getInput(memberID, "\nEnter member ID for update:\n > ");
 
-            if (!(isValidID = validateIDFormat(memberID))) {
-                cout << "\nInvalid ID format (9-digit), please try again." << endl;
-            }
-        } while (!isValidID);
-        
-        memberToUpdate = ChocAnSystem::getInstance().getMember(memberID);
+        if (!(isValidID = validateIDFormat(memberID))) {
+            cout << "\nInvalid ID format (9-digit), please try again." << endl;
+        }
+    } while (!isValidID);
 
-        if (memberToUpdate.isEmpty()) {
-            cout << "No member with Member ID " << memberID << "Exist" << endl;
-            return; 
-        } else {
-            cout << "\nPlease review the member info:" << endl;
-            memberToUpdate.displayMember(); 
-            if (confirmPrompt("\nIs this the correct member?")){
-                cout << "Please try again with other Member ID" << endl;
+    // check if member exist
+    if (!(ChocAnSystem::getInstance().searchMember(memberID))) {
+        cerr << "No Member with memberID " << memberID << " exist." << endl;
+        return;
+    }
+
+    // Actual update input field
+    cout << "\nPlease Enter update information here" << endl;
+    do {
+        {
+            // Scope for user input
+            getAddressInput(new_address, new_city, new_state, new_zip, "Member");
+        } // end of input scope
+
+        {   // Member Information confirmation scope
+            cout << "\nPlease make sure the following information is correct: " << endl;
+            cout << "MemberID: " << memberID << endl
+                << "New Address: " << new_address << endl
+                << "New City: " << new_city << endl
+                << "New State: " << new_state << endl
+                << "New Zipcode: " << new_zip << endl; 
+
+            if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
+                cout << "\nPlease try again with new information" << endl;
             }
         }
     } while (!confirm);
 
-    // Actual update input field
-    {
-        // Scope for user input
-        getAddressInput(new_address, new_city, new_state, new_zip, "Member");
-    } // end of input scope
-
-    {   // Member Information confirmation scope
-        cout << "Please make sure the following information is correct: " << endl;
-        cout << "MemberID: " << memberID << endl
-             << "New Address: " << new_address << endl
-             << "New City: " << new_city << endl
-             << "New State: " << new_state << endl
-             << "New Zipcode: " << new_zip << endl; 
-
-        if (!confirmPrompt("\nIs this information correct?")) {
-            cout << "\nPlease try again with update Member" << endl;
-            return;
-        }
-    }
-
     // Call actual update function from chocan
     if (ChocAnSystem::getInstance().updateMember(memberID, new_address, new_city, new_state, new_zip)) {
-        cout << "\nMember with MemberID " << memberID << "Updated successfully." << endl;
+        cout << "\nMember with MemberID " << memberID << " Updated successfully." << endl;
     } else {
         cout << "\nFailed to Update Member " << memberID << endl;
     }
@@ -210,34 +207,39 @@ void OperatorTerminal::addProvider()
           , new_city{}
           , new_state{}
           , new_zip{};
+    bool confirm {false};
 
     cout << "\n[Add new Provider]" << endl;
-
-    {   // Scope for user input //
-        // Provider name
-        cout << "Enter New Provider Name: ";
-        getline(cin, new_name);
-        if (new_name.length() > 25) {
-            new_name = new_name.substr(0, 25);
-        }
         
-        // get Provider Address
-        getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
-    }
+    cout << "\nPlease enter new Provider Information" << endl;
 
-    {   // Confirm block
-        cout << "Please confirm if this is the correct information: " << endl;
-        cout << "Provider Name: " << new_name << endl
-             << "Provider Adress: " << new_address << endl
-             << "Provider City: " << new_city << endl
-             << "Provider State: " << new_state << endl
-             << "Provider Zipcode: " << new_zip << endl;
-
-        if (!confirmPrompt("\nIs this information correct?")) {
-            cout << "\nPlease try again with add new Provider" << endl;
-            return;
+    do {
+        {   // Scope for user input //
+            // Provider name
+            cout << "Enter New Provider Name: ";
+            getline(cin, new_name);
+            if (new_name.length() > 25) {
+                new_name = new_name.substr(0, 25);
+            }
+            
+            // get Provider Address
+            getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
         }
-    } 
+
+        {   // Confirm block
+            cout << "\nPlease confirm if this is the correct information: " << endl;
+            cout << "Provider Name: " << new_name << endl
+                << "Provider Adress: " << new_address << endl
+                << "Provider City: " << new_city << endl
+                << "Provider State: " << new_state << endl
+                << "Provider Zipcode: " << new_zip << endl;
+
+            if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
+                cout << "\nPlease try again with new information" << endl;
+            }
+        }
+    } while (!confirm); 
+
 
     // Call to ChocAnSystem to add the new provider
     if (ChocAnSystem::getInstance().addNewProvider(new_name, new_address, new_city, new_state, new_zip)) {
@@ -258,46 +260,40 @@ void OperatorTerminal::updateProvider()
     cout << "\n[PROVIDER UPDATE]" << endl;
 
     do {
-        do {
-            getInput(providerID, "\nEnter provider Id for update:\n > ");
-            if (!(isValidID = validateIDFormat(providerID))) {
-                cout << "\nInvalid ID format (9-digit), please try again." << endl;
-            } 
-        } while (!isValidID);
-        
-        providerToUpdate = ChocAnSystem::getInstance().getProvider(providerID);
+        getInput(providerID, "\nEnter provider Id for update:\n > ");
+        if (!(isValidID = validateIDFormat(providerID))) {
+            cout << "\nInvalid ID format (9-digit), please try again." << endl;
+        } 
+    } while (!isValidID);
+    
+    // check if provider exist
+    if (!(ChocAnSystem::getInstance().searchProvider(providerID))) {
+        cerr << "No Provider with providerID " << providerID << " exist." << endl;
+        return;
+    }
 
-        if (providerToUpdate.isEmpty()) {
-            cout << "No Provider with Provider ID " << providerID << "Exist" << endl;
-            return; 
-        } else {
-            cout << "\nPlease review the provider info:" << endl;
-            providerToUpdate.displayProvider(); 
+    cout << "\nPlease Enter update information here" << endl;
+
+    do {
+        {
+            cout << "\nPlease Enter update information here" << endl;
+            // input scope, get Provider input
+            getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
+        }
+
+        {   // Member Information confirmation scope
+            cout << "\nPlease make sure the following information is correct: " << endl;
+            cout << "ProviderID: " << providerID << endl
+                << "New Address: " << new_address << endl
+                << "New City: " << new_city << endl
+                << "New State: " << new_state << endl
+                << "New Zipcode: " << new_zip << endl; 
 
             if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
-                cout << "Please try again with different Provider ID" << endl;
+                cout << "\nPlease try again with new information" << endl;
             }
         }
     } while (!confirm);
-    
-    {
-        // input scope, get Provider input
-        getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
-    }
-
-    {   // Member Information confirmation scope
-        cout << "Please make sure the following information is correct: " << endl;
-        cout << "ProviderID: " << providerID << endl
-             << "New Address: " << new_address << endl
-             << "New City: " << new_city << endl
-             << "New State: " << new_state << endl
-             << "New Zipcode: " << new_zip << endl; 
-
-        if (!confirmPrompt("\nIs this information correct?")) {
-            cout << "\nPlease try again with update Provider" << endl;
-            return;
-        }
-    }
 
     // Update provider info in system
     if (ChocAnSystem::getInstance().updateProvider(providerID, new_address, new_city, new_state, new_zip)) {
