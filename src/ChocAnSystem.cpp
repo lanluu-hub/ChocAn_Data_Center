@@ -46,7 +46,6 @@ float ChocAnSystem::getServiceFee(const string& servCode)
     service = Database::getInstance().getService(servCode);
 
     cout << "\nService Name: " << service.serviceName << endl;
-    cout << "Service Fee: $" << fixed << setprecision(2) << service.serviceFee << "\n";
     cout << "Is it Correct? (Y/N) \n > ";
     
     return service.serviceFee;
@@ -365,7 +364,10 @@ bool ChocAnSystem::updateProvider(const std::string &providerID, const std::stri
 
 Member ChocAnSystem::getMember(const std::string & memberID)
 {
-    return Database::getInstance().getMember(memberID);
+    Member updateMember;
+    // return a member obj base on Member id
+    //updateMember = Database::getInstance().getMember(memberID);   // UNCOMMENT WHEN DATABASE IS READY
+    return updateMember;
 }
 
 bool ChocAnSystem::updateMember(const std::string &memberID, const std::string &newAddrss

@@ -72,6 +72,8 @@ bool is_digits(const string &str);
  */
 int
 main() {
+    clearScreen();
+
     do {
         string userID {};
        
@@ -136,6 +138,7 @@ main() {
             }
             
             cout << "Session End. . . " << endl;
+            pressEnterToContinue();
         }
         else
             cerr << "Error: invalid userID!" <<endl;
@@ -150,7 +153,6 @@ main() {
 
 void intro()
 {
-    clearScreen();
     cout << "\n\t***************************************\n";
     cout << "\t*    Welcome to the ChocAn System    *\n";
     cout << "\t*    Developed by Team WhiteSpace    *\n";

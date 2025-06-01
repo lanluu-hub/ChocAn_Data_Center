@@ -147,10 +147,12 @@ float ProviderTerminal::billService()
         {
             clearScreen();
             cout << "Invalid Member ID format (9-digits ID), please try again." << endl;
+            cout << "---------------------------\n\n";
         } else if (ID != memberID && ID != ("000000000"))
         {
             clearScreen();
             cout << "Member ID does not match current session member ID." << endl;
+            cout << "---------------------------\n\n";
         }
     } while (!(isIdValid) || ID != memberID);
 
@@ -174,6 +176,7 @@ float ProviderTerminal::billService()
             if (!(isServCodeValid = validateServiceCodeFormat(servCode))) {
                 clearScreen();
                 cout << "Invalid Service code, please try again (6-digits code)" << endl;
+                cout << "---------------------------\n\n";
                 cout << inputLog;
             }
         } while (!isServCodeValid);
@@ -182,8 +185,13 @@ float ProviderTerminal::billService()
         fee = ChocAnSystem::getInstance().getServiceFee(servCode);
         cin >> userConfirm;
         cin.ignore(1024, '\n');
-        //clearScreen();
-        //cout << inputLog;
+
+        if (toupper(userConfirm) != 'Y')
+        {
+            clearScreen();
+            cout << inputLog;
+        }
+
     } while (toupper(userConfirm) != 'Y');
 
     string serviceName = ChocAnSystem::getInstance().getServiceName(servCode);
@@ -191,7 +199,6 @@ float ProviderTerminal::billService()
     roundedFee << fixed << setprecision(2) << fee;
     inputLog += "Enter Service Code:\n > " + servCode + "\n\n";
     inputLog += "Service Name: " + serviceName + "\n";
-    inputLog += "Service Fee: $" + roundedFee.str() + "\n";
     inputLog += "Is this correct? (Y/N)\n > " + string(1, toupper(userConfirm)) + "\n\n";
     // End Service code //
    
@@ -202,6 +209,7 @@ float ProviderTerminal::billService()
         if (!(isDateValid = validateServiceDateFormat(servDate))) {
             clearScreen();
             cout << "Invalid Service Date, Please try again (MM-DD-YYYY)" << endl;
+            cout << "---------------------------\n\n";
             cout << inputLog;
         }
     } while (!isDateValid);
@@ -213,6 +221,7 @@ float ProviderTerminal::billService()
     if (servComment.size() > 100) {
         servComment = servComment.substr(0, 100);
     }
+    clearScreen();
 
     if (ChocAnSystem::getInstance().serviceLog(userID, memberID, servCode, servDate, servComment)) {
         // If true: output "Service Logged Successfully!"
@@ -220,7 +229,7 @@ float ProviderTerminal::billService()
     } else {
         // If false: output "Error: Failed to Log current service!"
         cerr << "\nFailed to log current service" << endl;
-        //exit(EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     cout << "\nAmount of Fee: " << fee << endl;

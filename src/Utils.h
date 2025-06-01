@@ -18,3 +18,9 @@ inline void pressEnterToContinue() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     clearScreen();
 }
+
+inline void pressEnterToContinue(const std::string& text) {
+    std::cout << text;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    clearScreen();
+}
