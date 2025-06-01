@@ -138,6 +138,12 @@ void OperatorTerminal::updateMember()
         }
     } while (!isValidID);
 
+    // check if member exist
+    if (!(ChocAnSystem::getInstance().searchMember(memberID))) {
+        cerr << "No Member with memberID " << memberID << " exist." << endl;
+        return;
+    }
+
     // Actual update input field
     cout << "\nPlease Enter update information here" << endl;
     do {
@@ -260,6 +266,12 @@ void OperatorTerminal::updateProvider()
         } 
     } while (!isValidID);
     
+    // check if provider exist
+    if (!(ChocAnSystem::getInstance().searchProvider(providerID))) {
+        cerr << "No Provider with providerID " << providerID << " exist." << endl;
+        return;
+    }
+
     cout << "\nPlease Enter update information here" << endl;
 
     do {

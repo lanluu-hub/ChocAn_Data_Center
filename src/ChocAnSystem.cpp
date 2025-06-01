@@ -335,7 +335,7 @@ bool ChocAnSystem::searchProvider(const std::string &ProviderID)
 {
     // Return a bool, true if provider with "ProviderID" exist
     //return Database::getInstance().searchProvider(ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
-    return true;
+    return false;
 }
 
 Provider ChocAnSystem::getProvider(const std::string &ProviderID)
