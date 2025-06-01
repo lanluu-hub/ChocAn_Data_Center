@@ -11,6 +11,7 @@ using namespace std;
 
 const string MEMBER_REPORT_FOLDER = "src/reports/members/";
 const string PROVIDER_REPORT_FOLDER = "src/reports/providers/";
+const string SUMMARY_REPORT_FOLDER = "src/reports/summaries/";
 
 const string PROVIDDER_DIRECTORY_PATH = "src/reports/Provider_Directory.txt";
 
@@ -40,10 +41,8 @@ int ChocAnSystem::validateMembership(string& memberID)
 
 float ChocAnSystem::getServiceFee(const string& servCode)
 {
-    // make new Service Obj
     Service service;
 
-    // Call to Database::getInstance().getService(servCode); Return a Service Obj assignt to ServObj
     service = Database::getInstance().getService(servCode);
 
     cout << "\nService Name: " << service.serviceName << endl;
@@ -93,42 +92,15 @@ void ChocAnSystem::getProviderDirectory()
 
 void ChocAnSystem::generateMemberReport(const std::string &memberID)
 {
-    /*
-        workflow
-        2. ChocAnSystem
-        member <- Database::getMemberByID(memberID)
-        If member == null:
-            Output "Member does not exist"
-            return
-
-        Output:
-            "Member ID: " + member.ID
-            "Member Name: " + member.Name
-        Prompt: "Is this the correct member? (Y/N)"
-        If input != 'Y':
-            Output "Try again with another ID"
-            return
-
-        currentDate = getCurrentDate()
-        bestDate = currentDate - 7 days
-        rawFilename = member.Name + "_" + currentDate
-        formattedFilename = sanitizeFileName(rawFilename)
-        filePath = MEMBER_REPORT_FOLDER + formattedFilename + ".txt"
-
-        Call Database::generateMemberReport(member, bestDate, filePath)
-
-        call printMemberReport(filepath);
-    */
-
     Member member = getMember(memberID);
     char confirm {};
-    string  currentDate {},
-            bestDate {},
-            rawFilename {},
-            formattedFilename {},
-            filePath {};
+    string  currentDate {}, // hold current date
+            bestDate {},    // hold the earliest day the report will be generate
+            rawFilename {}, // hold the raw file name with whitespace and special character
+            formattedFilename {},   // hold clean filename e.g first_last_2025_05_31.txt
+            filePath {};    // file path to the report file src/reports/members/first_last_2025_05_31.txt
 
-    const string format = "%Y-%m-%d";
+    const string format = "%Y-%m-%d";   // Date format for fileName
 
     if (member.isEmpty()) {
         cout << "\nMember does not exist" << endl;
@@ -181,12 +153,19 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
     cout << "FilePath: " << filePath << endl;
     // End of temporary output - delete this when database is ready 
 
-    //Database::getInstance().generateMemberReport(member, bestDate, filePath);   // UNCOMMENTS THIS WHEN DATABASE READY
-    printMemberReport(filePath);
+    /// @brief Generates and writes a weekly member service report to the specified file.
+    ///        This function queries all services provided to the member within the last 7 days,
+    ///        then formats and saves the results into a human-readable report file.
+    /// @param memberID The unique 9-digit ID of the member whose report is being generated. Used to query ServiceLog.
+    /// @param bestDate The lower bound (7 days ago) in YYYY-MM-DD format. Only services on or after this date are included.
+    /// @param filePath The full path (e.g., "reports/members/John_Doe_2025-05-26.txt") where the report file will be written.
+    ///        The file should be opened and written inside this function. 
+    //Database::getInstance().generateMemberReport(memberID, bestDate, filePath);   // UNCOMMENTS THIS WHEN DATABASE READY
+    printReport(filePath);
     return;
 }
 
-void ChocAnSystem::printMemberReport(const std::string &filePath)
+void ChocAnSystem::printReport(const std::string &filePath)
 {
     ifstream file(filePath);
 
@@ -205,40 +184,14 @@ void ChocAnSystem::printMemberReport(const std::string &filePath)
 }
 
 void ChocAnSystem::generateProviderReport(const std::string &providerID)
-{
-    /*
-        providerObj <- Database::getInstance().getProviderByID(providerID)
-        if (providerObj is null):
-            Output: "Provider not found."
-            return
-
-        Output:
-            "Provider ID: " + providerObj.ID
-            "Provider Name: " + providerObj.Name
-        Prompt: "Is this the correct provider? (Y/N) >"
-        if input != 'Y':
-            Output: "Please try again with another ID"
-            return
-
-        currentDate <- getCurrentDate()                      // YYYY-MM-DD
-        cutoffDate <- currentDate - 7 days                   // for weekly report
-
-        rawFileName <- providerObj.Name + "_" + currentDate
-        formattedFileName <- sanitizeFileName(rawFileName)
-        filePath <- PROVIDER_REPORT_FOLDER + formattedFileName + ".txt"
-
-        Call Database::generateProviderReport(providerObj, cutoffDate, filePath)
-
-        Call ManagerTerminal::printReport(filePath)
-    */
-    
+{   
     Provider provider = getProvider(providerID);
     char confirm {};
-    string  currentDate {},
-            bestDate {},
-            rawFilename {},
-            formattedFilename {},
-            filePath {};
+    string  currentDate {}, // hold current date
+            bestDate {},    // hold the earliest day the report will be generate
+            rawFilename {}, // hold the raw file name with whitespace and special character
+            formattedFilename {},   // hold clean filename e.g first_last_2025_05_31.txt
+            filePath {};    // file path to the report file src/reports/members/first_last_2025_05_31.txt
 
     const string format = "%Y-%m-%d";
 
@@ -293,14 +246,57 @@ void ChocAnSystem::generateProviderReport(const std::string &providerID)
     cout << "FilePath: " << filePath << endl;
     // End of temporary output - delete this when database is ready 
 
-    //Database::getInstance().generateProviderReport(provider, bestDate, filePath);   // UNCOMMENTS THIS WHEN DATABASE READY
-    printProviderReport(filePath);
+    /// @brief Generates and writes a weekly provider service report to the specified file.
+    ///        This function queries all services provided by the given provider within the last 7 days,
+    ///        and formats the results into a detailed report suitable for accounts payable.
+    /// @param providerID The unique 9-digit ID of the provider. Used to retrieve service logs from the database.
+    /// @param bestDate The lower bound (7 days ago) in YYYY-MM-DD format. Only services on or after this date are included.
+    /// @param filePath The full file path (e.g., "reports/providers/Jane_Smith_2025-05-26.txt") where the report will be saved.
+    ///        The function should open and write to this file.
+    //Database::getInstance().generateProviderReport(providerID, bestDate, filePath);   // UNCOMMENTS THIS WHEN DATABASE READY
+    printReport(filePath);
     return;
 }
 
-void ChocAnSystem::printProviderReport(const std::string &filePath)
+void ChocAnSystem::generateSummaryReport()
 {
-    /// @todo need display
+    string  currentDate{},
+            cutoffDate {},
+            rawFilename {},
+            formattedFilename{},
+            filePath{};
+    
+    const string format {"%Y-%m-%d"};
+
+    currentDate = getCurrentDate();
+
+    // Get the cutoffDate //
+    // parse the date
+    chrono::system_clock::time_point parsedDate = parseDate(currentDate, format);
+
+    // subtract 7 days
+    chrono::system_clock::time_point lastDate = parsedDate - chrono::hours(24 * 7);
+
+    // Format the date back to string
+    cutoffDate = dateTime(lastDate, format);
+    // End of cutoffDate //
+
+    // Get Clean filePath for generated report //
+    rawFilename = "Summary_Report_" + currentDate;
+    formattedFilename = formatFileName(rawFilename);
+    filePath = SUMMARY_REPORT_FOLDER + formattedFilename + ".txt";
+    // End of filePath //
+
+    /// @brief Generates and writes a weekly summary report for accounts payable to the specified file.
+    ///        The report includes all providers who rendered services during the past 7 days,
+    ///        along with their total number of consultations and total fees.
+    ///        It also includes overall totals at the end of the report.
+    /// @param cutoffDate The lower bound (7 days ago) in YYYY-MM-DD format. Only services on or after this date are included.
+    /// @param filePath The full file path (e.g., "reports/SummaryReport_2025-05-26.txt") where the summary report will be written.
+    ///        The file should be created and written inside this function.
+    //Database::generateSummaryReport(cutoffDate, filePath); // UNCOMMENT THIS WHEN DATABASE IS READY
+
+    printReport(filePath);
 }
 
 /////////// Operator Terminal //////////

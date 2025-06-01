@@ -72,13 +72,6 @@ void ManagerTerminal::printMemberReport()
 
 void ManagerTerminal::printProviderReport()
 {
-    /*
-        Prompt: "Enter Provider ID:"
-        providerID <- Input
-        if (!validateFormat(providerID)):
-        return with message "Invalid format. Please try again."
-        Call ChocAnSystem::generateProviderReport(providerID)
-    */
     string  providerID{};
     bool isValidateID {false};
 
@@ -96,6 +89,9 @@ void ManagerTerminal::printProviderReport()
 
 void ManagerTerminal::printSummaryReport()
 {
+    cout << "\n\t[PRINT SUMMARY REPORT]" << endl;
+
+    ChocAnSystem::getInstance().generateSummaryReport();
 }
 
 //////////  Helper Function //////////

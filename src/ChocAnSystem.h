@@ -123,13 +123,13 @@ class ChocAnSystem {
         void generateMemberReport(const std::string & memberID);
 
         // [comments]
-        void printMemberReport(const std::string & filePath);
+        void printReport(const std::string & filePath);
         
         // [comments]
         void generateProviderReport(const std::string & providerID);
 
         // [comments]
-        void printProviderReport(const std::string & filePath);
+        void generateSummaryReport();
 
         // ---------------- Operator Terminal - Member Management ---------------- //
         
