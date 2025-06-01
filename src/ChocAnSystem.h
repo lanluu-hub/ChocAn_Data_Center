@@ -65,7 +65,20 @@ class ChocAnSystem {
          */
         float getServiceFee(const std::string& servCode);
 
+        /**
+         * @brief Retrieves the name of a service given its service code.
+         * @param servCode The 6-digit service code.
+         * @return The name of the service as a string.
+         */ 
         std::string getServiceName(const std::string& servCode);
+
+        /**
+         * @brief Retrieves the complete service object for a given service code.
+         * @param servCode The 6-digit service code.
+         * @return A Service object containing all service-related data.
+         */
+        Service getService(const std::string & servCode);
+
          /**
          * @brief Logs a service transaction to the system database.
          * @param providerID The ID of the provider delivering the service.
