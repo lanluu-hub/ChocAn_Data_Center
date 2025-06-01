@@ -2,6 +2,7 @@
 #include <cassert>
 #include "OperatorTerminal.h"
 #include "../ChocAnSystem.h"
+#include "../Utils.h"
 
 using namespace std;
 
@@ -18,8 +19,7 @@ int OperatorTerminal::showMenu()
     int numOfOption {};
 
     // show menu option
-    cout << "\n[Operator Terminal]" << endl;
-    cout << "Possible Operatrion: " << endl;
+    cout << "[Operator Terminal]" << endl;
     cout << "/--------------------" << endl;
     cout << "|  1. Add Member" << endl;
     cout << "|  2. Update Member" << endl;
@@ -38,27 +38,33 @@ void OperatorTerminal::commandHandler(int input)
 {
     switch (input) {
     case 1: // Add member
-        addMember();    
+        addMember();
+        pressEnterToContinue();
         break;
     
     case 2: // Update member
         updateMember();    
+        pressEnterToContinue();
         break;
 
     case 3: // Delete member
-        deleteMember();    
+        deleteMember();
+        pressEnterToContinue();
         break;
 
     case 4: // Add Provider
         addProvider();
+        pressEnterToContinue();
         break;
 
     case 5: // Update Provider
-        updateProvider(); 
+        updateProvider();
+        pressEnterToContinue();
         break;
 
     case 6: // Delete Provider
-        deleteProvider(); 
+        deleteProvider();
+        pressEnterToContinue();
         break;
 
     case 0: // exit
@@ -81,33 +87,33 @@ void OperatorTerminal::addMember()
             , new_zip{};
     bool confirm{false};
 
-    cout << "\n[Add new Member]" << endl;
-    
-    cout << "Please enter new Member information" << endl;
+    cout << "[Add Member]" << endl;
 
-    do {
-        {   // Scope for user input //
-            // member name
-            cout << "Enter New Member Name: ";
-            getline(cin, new_name);
-            if (new_name.length() > 25) {
-                new_name = new_name.substr(0, 25);
-            }
-            
-            getAddressInput(new_address, new_city, new_state, new_zip, "Member");
-        }   // End of input scope
+    {   // Scope for user input //
+        // member name
+        cout << "Enter New Member Name: ";
+        getline(cin, new_name);
+        if (new_name.length() > 25) {
+            new_name = new_name.substr(0, 25);
+        }
+        
+        getAddressInput(new_address, new_city, new_state, new_zip, "Member");
+    }   // End of input scope
 
-        {   // Confirm block
-            cout << "\nPlease confirm if this is the correct information: " << endl;
-            cout << "Member Name: " << new_name << endl
-                << "Member Adress: " << new_address << endl
-                << "Member City: " << new_city << endl
-                << "Member State: " << new_state << endl
-                << "Member Zipcode: " << new_zip << endl;
+    clearScreen();
 
-            if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
-                cout << "\nPlease try again with add new Member" << endl;
-            }
+    {   // Confirm block
+        cout << "Please confirm if this is the correct information: " << endl;
+        cout << "Member Name: " << new_name << endl
+             << "Member Adress: " << new_address << endl
+             << "Member City: " << new_city << endl
+             << "Member State: " << new_state << endl
+             << "Member Zipcode: " << new_zip << endl;
+
+        if (confirmPrompt("\nIs this information correct?")) {
+            cout << "\nPlease try again with add new Member" << endl;
+            return;
+
         }
     } while (!confirm); 
 
@@ -128,7 +134,7 @@ void OperatorTerminal::updateMember()
     string new_address{}, new_city{}, new_state{}, new_zip {};
     bool isValidID{false};
 
-    cout << "\n[MEMBER UPDATE]" << endl;
+    cout << "[Update Member]" << endl;
 
     do {
         getInput(memberID, "\nEnter member ID for update:\n > ");
@@ -179,7 +185,7 @@ void OperatorTerminal::deleteMember()
     string memberID{};
     bool isValidMemberID{false};
    
-    cout << "\n[Delete Member]" << endl;
+    cout << "[Delete Member]" << endl;
     do {
         getInput(memberID, "\nEnter member id: ");
         if (!(isValidMemberID = validateIDFormat(memberID))){
@@ -209,7 +215,7 @@ void OperatorTerminal::addProvider()
           , new_zip{};
     bool confirm {false};
 
-    cout << "\n[Add new Provider]" << endl;
+    cout << "[Add Provider]" << endl;
         
     cout << "\nPlease enter new Provider Information" << endl;
 
@@ -257,7 +263,7 @@ void OperatorTerminal::updateProvider()
     string new_address{}, new_city{}, new_state{}, new_zip {};
     bool isValidID{false};
 
-    cout << "\n[PROVIDER UPDATE]" << endl;
+    cout << "[Update Provider]" << endl;
 
     do {
         getInput(providerID, "\nEnter provider Id for update:\n > ");
@@ -308,7 +314,7 @@ void OperatorTerminal::deleteProvider()
     string providerID{};
     bool isValidProviderID{false};
 
-    cout << "\n[Delete Provider]" << endl;
+    cout << "[Delete Provider]" << endl;
     do {
         getInput(providerID, "\nEnter provider id: ");
         if (!(isValidProviderID = validateIDFormat(providerID))) {
@@ -378,3 +384,4 @@ bool OperatorTerminal::confirmPrompt(const std::string &message)
     cin.ignore();
     return toupper(confirm) == 'Y';
 }
+

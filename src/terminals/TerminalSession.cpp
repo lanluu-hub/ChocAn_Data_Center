@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "TerminalSession.h"
+#include "../Utils.h"
 
 TerminalSession::TerminalSession()
 {
@@ -11,17 +12,20 @@ void TerminalSession::runSession()
     int input {};
     int numberOfOption {};
 
-    std::cout << "\nLogin Success\n" << std::endl;
-    
+    std::cout << "[Login Success]\n";
+    std::cout << "---------------\n\n";
+    pressEnterToContinue();
+
     do { 
-        numberOfOption = showMenu();    // Call to child class showMenu, and return the number of menu options
         do {
+            numberOfOption = showMenu();    // Call to child class showMenu, and return the number of menu options
             std::cout << "Please choose your option: " << std::endl;
             std::cout << "> ";
             input = getInput();
+            clearScreen();
 
             if (input < 0 || input > numberOfOption) {
-                std::cout << "Invalid option, please choose again: \n";
+                std::cout << "Invalid option, please choose again\n";
             }
         } while (input < 0 || input > numberOfOption);
         
@@ -80,3 +84,4 @@ bool TerminalSession::is_digits(const std::string &str) const
 
 TerminalSession::~TerminalSession()
 {}
+

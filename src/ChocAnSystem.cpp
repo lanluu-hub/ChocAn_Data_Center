@@ -51,6 +51,14 @@ float ChocAnSystem::getServiceFee(const string& servCode)
     return service.serviceFee;
 }
 
+string ChocAnSystem::getServiceName(const string& servCode) {
+    Service service;
+
+    service = Database::getInstance().getService(servCode);
+
+    return service.serviceName;
+}
+
 bool ChocAnSystem::serviceLog(string &providerID, string &memberID
                              , string &serviceCode, string &serviceDate, string &serviceComment)
 {
@@ -60,7 +68,7 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
     string formattedTime = dateTime(now, format);
 
     // Temporary output
-    cout << "\nSave this service:" << endl;
+    cout << "[Saving service]\n" << endl;
     cout << "Current date and time: " << formattedTime << endl;
     cout << "Date service was provided: " << serviceDate << endl;
     cout << "Provider number: " << providerID << endl;
@@ -478,3 +486,4 @@ bool ChocAnSystem::writeProviderDirectoryToFile(vector<Service> &services, const
     writeToFile.close();
     return true;
 }
+

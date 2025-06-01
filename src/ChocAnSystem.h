@@ -65,6 +65,7 @@ class ChocAnSystem {
          */
         float getServiceFee(const std::string& servCode);
 
+        std::string getServiceName(const std::string& servCode);
          /**
          * @brief Logs a service transaction to the system database.
          * @param providerID The ID of the provider delivering the service.
