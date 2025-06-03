@@ -4,6 +4,8 @@
 #include <cstring>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
+#include <cctype>
 #include "Database.h"
 
 Database::Database() : db(nullptr)
@@ -263,26 +265,179 @@ bool Database::serviceLog(const std::string &providerId,
     return success;
 }
 
-/* Functionalities for Operator Terminal*/ 
+/* Functionalities for Operator Terminal*/
 
-// Member Functionalities
-bool addNewMember(const std::string &newName, const std::string &newAddr, const std::string &newCity, const std::string &newState, const std::string &newZip)
+bool Database::update(const std::string &id,
+                      const std::string &table,
+                      const std::string &address,
+                      const std::string &city,
+                      const std::string &state,
+                      const std::string &zip)
 {
-    return true;
-}
-bool updateMember(const std::string &memberID, const std::string &newAddrss, const std::string &newCty, const std::string &newState, const std::string &newZip)
-{
-    return true;
-}
-bool deleteMember(const std::string &memberID)
-{
-    return true;
+    std::string id_column = (table == "Members") ? "member_id" :
+                            (table == "Users")   ? "user_id"   : "";
+
+    if (id_column.empty())
+    {
+        std::cerr << "Invalid table: " << table << "\n";
+        return false;
+    }
+
+    // Ensure ID is numeric before converting
+    if (!std::all_of(id.begin(), id.end(), ::isdigit))
+    {
+        std::cerr << "Invalid numeric ID: " << id << "\n";
+        return false;
+    }
+
+    std::string query = "UPDATE " + table +
+                        " SET address = ?, city = ?, state = ?, zip_code = ? WHERE " + id_column + " = ?;";
+
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare update: " << sqlite3_errmsg(db) << "\n";
+        return false;
+    }
+
+    sqlite3_bind_text(stmt, 1, address.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, city.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, state.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, zip.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int64(stmt, 5, std::stoll(id));  // Correctly bind numeric ID
+
+    bool success = false;
+    if (sqlite3_step(stmt) == SQLITE_DONE)
+    {
+        int changes = sqlite3_changes(db);
+        success = (changes > 0);
+        if (!success)
+        {
+            std::cerr << "No rows updated. Possibly invalid ID: " << id << "\n";
+        }
+    }
+    else
+    {
+        std::cerr << "Failed to execute update: " << sqlite3_errmsg(db) << "\n";
+    }
+
+    sqlite3_finalize(stmt);
+    return success;
 }
 
-// Provider Functionalities
-bool addNewProvider(const std::string &newName, std::string &newAddr, const std::string &newCity, const std::string &newState, const std::string &newZip);
-bool updateProvider(const std::string &providerID, const std::string &newAddrss, const std::string &newCty, const std::string &newState, const std::string &newZip);
-bool deleteProvider(const std::string &providerID);
+
+bool Database::add(const std::string &table,
+                   const std::string &name,
+                   const std::string &address,
+                   const std::string &city,
+                   const std::string &state,
+                   const std::string &zip)
+{
+    std::string query;
+    sqlite3_stmt* stmt;
+
+    // 1. Members Table (simple insert)
+    if (table == "Members") {
+        query = R"SQL(
+            INSERT INTO Members (name, address, city, state, zip_code, status)
+            VALUES (?, ?, ?, ?, ?, 'Active');
+        )SQL";
+
+        if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+            std::cerr << " Failed to prepare Members insert: " << sqlite3_errmsg(db) << "\n";
+            return false;
+        }
+
+        sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 2, address.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 3, city.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 4, state.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 5, zip.c_str(), -1, SQLITE_STATIC);
+
+    }
+    // 2. Users Table (specifically for Provider)
+    else if (table == "Users") {
+        // Step 1: Get next available provider ID
+        const char* maxQuery = "SELECT MAX(user_id) FROM Users WHERE user_type = 'Provider';";
+
+        if (sqlite3_prepare_v2(db, maxQuery, -1, &stmt, nullptr) != SQLITE_OK) {
+            std::cerr << " Failed to query max provider ID: " << sqlite3_errmsg(db) << "\n";
+            return false;
+        }
+
+        int newID = 200000001;
+        if (sqlite3_step(stmt) == SQLITE_ROW && sqlite3_column_type(stmt, 0) != SQLITE_NULL) {
+            newID = sqlite3_column_int(stmt, 0) + 1;
+        }
+        sqlite3_finalize(stmt);
+
+        // Step 2: Insert with new provider ID
+        query = R"SQL(
+            INSERT INTO Users (user_id, name, address, city, state, zip_code, user_type)
+            VALUES (?, ?, ?, ?, ?, ?, 'Provider');
+        )SQL";
+
+        if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+            std::cerr << " Failed to prepare Provider insert: " << sqlite3_errmsg(db) << "\n";
+            return false;
+        }
+
+        sqlite3_bind_int(stmt, 1, newID);
+        sqlite3_bind_text(stmt, 2, name.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 3, address.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 4, city.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 5, state.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 6, zip.c_str(), -1, SQLITE_STATIC);
+
+        std::cout << " Provider added with ID: " << newID << "\n";
+    }
+    else {
+        std::cerr << " Invalid table name: " << table << "\n";
+        return false;
+    }
+
+    // Final execution
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+    if (!success) {
+        std::cerr << " Failed to execute insert: " << sqlite3_errmsg(db) << "\n";
+    }
+
+    sqlite3_finalize(stmt);
+    return success;
+}
+
+
+bool Database::deleteUser(const std::string& table, const std::string &id)
+{
+    std::string id_column = (table == "Members") ? "member_id" :
+                            (table == "Users")   ? "user_id"   : "";
+
+    if (id_column.empty()) {
+        std::cerr << "Invalid table: " << table << "\n";
+        return false;
+    }
+
+    if (!std::all_of(id.begin(), id.end(), ::isdigit)) {
+        std::cerr << "Invalid numeric ID: " << id << "\n";
+        return false;
+    }
+
+    std::string query = "DELETE FROM " + table + " WHERE " + id_column + " = ?;";
+    sqlite3_stmt* stmt;
+
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Failed to prepare delete statement: " << sqlite3_errmsg(db) << "\n";
+        return false;
+    }
+
+    sqlite3_bind_int64(stmt, 1, std::stoll(id));
+
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE && sqlite3_changes(db) > 0);
+    sqlite3_finalize(stmt);
+    return success;
+}
+
+
 
 /* Operator Terminal End*/
 
@@ -290,7 +445,7 @@ bool deleteProvider(const std::string &providerID);
 
 bool Database::searchMember(const std::string memberID)
 {
-    return search("Memebers", "member_id", memberID);
+    return search("Members", "member_id", memberID);
 }
 bool Database::searchProvider(const std::string providerID)
 {
@@ -299,15 +454,22 @@ bool Database::searchProvider(const std::string providerID)
 
 bool Database::search(const std::string &table, const std::string &column, const std::string &id)
 {
+    // Validate that the ID is numeric
+    if (!std::all_of(id.begin(), id.end(), ::isdigit))
+    {
+        std::cerr << "Invalid numeric ID: " << id << "\n";
+        return false;
+    }
     std::string query = "SELECT 1 FROM " + table + " WHERE " + column + " = ?;";
-
     sqlite3_stmt *stmt;
 
     if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
         return false;
 
-    sqlite3_bind_text(stmt, 1, id.c_str(), -1, SQLITE_STATIC);
+    sqlite3_bind_int64(stmt, 1, std::stoll(id));
+
     bool exists = (sqlite3_step(stmt) == SQLITE_ROW);
+
     sqlite3_finalize(stmt);
     return exists;
 }
