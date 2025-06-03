@@ -249,7 +249,7 @@ float ProviderTerminal::billService()
         exit(EXIT_FAILURE);
     }
 
-    cout << "\nAmount of Fee: " << fixed << setprecision(2) << fee << endl;
+    cout << "\nAmount of Fee: $" << fixed << setprecision(2) << fee << endl;
     pressEnterToContinue();
     // End current session with member ID
     // clear memberID
