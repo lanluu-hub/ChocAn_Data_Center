@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cassert>
+#include <vector>
+#include <algorithm>
 #include "OperatorTerminal.h"
 #include "../ChocAnSystem.h"
 #include "../Utils.h"
@@ -14,9 +16,9 @@ OperatorTerminal::~OperatorTerminal()
 {
 }
 
-int OperatorTerminal::showMenu() 
+int OperatorTerminal::showMenu()
 {
-    int numOfOption {};
+    int numOfOption{};
 
     // show menu option
     cout << "[Operator Terminal]" << endl;
@@ -29,21 +31,21 @@ int OperatorTerminal::showMenu()
     cout << "|  6. Delete Provider" << endl;
     cout << "|  0. End Session" << endl;
     cout << "\\___________________" << endl;
-    
+
     numOfOption = 6;
     return numOfOption;
 }
 
-void OperatorTerminal::commandHandler(int input) 
+void OperatorTerminal::commandHandler(int input)
 {
     switch (input) {
     case 1: // Add member
         addMember();
         pressEnterToContinue();
         break;
-    
+
     case 2: // Update member
-        updateMember();    
+        updateMember();
         pressEnterToContinue();
         break;
 
@@ -68,7 +70,7 @@ void OperatorTerminal::commandHandler(int input)
         break;
 
     case 0: // exit
-        break; 
+        break;
 
     default:
         cerr << "\nError: Unexpect case encounter!" << __FILE__ << __LINE__ << endl;
@@ -94,11 +96,15 @@ void OperatorTerminal::addMember()
         {   // Scope for user input //
             // member name
             cout << "Enter New Member Name: ";
-            getline(cin, new_name);
+            do
+            {
+                getline(cin, new_name);
+            } while (new_name.empty() || new_name == "\0");
+
             if (new_name.length() > 25) {
                 new_name = new_name.substr(0, 25);
             }
-            
+
             getAddressInput(new_address, new_city, new_state, new_zip, "Member");
         }   // End of input scope
 
@@ -122,7 +128,8 @@ void OperatorTerminal::addMember()
     // Called to ChocAn to add new member, a bool is being return, true = successfull, false otherwise
     if (ChocAnSystem::getInstance().addNewMember(new_name, new_address, new_city, new_state, new_zip)) {
         cout << "\nMember added successfully." << endl;
-    } else {
+    }
+    else {
         cout << "\nFailed to add new Member." << endl;
     }
     return;
@@ -131,10 +138,10 @@ void OperatorTerminal::addMember()
 void OperatorTerminal::updateMember()
 {
     Member memberToUpdate;
-    bool confirm {false};
+    bool confirm{ false };
     string memberID{};
-    string new_address{}, new_city{}, new_state{}, new_zip {};
-    bool isValidID{false};
+    string new_address{}, new_city{}, new_state{}, new_zip{};
+    bool isValidID{ false };
 
     cout << "[Update Member]" << endl;
 
@@ -185,23 +192,25 @@ void OperatorTerminal::updateMember()
 void OperatorTerminal::deleteMember()
 {
     string memberID{};
-    bool isValidMemberID{false};
-   
+    bool isValidMemberID{ false };
+
     cout << "[Delete Member]" << endl;
     do {
         getInput(memberID, "\nEnter member id: ");
-        if (!(isValidMemberID = validateIDFormat(memberID))){
+        if (!(isValidMemberID = validateIDFormat(memberID))) {
             cout << "Invalid member id format (9-digit), please try again." << endl;
         }
-    } while(!isValidMemberID);
+    } while (!isValidMemberID);
 
     // Check if memberID is in database
     if (!(ChocAnSystem::getInstance().searchMember(memberID))) {
         cout << "\nCannot delete member: No such member exist" << endl;
-    } else {
+    }
+    else {
         if ((ChocAnSystem::getInstance().deleteMember(memberID))) {
             cout << "\nMember is deleted successfully" << endl;
-        } else {
+        }
+        else {
             cout << "\nCannot deleted Member with MemberID: " << memberID << endl;
         }
     }
@@ -225,11 +234,16 @@ void OperatorTerminal::addProvider()
         {   // Scope for user input //
             // Provider name
             cout << "Enter New Provider Name: ";
-            getline(cin, new_name);
+
+            do
+            {
+                getline(cin, new_name);
+            } while (new_name.empty() || new_name == "\0");
+
             if (new_name.length() > 25) {
                 new_name = new_name.substr(0, 25);
             }
-            
+
             // get Provider Address
             getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
         }
@@ -252,7 +266,8 @@ void OperatorTerminal::addProvider()
     // Call to ChocAnSystem to add the new provider
     if (ChocAnSystem::getInstance().addNewProvider(new_name, new_address, new_city, new_state, new_zip)) {
         cout << "\nProvider added successfully." << endl;
-    } else {
+    }
+    else {
         cout << "\nFailed to add new Provider." << endl;
     }
 }
@@ -260,10 +275,10 @@ void OperatorTerminal::addProvider()
 void OperatorTerminal::updateProvider()
 {
     Provider providerToUpdate;
-    bool confirm {false};
+    bool confirm{ false };
     string providerID{};
-    string new_address{}, new_city{}, new_state{}, new_zip {};
-    bool isValidID{false};
+    string new_address{}, new_city{}, new_state{}, new_zip{};
+    bool isValidID{ false };
 
     cout << "[Update Provider]" << endl;
 
@@ -273,7 +288,7 @@ void OperatorTerminal::updateProvider()
             cout << "\nInvalid ID format (9-digit), please try again." << endl;
         } 
     } while (!isValidID);
-    
+
     // check if provider exist
     if (!(ChocAnSystem::getInstance().searchProvider(providerID))) {
         cerr << "No Provider with providerID " << providerID << " exist." << endl;
@@ -306,7 +321,8 @@ void OperatorTerminal::updateProvider()
     // Update provider info in system
     if (ChocAnSystem::getInstance().updateProvider(providerID, new_address, new_city, new_state, new_zip)) {
         cout << "\nProvider with ID " << providerID << " updated successfully." << endl;
-    } else {
+    }
+    else {
         cout << "\nFailed to update provider with ID " << providerID << endl;
     }
 }
@@ -314,7 +330,7 @@ void OperatorTerminal::updateProvider()
 void OperatorTerminal::deleteProvider()
 {
     string providerID{};
-    bool isValidProviderID{false};
+    bool isValidProviderID{ false };
 
     cout << "[Delete Provider]" << endl;
     do {
@@ -327,10 +343,12 @@ void OperatorTerminal::deleteProvider()
     // Check if providerID is in database
     if (!(ChocAnSystem::getInstance().searchProvider(providerID))) {
         cout << "\nCannot delete provider: No such provider exists" << endl;
-    } else {
+    }
+    else {
         if ((ChocAnSystem::getInstance().deleteProvider(providerID))) {
             cout << "\nProvider is deleted successfully" << endl;
-        } else {
+        }
+        else {
             cout << "\nCannot delete Provider with ProviderID: " << providerID << endl;
         }
     }
@@ -338,56 +356,101 @@ void OperatorTerminal::deleteProvider()
 
 ////////// HELPER FUNCTION //////////
 
-bool OperatorTerminal::validateZipcodeFormat(const std::string &str)
+bool OperatorTerminal::validateZipcodeFormat(const std::string& str)
 {
     return is_digits(str) && str.length() == 5;
 }
 
-void OperatorTerminal::getAddressInput(std::string &address, std::string &city, std::string &state
-                                      , std::string &zip, const std::string &role)
+void OperatorTerminal::getAddressInput(std::string& address, std::string& city, std::string& state
+    , std::string& zip, const std::string& role)
 {
-    bool isValidZipcode{false};
+    vector<string> validStates =
+    {
+        "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+        "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+        "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+        "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+        "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+        "ALABAMA",       "ALASKA",         "ARIZONA",       "ARKANSAS",
+        "CALIFORNIA",    "COLORADO",       "CONNECTICUT",   "DELAWARE",
+        "FLORIDA",       "GEORGIA",        "HAWAII",        "IDAHO",
+        "ILLINOIS",      "INDIANA",        "IOWA",          "KANSAS",
+        "KENTUCKY",      "LOUISIANA",      "MAINE",         "MARYLAND",
+        "MASSACHUSETTS", "MICHIGAN",       "MINNESOTA",     "MISSISSIPPI",
+        "MISSOURI",      "MONTANA",        "NEBRASKA",      "NEVADA",
+        "NEW HAMPSHIRE", "NEW JERSEY",     "NEW MEXICO",    "NEW YORK",
+        "NORTH CAROLINA","NORTH DAKOTA",   "OHIO",          "OKLAHOMA",
+        "OREGON",        "PENNSYLVANIA",   "RHODE ISLAND",  "SOUTH CAROLINA",
+        "SOUTH DAKOTA",  "TENNESSEE",      "TEXAS",         "UTAH",
+        "VERMONT",       "VIRGINIA",       "WASHINGTON",    "WEST VIRGINIA",
+        "WISCONSIN",     "WYOMING"
+    };
+    bool isValidState = false;
+    bool isValidZipcode{ false };
 
     // Input new address
     cout << "Enter " << role << " street Address: ";
-    getline(cin, address);
+    do
+    {
+        getline(cin, address);
+    } while (address.empty() || address == "\0");
+
     if (address.length() > 25) {
         address = address.substr(0, 25);
     }
+    toupper(address[0]);
 
     // New city
     cout << "Enter " << role << " city: ";
-    getline(cin, city);
+    do
+    {
+        getline(cin, city);
+    } while (city.empty() || city == "\0");
+
     if (city.length() > 14) {
         city = city.substr(0, 14);
     }
+    toupper(city[0]);
 
     // Capitalize first Character
 
     // New state
     cout << "Enter " << role << " State (e.g. OR, WA,...): ";
-    getline(cin, state);
-    if (state.length() > 2) {
+    do
+    {
+        getline(cin, state);
+
+        transform(state.begin(), state.end(), state.begin(), ::toupper);
+
+        isValidState = false;   //set false first before compare
+        for (const auto& valid : validStates)
+        {
+            if (state == valid)
+            {
+                isValidState = true;
+                break;
+            }
+        }
+    } while (!isValidState);
+
+    if (state.length() > 2)
+    {
         state = state.substr(0, 2);
     }
     
-    // Capitalize State (e.g., OR)
-    for (char &c : state) {
-        c = toupper(c);
-    }
-
     // New zip code
     do {
         getInput(zip, "Enter " + role + " Zipcode: ");
         if (!(isValidZipcode = validateZipcodeFormat(zip))) {
             cout << "Invalid zipcode format, please try again (5-digit)" << endl;
-        } 
-    } while (!isValidZipcode); 
+        }
+    } while (!isValidZipcode);
 }
 
-bool OperatorTerminal::confirmPrompt(const std::string &message)
+
+bool OperatorTerminal::confirmPrompt(const std::string& message)
 {
-    char confirm {};
+    char confirm{};
     cout << message << " (Y/N)\n > ";
     cin >> confirm;
     cin.ignore();
