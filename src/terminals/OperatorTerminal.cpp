@@ -82,12 +82,12 @@ void OperatorTerminal::commandHandler(int input)
 void OperatorTerminal::addMember()
 {
     string  new_id{}
-            , new_name{}
-            , new_address{}
-            , new_city{}
-            , new_state{}
-            , new_zip{};
-    bool confirm{false};
+        , new_name{}
+        , new_address{}
+        , new_city{}
+        , new_state{}
+    , new_zip{};
+    bool confirm{ false };
 
     cout << "[Add Member]" << endl;
 
@@ -101,9 +101,7 @@ void OperatorTerminal::addMember()
                 getline(cin, new_name);
             } while (new_name.empty() || new_name == "\0");
 
-            if (new_name.length() > 25) {
-                new_name = new_name.substr(0, 25);
-            }
+            new_name.front() = toupper(new_name.front());
 
             getAddressInput(new_address, new_city, new_state, new_zip, "Member");
         }   // End of input scope
@@ -123,7 +121,7 @@ void OperatorTerminal::addMember()
                 cout << "\nPlease try again with add new Member" << endl;
             }
         }
-    } while (!confirm); 
+    } while (!confirm);
 
     // Called to ChocAn to add new member, a bool is being return, true = successfull, false otherwise
     if (ChocAnSystem::getInstance().addNewMember(new_name, new_address, new_city, new_state, new_zip)) {
@@ -173,7 +171,7 @@ void OperatorTerminal::updateMember()
                 << "New Address: " << new_address << endl
                 << "New City: " << new_city << endl
                 << "New State: " << new_state << endl
-                << "New Zipcode: " << new_zip << endl; 
+                << "New Zipcode: " << new_zip << endl;
 
             if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
                 cout << "\nPlease try again with new information" << endl;
@@ -184,7 +182,8 @@ void OperatorTerminal::updateMember()
     // Call actual update function from chocan
     if (ChocAnSystem::getInstance().updateMember(memberID, new_address, new_city, new_state, new_zip)) {
         cout << "\nMember with MemberID " << memberID << " Updated successfully." << endl;
-    } else {
+    }
+    else {
         cout << "\nFailed to Update Member " << memberID << endl;
     }
 }
@@ -219,22 +218,21 @@ void OperatorTerminal::deleteMember()
 void OperatorTerminal::addProvider()
 {
     string  new_id{}
-          , new_name{}
-          , new_address{}
-          , new_city{}
-          , new_state{}
-          , new_zip{};
-    bool confirm {false};
+        , new_name{}
+        , new_address{}
+        , new_city{}
+        , new_state{}
+    , new_zip{};
+    bool confirm{ false };
 
     cout << "[Add Provider]" << endl;
-        
+
     cout << "\nPlease enter new Provider Information" << endl;
 
     do {
         {   // Scope for user input //
             // Provider name
             cout << "Enter New Provider Name: ";
-
             do
             {
                 getline(cin, new_name);
@@ -243,7 +241,7 @@ void OperatorTerminal::addProvider()
             if (new_name.length() > 25) {
                 new_name = new_name.substr(0, 25);
             }
-
+            new_name.front() = toupper(new_name.front());
             // get Provider Address
             getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
         }
@@ -260,7 +258,7 @@ void OperatorTerminal::addProvider()
                 cout << "\nPlease try again with new information" << endl;
             }
         }
-    } while (!confirm); 
+    } while (!confirm);
 
 
     // Call to ChocAnSystem to add the new provider
@@ -286,7 +284,7 @@ void OperatorTerminal::updateProvider()
         getInput(providerID, "\nEnter provider Id for update:\n > ");
         if (!(isValidID = validateIDFormat(providerID))) {
             cout << "\nInvalid ID format (9-digit), please try again." << endl;
-        } 
+        }
     } while (!isValidID);
 
     // check if provider exist
@@ -310,7 +308,7 @@ void OperatorTerminal::updateProvider()
                 << "New Address: " << new_address << endl
                 << "New City: " << new_city << endl
                 << "New State: " << new_state << endl
-                << "New Zipcode: " << new_zip << endl; 
+                << "New Zipcode: " << new_zip << endl;
 
             if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
                 cout << "\nPlease try again with new information" << endl;
@@ -398,7 +396,7 @@ void OperatorTerminal::getAddressInput(std::string& address, std::string& city, 
     if (address.length() > 25) {
         address = address.substr(0, 25);
     }
-    toupper(address[0]);
+    transform(address.begin(), address.end(), address.begin(), ::toupper);
 
     // New city
     cout << "Enter " << role << " city: ";
@@ -410,9 +408,7 @@ void OperatorTerminal::getAddressInput(std::string& address, std::string& city, 
     if (city.length() > 14) {
         city = city.substr(0, 14);
     }
-    toupper(city[0]);
-
-    // Capitalize first Character
+    city.front() = toupper(city.front());
 
     // New state
     cout << "Enter " << role << " State (e.g. OR, WA,...): ";
@@ -437,7 +433,7 @@ void OperatorTerminal::getAddressInput(std::string& address, std::string& city, 
     {
         state = state.substr(0, 2);
     }
-    
+
     // New zip code
     do {
         getInput(zip, "Enter " + role + " Zipcode: ");
