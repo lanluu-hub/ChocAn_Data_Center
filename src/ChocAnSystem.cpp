@@ -306,78 +306,59 @@ void ChocAnSystem::generateSummaryReport()
 bool ChocAnSystem::addNewMember(const std::string & newName, const std::string & newAddr
                                 , const std::string & newCity, const std::string & newState, const std::string & newZip)
 {
-    // return a bool, true if successfully added new member
-    return Database::getInstance().add("Members", newName, newAddr, newCity, newState, newZip);   // UNCOMMENT WHEN DATABASE IS READY
-    //return false;
+    return Database::getInstance().add("Members", newName, newAddr, newCity, newState, newZip);   
 }
 
 bool ChocAnSystem::searchMember(const std::string &memberID)
 {
-    // Return a bool, true if member with "memberID" exist
-    return Database::getInstance().searchMember(memberID); // UNCOMMENTS WHEN DATABASE IS READY
-    //return true;
+    return Database::getInstance().searchMember(memberID); 
 }
 
 bool ChocAnSystem::updateMember(const std::string &memberID, const std::string &newAddrss
                                 , const std::string &newCty, const std::string &newState, const std::string &newZip)
 {
-    // return bool, true if successful update.
-    return Database::getInstance().update(memberID, "Members", newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
-    //return false;
+    return Database::getInstance().update(memberID, "Members", newAddrss, newCty, newState, newZip); 
+}
+
+Member ChocAnSystem::getMember(const std::string & memberID)
+{
+    Member updateMember;
+    updateMember = Database::getInstance().getMember(memberID);    
+    return updateMember;
 }
 
 bool ChocAnSystem::deleteMember(const std::string &memberID)
 {
-    // Return a bool, true if successfully delete
-    return Database::getInstance().deleteUser("Members",memberID); // UNCOMMENTS WHEN DATABASE IS READY
-    //return false;
+    return Database::getInstance().deleteUser("Members",memberID); 
 }
 
 bool ChocAnSystem::addNewProvider(const std::string &newName, const std::string &newAddr
                                  , const std::string &newCity, const std::string &newState, const std::string &newZip)
 {
-    // return bool, True if Added successfully
-    return Database::getInstance().add("Users", newName, newAddr, newCity, newState, newZip);    // UNCOMMENT WHEN DATABASE IS READY
-    //return false;
+    return Database::getInstance().add("Users", newName, newAddr, newCity, newState, newZip);    
 }
 
 bool ChocAnSystem::searchProvider(const std::string &ProviderID)
 {
-    // Return a bool, true if provider with "ProviderID" exist
-    return Database::getInstance().searchProvider(ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
-    //return false;
+    return Database::getInstance().searchProvider(ProviderID); 
 }
 
 Provider ChocAnSystem::getProvider(const std::string &ProviderID)
 {
     Provider updateProvider;
-    // return a Provider obj base on Provider id
-    updateProvider = Database::getInstance().getProvider(ProviderID);   // UNCOMMENT WHEN DATABASE IS READY
+    updateProvider = Database::getInstance().getProvider(ProviderID);   
     return updateProvider;
 }
 
 bool ChocAnSystem::updateProvider(const std::string &providerID, const std::string &newAddrss
                                  , const std::string &newCty, const std::string &newState, const std::string &newZip)
 {
-    // return bool, true if successful update.
-    return Database::getInstance().update(providerID, "Users", newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
-    //return false;
+    return Database::getInstance().update(providerID, "Users", newAddrss, newCty, newState, newZip); 
 }
-
-Member ChocAnSystem::getMember(const std::string & memberID)
-{
-    Member updateMember;
-    // return a member obj base on Member id
-    updateMember = Database::getInstance().getMember(memberID);   // UNCOMMENT WHEN DATABASE IS READY
-    return updateMember;
-}
-
 
 bool ChocAnSystem::deleteProvider(const std::string &ProviderID)
 {
-    // Return a bool
-    return Database::getInstance().deleteUser("Users", ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
-    //return false;
+    return Database::getInstance().deleteUser("Users", ProviderID); 
 }
 
 ////////// Helper function /////////

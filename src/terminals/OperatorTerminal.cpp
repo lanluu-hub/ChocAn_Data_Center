@@ -96,16 +96,18 @@ void OperatorTerminal::addMember()
         {   // Scope for user input //
             // member name
             cout << "Enter New Member Name: ";
-            do
-            {
+            do {
                 getline(cin, new_name);
-            } while (new_name.empty() || new_name == "\0");
+                if (new_name.empty()) {
+                    cout << "Name cannot be empty. Try again:\n > ";
+                }
+            } while (new_name.empty());
 
             if (new_name.length() > 25) {
                 new_name = new_name.substr(0, 25);
             }
 
-            new_name.front() = toupper(new_name.front());
+            transform(new_name.begin(), new_name.end(), new_name.begin(), ::toupper);
 
             getAddressInput(new_address, new_city, new_state, new_zip, "Member");
         }   // End of input scope
@@ -222,11 +224,11 @@ void OperatorTerminal::deleteMember()
 void OperatorTerminal::addProvider()
 {
     string  new_id{}
-        , new_name{}
-        , new_address{}
-        , new_city{}
-        , new_state{}
-    , new_zip{};
+            , new_name{}
+            , new_address{}
+            , new_city{}
+            , new_state{}
+        , new_zip{};
     bool confirm{ false };
 
     cout << "[Add Provider]" << endl;
@@ -235,22 +237,25 @@ void OperatorTerminal::addProvider()
 
     do {
         {   // Scope for user input //
-            // Provider name
             cout << "Enter New Provider Name: ";
-            do
-            {
+            do {
                 getline(cin, new_name);
-            } while (new_name.empty() || new_name == "\0");
+                if (new_name.empty()) {
+                    cout << "Name cannot be empty. Try again:\n > ";
+                }
+            } while (new_name.empty());
 
             if (new_name.length() > 25) {
                 new_name = new_name.substr(0, 25);
             }
 
-            new_name.front() = toupper(new_name.front());
+            transform(new_name.begin(), new_name.end(), new_name.begin(), ::toupper);
 
             // get Provider Address
             getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
         }
+
+        clearScreen();
 
         {   // Confirm block
             cout << "\nPlease confirm if this is the correct information: " << endl;
@@ -261,6 +266,7 @@ void OperatorTerminal::addProvider()
                 << "Provider Zipcode: " << new_zip << endl;
 
             if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
+                clearScreen();
                 cout << "\nPlease try again with new information" << endl;
             }
         }
@@ -393,33 +399,43 @@ void OperatorTerminal::getAddressInput(std::string& address, std::string& city, 
 
     // Input new address
     cout << "Enter " << role << " street Address: ";
-    do
-    {
+    do {
         getline(cin, address);
-    } while (address.empty() || address == "\0");
+        if (address.empty()) {
+            cout << "Adress cannot be empty. Try again:\n > ";
+        }
+    } while (address.empty());
 
     if (address.length() > 25) {
         address = address.substr(0, 25);
     }
     transform(address.begin(), address.end(), address.begin(), ::toupper);
+    // End of Adress input
 
     // New city
     cout << "Enter " << role << " city: ";
-    do
-    {
+    do {
         getline(cin, city);
-    } while (city.empty() || city == "\0");
+        if (city.empty()) {
+            cout << "City cannot be empty. Try again:\n > ";
+        }
+    } while (city.empty());
 
     if (city.length() > 14) {
         city = city.substr(0, 14);
     }
-    city.front() = toupper(city.front());
+    transform(city.begin(), city.end(), city.begin(), ::toupper);
 
     // New state
     cout << "Enter " << role << " State (e.g. OR, WA,...): ";
     do
     {
-        getline(cin, state);
+        do {
+            getline(cin, state);
+            if (state.empty()) {
+                cout << "State cannot be empty. Try again:\n > ";
+            }
+        } while (state.empty());
 
         transform(state.begin(), state.end(), state.begin(), ::toupper);
 
@@ -431,6 +447,10 @@ void OperatorTerminal::getAddressInput(std::string& address, std::string& city, 
                 isValidState = true;
                 break;
             }
+        }
+
+        if (!isValidState) {
+            cout << "Invalid State, Try again:\n > ";
         }
     } while (!isValidState);
 
@@ -454,7 +474,7 @@ bool OperatorTerminal::confirmPrompt(const std::string& message)
     char confirm{};
     cout << message << " (Y/N)\n > ";
     cin >> confirm;
-    cin.ignore();
+    cin.ignore(1024, '\n');
     return toupper(confirm) == 'Y';
 }
 
