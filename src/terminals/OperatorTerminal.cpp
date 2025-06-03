@@ -101,6 +101,10 @@ void OperatorTerminal::addMember()
                 getline(cin, new_name);
             } while (new_name.empty() || new_name == "\0");
 
+            if (new_name.length() > 25) {
+                new_name = new_name.substr(0, 25);
+            }
+
             new_name.front() = toupper(new_name.front());
 
             getAddressInput(new_address, new_city, new_state, new_zip, "Member");
@@ -241,7 +245,9 @@ void OperatorTerminal::addProvider()
             if (new_name.length() > 25) {
                 new_name = new_name.substr(0, 25);
             }
+
             new_name.front() = toupper(new_name.front());
+
             // get Provider Address
             getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
         }
