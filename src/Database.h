@@ -52,15 +52,10 @@ class Database {
             Operator Terminal Functionalities
         */
         // Member Functionalities
-        bool addNewMember(const std::string &newName, const std::string &newAddr, const std::string &newCity, const std::string &newState, const std::string &newZip);
-        bool updateMember(const std::string &memberID, const std::string &newAddrss
-                                , const std::string &newCty, const std::string &newState, const std::string &newZip);
         bool deleteMember(const std::string &memberID);
-        
         // Provider Functionalities
-        bool addNewProvider(const std::string &newName, std::string &newAddr, const std::string &newCity, const std::string &newState, const std::string &newZip);
-        bool updateProvider(const std::string &providerID, const std::string &newAddrss
-                                , const std::string &newCty, const std::string &newState, const std::string &newZip);
+        
+
         bool deleteProvider(const std::string &providerID);
 
 
@@ -87,11 +82,31 @@ class Database {
         /* 
             Utilities 
         */
-        
-        bool search(const std::string &table, const std::string &column, const std::string &id);
 
+        std::string generateNewID(const std::string& type);
+        
+        //Search
+        bool search(const std::string &table, const std::string &column, const std::string &id);
         bool searchMember(const std::string memberID);
         bool searchProvider(const std::string providerID);
+
+        // Update 
+        bool update(const std::string& id,
+                    const std::string& table,
+                    const std::string& address,
+                    const std::string& city,
+                    const std::string& state,
+                    const std::string& zip);
+
+        // Add
+        bool add(const std::string& table, 
+                    const std::string& name,
+                    const std::string& address,
+                    const std::string& city,
+                    const std::string& state,
+                    const std::string& zip);
+
+        bool deleteUser(const std::string& table, const std::string& id);
 
         //Functions for get dby ID/Code
         Service getService(const std::string serviceCode);

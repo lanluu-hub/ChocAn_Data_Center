@@ -299,7 +299,6 @@ void OperatorTerminal::updateProvider()
 
     do {
         {
-            cout << "\nPlease Enter update information here" << endl;
             // input scope, get Provider input
             getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
         }

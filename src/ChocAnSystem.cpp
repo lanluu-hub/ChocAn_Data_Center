@@ -307,8 +307,8 @@ bool ChocAnSystem::addNewMember(const std::string & newName, const std::string &
                                 , const std::string & newCity, const std::string & newState, const std::string & newZip)
 {
     // return a bool, true if successfully added new member
-    //return Database::getInstance().addNewMeber(newName, newAddr, newCity, newState, newZip);   // UNCOMMENT WHEN DATABASE IS READY
-    return false;
+    return Database::getInstance().add("Members", newName, newAddr, newCity, newState, newZip);   // UNCOMMENT WHEN DATABASE IS READY
+    //return false;
 }
 
 bool ChocAnSystem::searchMember(const std::string &memberID)
@@ -318,19 +318,27 @@ bool ChocAnSystem::searchMember(const std::string &memberID)
     //return true;
 }
 
+bool ChocAnSystem::updateMember(const std::string &memberID, const std::string &newAddrss
+                                , const std::string &newCty, const std::string &newState, const std::string &newZip)
+{
+    // return bool, true if successful update.
+    return Database::getInstance().update(memberID, "Members", newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
+    //return false;
+}
+
 bool ChocAnSystem::deleteMember(const std::string &memberID)
 {
     // Return a bool, true if successfully delete
-    //return Database::getInstance().deleteMember(memberID); // UNCOMMENTS WHEN DATABASE IS READY
-    return false;
+    return Database::getInstance().deleteUser("Members",memberID); // UNCOMMENTS WHEN DATABASE IS READY
+    //return false;
 }
 
 bool ChocAnSystem::addNewProvider(const std::string &newName, const std::string &newAddr
                                  , const std::string &newCity, const std::string &newState, const std::string &newZip)
 {
     // return bool, True if Added successfully
-    //return Database::getInstance().addNewProvider(newName, newAddr, newCity, newState, newZip);    // UNCOMMENT WHEN DATABASE IS READY
-    return false;
+    return Database::getInstance().add("Users", newName, newAddr, newCity, newState, newZip);    // UNCOMMENT WHEN DATABASE IS READY
+    //return false;
 }
 
 bool ChocAnSystem::searchProvider(const std::string &ProviderID)
@@ -352,8 +360,8 @@ bool ChocAnSystem::updateProvider(const std::string &providerID, const std::stri
                                  , const std::string &newCty, const std::string &newState, const std::string &newZip)
 {
     // return bool, true if successful update.
-    //return Databse::getInstance().updateMember(providerID, newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
-    return false;
+    return Database::getInstance().update(providerID, "Users", newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
+    //return false;
 }
 
 Member ChocAnSystem::getMember(const std::string & memberID)
@@ -364,19 +372,12 @@ Member ChocAnSystem::getMember(const std::string & memberID)
     return updateMember;
 }
 
-bool ChocAnSystem::updateMember(const std::string &memberID, const std::string &newAddrss
-                                , const std::string &newCty, const std::string &newState, const std::string &newZip)
-{
-    // return bool, true if successful update.
-    //return Databse::getInstance().updateMember(memberID, newAddrss, newCty, newState, newZip); // UNCOMMENTS WHEN DATABASE IS READY
-    return false;
-}
 
 bool ChocAnSystem::deleteProvider(const std::string &ProviderID)
 {
     // Return a bool
-    //return Database::getInstance().deleteProvider(ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
-    return false;
+    return Database::getInstance().deleteUser("Users", ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
+    //return false;
 }
 
 ////////// Helper function /////////

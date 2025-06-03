@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS Services;
 
 -- Create Users table (only for system users)
 CREATE TABLE IF NOT EXISTS Users (
-    user_id TEXT PRIMARY KEY,
+    user_id INTEGER PRIMARY KEY,
     name TEXT NOT NULL,
     address TEXT NOT NULL,
     city TEXT NOT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS Users (
 
 -- Create Members table (completely separate)
 CREATE TABLE Members (
-    member_id INTEGER PRIMARY KEY,
+    member_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     address TEXT NOT NULL,
     city TEXT NOT NULL,
