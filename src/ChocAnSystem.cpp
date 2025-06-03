@@ -314,8 +314,8 @@ bool ChocAnSystem::addNewMember(const std::string & newName, const std::string &
 bool ChocAnSystem::searchMember(const std::string &memberID)
 {
     // Return a bool, true if member with "memberID" exist
-    //return Database::getInstance().searchMember(memberID); // UNCOMMENTS WHEN DATABASE IS READY
-    return true;
+    return Database::getInstance().searchMember(memberID); // UNCOMMENTS WHEN DATABASE IS READY
+    //return true;
 }
 
 bool ChocAnSystem::deleteMember(const std::string &memberID)
@@ -336,15 +336,15 @@ bool ChocAnSystem::addNewProvider(const std::string &newName, const std::string 
 bool ChocAnSystem::searchProvider(const std::string &ProviderID)
 {
     // Return a bool, true if provider with "ProviderID" exist
-    //return Database::getInstance().searchProvider(ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
-    return false;
+    return Database::getInstance().searchProvider(ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
+    //return false;
 }
 
 Provider ChocAnSystem::getProvider(const std::string &ProviderID)
 {
     Provider updateProvider;
     // return a Provider obj base on Provider id
-    //updateProvider = Database::getInstance().getProvider(ProviderID);   // UNCOMMENT WHEN DATABASE IS READY
+    updateProvider = Database::getInstance().getProvider(ProviderID);   // UNCOMMENT WHEN DATABASE IS READY
     return updateProvider;
 }
 
@@ -360,7 +360,7 @@ Member ChocAnSystem::getMember(const std::string & memberID)
 {
     Member updateMember;
     // return a member obj base on Member id
-    //updateMember = Database::getInstance().getMember(memberID);   // UNCOMMENT WHEN DATABASE IS READY
+    updateMember = Database::getInstance().getMember(memberID);   // UNCOMMENT WHEN DATABASE IS READY
     return updateMember;
 }
 
