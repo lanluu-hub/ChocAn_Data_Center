@@ -113,8 +113,8 @@ void OperatorTerminal::addMember()
                 << "Member Zipcode: " << new_zip << endl;
 
             if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
+                clearScreen();
                 cout << "\nPlease try again with add new Member" << endl;
-                return;
             }
         }
     } while (!confirm); 
@@ -362,11 +362,18 @@ void OperatorTerminal::getAddressInput(std::string &address, std::string &city, 
         city = city.substr(0, 14);
     }
 
+    // Capitalize first Character
+
     // New state
     cout << "Enter " << role << " State (e.g. OR, WA,...): ";
     getline(cin, state);
     if (state.length() > 2) {
         state = state.substr(0, 2);
+    }
+    
+    // Capitalize State (e.g., OR)
+    for (char &c : state) {
+        c = toupper(c);
     }
 
     // New zip code
