@@ -394,6 +394,7 @@ void OperatorTerminal::getAddressInput(std::string& address, std::string& city, 
     if (address.length() > 25) {
         address = address.substr(0, 25);
     }
+    toupper(address[0]);
 
     // New city
     cout << "Enter " << role << " city: ";
@@ -405,6 +406,7 @@ void OperatorTerminal::getAddressInput(std::string& address, std::string& city, 
     if (city.length() > 14) {
         city = city.substr(0, 14);
     }
+    toupper(city[0]);
 
     // New state
     cout << "Enter " << role << " State (e.g. OR, WA,...): ";
