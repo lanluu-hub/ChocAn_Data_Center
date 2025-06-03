@@ -89,31 +89,33 @@ void OperatorTerminal::addMember()
 
     cout << "[Add Member]" << endl;
 
-    {   // Scope for user input //
-        // member name
-        cout << "Enter New Member Name: ";
-        getline(cin, new_name);
-        if (new_name.length() > 25) {
-            new_name = new_name.substr(0, 25);
-        }
-        
-        getAddressInput(new_address, new_city, new_state, new_zip, "Member");
-    }   // End of input scope
+    cout << "\nPlease enter new Member Information" << endl;
+    do {
+        {   // Scope for user input //
+            // member name
+            cout << "Enter New Member Name: ";
+            getline(cin, new_name);
+            if (new_name.length() > 25) {
+                new_name = new_name.substr(0, 25);
+            }
+            
+            getAddressInput(new_address, new_city, new_state, new_zip, "Member");
+        }   // End of input scope
 
-    clearScreen();
+        clearScreen();
 
-    {   // Confirm block
-        cout << "Please confirm if this is the correct information: " << endl;
-        cout << "Member Name: " << new_name << endl
-             << "Member Adress: " << new_address << endl
-             << "Member City: " << new_city << endl
-             << "Member State: " << new_state << endl
-             << "Member Zipcode: " << new_zip << endl;
+        {   // Confirm block
+            cout << "Please confirm if this is the correct information: " << endl;
+            cout << "Member Name: " << new_name << endl
+                << "Member Adress: " << new_address << endl
+                << "Member City: " << new_city << endl
+                << "Member State: " << new_state << endl
+                << "Member Zipcode: " << new_zip << endl;
 
-        if (confirmPrompt("\nIs this information correct?")) {
-            cout << "\nPlease try again with add new Member" << endl;
-            return;
-
+            if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
+                clearScreen();
+                cout << "\nPlease try again with add new Member" << endl;
+            }
         }
     } while (!confirm); 
 
@@ -360,11 +362,18 @@ void OperatorTerminal::getAddressInput(std::string &address, std::string &city, 
         city = city.substr(0, 14);
     }
 
+    // Capitalize first Character
+
     // New state
     cout << "Enter " << role << " State (e.g. OR, WA,...): ";
     getline(cin, state);
     if (state.length() > 2) {
         state = state.substr(0, 2);
+    }
+    
+    // Capitalize State (e.g., OR)
+    for (char &c : state) {
+        c = toupper(c);
     }
 
     // New zip code

@@ -45,8 +45,7 @@ float ChocAnSystem::getServiceFee(const string& servCode)
 
     service = Database::getInstance().getService(servCode);
 
-    cout << "\nService Name: " << service.serviceName << endl;
-    cout << "Is it Correct? (Y/N) \n > ";
+    
     
     return service.serviceFee;
 }
@@ -59,6 +58,11 @@ string ChocAnSystem::getServiceName(const string& servCode) {
     return service.serviceName;
 }
 
+Service ChocAnSystem::getService(const std::string &servCode)
+{
+    return Database::getInstance().getService(servCode);
+}
+
 bool ChocAnSystem::serviceLog(string &providerID, string &memberID
                              , string &serviceCode, string &serviceDate, string &serviceComment)
 {
@@ -67,20 +71,8 @@ bool ChocAnSystem::serviceLog(string &providerID, string &memberID
     auto now = std::chrono::system_clock::now();
     string formattedTime = dateTime(now, format);
 
-    // Temporary output
-    cout << "[Saving service]\n" << endl;
-    cout << "Current date and time: " << formattedTime << endl;
-    cout << "Date service was provided: " << serviceDate << endl;
-    cout << "Provider number: " << providerID << endl;
-    cout << "Member number: " << memberID << endl;
-    cout << "Service code: " << serviceCode << endl;
-    cout << "Comments: " << serviceComment << endl; 
-    // Delete this section or comment it after database is work.
-
-    // Call to Database::getInstance().serviceLog(providerID, memberID, serviceCode
-    //                                            , serviceDate, formattedTime, serviceComment);
-    // return a bool: result of the service Log
-    return false;
+    return Database::getInstance().serviceLog(providerID, memberID, serviceCode
+                                             , serviceDate, formattedTime, serviceComment);
 }
 
 void ChocAnSystem::getProviderDirectory()
@@ -92,11 +84,13 @@ void ChocAnSystem::getProviderDirectory()
     
     // Save Provider Directory to file
     if (writeProviderDirectoryToFile(providerDirectory, PROVIDDER_DIRECTORY_PATH)) {
-        cout << "Provider Directory saved, file path: " << PROVIDDER_DIRECTORY_PATH << endl;
+        cout << "\n>> Provider Directory saved, file path: " << PROVIDDER_DIRECTORY_PATH << endl;
     } else {
         cerr << "Failed to saved Provider Directory." << endl;
     }
 }
+
+// ---------- Manager Terminal ---------- //
 
 void ChocAnSystem::generateMemberReport(const std::string &memberID)
 {
@@ -320,8 +314,8 @@ bool ChocAnSystem::addNewMember(const std::string & newName, const std::string &
 bool ChocAnSystem::searchMember(const std::string &memberID)
 {
     // Return a bool, true if member with "memberID" exist
-    //return Database::getInstance().searchMember(memberID); // UNCOMMENTS WHEN DATABASE IS READY
-    return true;
+    return Database::getInstance().searchMember(memberID); // UNCOMMENTS WHEN DATABASE IS READY
+    //return true;
 }
 
 bool ChocAnSystem::deleteMember(const std::string &memberID)
@@ -342,15 +336,15 @@ bool ChocAnSystem::addNewProvider(const std::string &newName, const std::string 
 bool ChocAnSystem::searchProvider(const std::string &ProviderID)
 {
     // Return a bool, true if provider with "ProviderID" exist
-    //return Database::getInstance().searchProvider(ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
-    return false;
+    return Database::getInstance().searchProvider(ProviderID); // UNCOMMENTS WHEN DATABASE IS READY
+    //return false;
 }
 
 Provider ChocAnSystem::getProvider(const std::string &ProviderID)
 {
     Provider updateProvider;
     // return a Provider obj base on Provider id
-    //updateProvider = Database::getInstance().getProvider(ProviderID);   // UNCOMMENT WHEN DATABASE IS READY
+    updateProvider = Database::getInstance().getProvider(ProviderID);   // UNCOMMENT WHEN DATABASE IS READY
     return updateProvider;
 }
 
@@ -366,7 +360,7 @@ Member ChocAnSystem::getMember(const std::string & memberID)
 {
     Member updateMember;
     // return a member obj base on Member id
-    //updateMember = Database::getInstance().getMember(memberID);   // UNCOMMENT WHEN DATABASE IS READY
+    updateMember = Database::getInstance().getMember(memberID);   // UNCOMMENT WHEN DATABASE IS READY
     return updateMember;
 }
 

@@ -77,6 +77,7 @@ void ProviderTerminal::commandHandler(int input)
 int ProviderTerminal::validateMembership()
 {
     int membershipStatus {-1};
+    int failedCount{};
     bool isIdValidate {false};
     string ID {};
 
@@ -91,8 +92,14 @@ int ProviderTerminal::validateMembership()
         if (!(isIdValidate = validateIDFormat(ID)))
         {
             cout << "Invalid Member ID format (9-digits ID), please try again." << endl;
+            ++failedCount;
+        } 
+
+        // If user input in wrong format more than 3, exit
+        if (failedCount > 3) {
+            return (-1);
         }
-    } while (!isIdValidate);
+    } while (!isIdValidate && failedCount < 3);
 
     membershipStatus = ChocAnSystem::getInstance().validateMembership(ID);
     
@@ -132,12 +139,14 @@ float ProviderTerminal::billService()
     string servCode {};
     string servDate {};
     string servComment{};
+    string serviceName{};
     string inputLog = "";
     float fee {};
     char userConfirm {};
     bool isIdValid {false};
     bool isServCodeValid {false};
     bool isDateValid{false};
+    bool isServiceEmpty{true};
 
     // re-enter member id
     do {
@@ -178,11 +187,20 @@ float ProviderTerminal::billService()
                 cout << "Invalid Service code, please try again (6-digits code)" << endl;
                 cout << "---------------------------\n\n";
                 cout << inputLog;
+            } else if ((isServiceEmpty = (ChocAnSystem::getInstance().getService(servCode)).isEmpty())) {
+                clearScreen();
+                cout << "Service not exist, please try again" << endl;
+                cout << "---------------------------\n\n";
+                cout << inputLog;
             }
-        } while (!isServCodeValid);
+        } while (!isServCodeValid || isServiceEmpty);
 
         // Get Service Fee
         fee = ChocAnSystem::getInstance().getServiceFee(servCode);
+        serviceName = ChocAnSystem::getInstance().getServiceName(servCode);
+
+        cout << "\nService Name: " << serviceName << endl;
+        cout << "Is it Correct? (Y/N) \n > ";
         cin >> userConfirm;
         cin.ignore(1024, '\n');
 
@@ -194,9 +212,8 @@ float ProviderTerminal::billService()
 
     } while (toupper(userConfirm) != 'Y');
 
-    string serviceName = ChocAnSystem::getInstance().getServiceName(servCode);
-    ostringstream roundedFee;
-    roundedFee << fixed << setprecision(2) << fee;
+    //ostringstream roundedFee;
+    //roundedFee << fixed << setprecision(2) << fee;
     inputLog += "Enter Service Code:\n > " + servCode + "\n\n";
     inputLog += "Service Name: " + serviceName + "\n";
     inputLog += "Is this correct? (Y/N)\n > " + string(1, toupper(userConfirm)) + "\n\n";
@@ -232,7 +249,7 @@ float ProviderTerminal::billService()
         exit(EXIT_FAILURE);
     }
 
-    cout << "\nAmount of Fee: " << fee << endl;
+    cout << "\nAmount of Fee: $" << fixed << setprecision(2) << fee << endl;
     pressEnterToContinue();
     // End current session with member ID
     // clear memberID
