@@ -159,13 +159,18 @@ void intro()
     cout << "\t***************************************\n\n";
     cout << "\t   ChocAn Data Processing Portal\n";
     cout << "\t   ----------------------------\n\n";
+    cout << "   This system allows registered users to log in and access the\n";
+    cout << "   appropriate terminal based on their role: Operator, Manager, or Provider.\n\n";
+
+    cout << "   Each session begins after user authentication and ends when the user logs out.\n";
+    cout << "   The program will continue to run until manually interrupted (e.g., Ctrl+C).\n";
+    cout << "   It will only exit automatically in the event of a system error.\n\n";
 }
 
 template <typename T>
 void getInput(T &input, const string &prompt)
 {
     cout << prompt;
-    //cin >> input;
     while (!(cin >>input)) {
         cin.clear();
         cin.ignore(1024, '\n');

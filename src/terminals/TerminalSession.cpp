@@ -56,13 +56,10 @@ int TerminalSession::getInput() const
 void TerminalSession::getInput(std::string &input, const std::string &prompt) 
 {
     std::cout << prompt;
-    while (!(std::cin >> input)) {
+    while (!std::getline(std::cin, input) || input.empty()) {
         std::cin.clear();
-        std::cin.ignore(1024, '\n');
-
-        std::cout << "\nInvalid input format. please try again.\n > ";
+        std::cout << "\nInvalid input format. Please try again.\n > ";
     }
-    std::cin.ignore();
 }
 
 bool TerminalSession::validateIDFormat(const std::string &ID) const
