@@ -6,6 +6,11 @@
 #include <sstream>
 #include <algorithm>
 #include <cctype>
+#include <iomanip>
+
+#include <filesystem>
+namespace fs = std::filesystem;
+
 #include "Database.h"
 
 Database::Database() : db(nullptr)
@@ -274,8 +279,8 @@ bool Database::update(const std::string &id,
                       const std::string &state,
                       const std::string &zip)
 {
-    std::string id_column = (table == "Members") ? "member_id" :
-                            (table == "Users")   ? "user_id"   : "";
+    std::string id_column = (table == "Members") ? "member_id" : (table == "Users") ? "user_id"
+                                                                                    : "";
 
     if (id_column.empty())
     {
@@ -304,7 +309,7 @@ bool Database::update(const std::string &id,
     sqlite3_bind_text(stmt, 2, city.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 3, state.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 4, zip.c_str(), -1, SQLITE_STATIC);
-    sqlite3_bind_int64(stmt, 5, std::stoll(id));  // Correctly bind numeric ID
+    sqlite3_bind_int64(stmt, 5, std::stoll(id)); // Correctly bind numeric ID
 
     bool success = false;
     if (sqlite3_step(stmt) == SQLITE_DONE)
@@ -325,7 +330,6 @@ bool Database::update(const std::string &id,
     return success;
 }
 
-
 bool Database::add(const std::string &table,
                    const std::string &name,
                    const std::string &address,
@@ -334,16 +338,18 @@ bool Database::add(const std::string &table,
                    const std::string &zip)
 {
     std::string query;
-    sqlite3_stmt* stmt;
+    sqlite3_stmt *stmt;
 
     // 1. Members Table (simple insert)
-    if (table == "Members") {
+    if (table == "Members")
+    {
         query = R"SQL(
             INSERT INTO Members (name, address, city, state, zip_code, status)
             VALUES (?, ?, ?, ?, ?, 'Active');
         )SQL";
 
-        if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+        {
             std::cerr << " Failed to prepare Members insert: " << sqlite3_errmsg(db) << "\n";
             return false;
         }
@@ -354,19 +360,39 @@ bool Database::add(const std::string &table,
         sqlite3_bind_text(stmt, 4, state.c_str(), -1, SQLITE_STATIC);
         sqlite3_bind_text(stmt, 5, zip.c_str(), -1, SQLITE_STATIC);
 
-    }
-    // 2. Users Table (specifically for Provider)
-    else if (table == "Users") {
-        // Step 1: Get next available provider ID
-        const char* maxQuery = "SELECT MAX(user_id) FROM Users WHERE user_type = 'Provider';";
+        /*
+            int memberID = 0;
+            std::string m_maxQuery = "SELECT MAX(member_id) FROM Members;";
 
-        if (sqlite3_prepare_v2(db, maxQuery, -1, &stmt, nullptr) != SQLITE_OK) {
+            if (sqlite3_prepare_v2(db, m_maxQuery.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+            {
+                std::cerr << " Failed to query max member ID: " << sqlite3_errmsg(db) << "\n";
+                return false;
+            }
+
+            if (sqlite3_step(stmt) == SQLITE_ROW && sqlite3_column_type(stmt, 0) != SQLITE_NULL)
+            {
+                memberID = sqlite3_column_int(stmt, 0) + 1;
+            }
+            std::cout << "Member added with ID: " << memberID << "\n";
+        */
+    }
+
+    // 2. Users Table (specifically for Provider)
+    else if (table == "Users")
+    {
+        // Step 1: Get next available provider ID
+        const char *maxQuery = "SELECT MAX(user_id) FROM Users WHERE user_type = 'Provider';";
+
+        if (sqlite3_prepare_v2(db, maxQuery, -1, &stmt, nullptr) != SQLITE_OK)
+        {
             std::cerr << " Failed to query max provider ID: " << sqlite3_errmsg(db) << "\n";
             return false;
         }
 
         int newID = 200000001;
-        if (sqlite3_step(stmt) == SQLITE_ROW && sqlite3_column_type(stmt, 0) != SQLITE_NULL) {
+        if (sqlite3_step(stmt) == SQLITE_ROW && sqlite3_column_type(stmt, 0) != SQLITE_NULL)
+        {
             newID = sqlite3_column_int(stmt, 0) + 1;
         }
         sqlite3_finalize(stmt);
@@ -377,7 +403,8 @@ bool Database::add(const std::string &table,
             VALUES (?, ?, ?, ?, ?, ?, 'Provider');
         )SQL";
 
-        if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+        {
             std::cerr << " Failed to prepare Provider insert: " << sqlite3_errmsg(db) << "\n";
             return false;
         }
@@ -389,16 +416,18 @@ bool Database::add(const std::string &table,
         sqlite3_bind_text(stmt, 5, state.c_str(), -1, SQLITE_STATIC);
         sqlite3_bind_text(stmt, 6, zip.c_str(), -1, SQLITE_STATIC);
 
-        std::cout << " Provider added with ID: " << newID << "\n";
+        std::cout << "Provider added with ID: " << newID << "\n";
     }
-    else {
+    else
+    {
         std::cerr << " Invalid table name: " << table << "\n";
         return false;
     }
 
     // Final execution
     bool success = (sqlite3_step(stmt) == SQLITE_DONE);
-    if (!success) {
+    if (!success)
+    {
         std::cerr << " Failed to execute insert: " << sqlite3_errmsg(db) << "\n";
     }
 
@@ -406,26 +435,30 @@ bool Database::add(const std::string &table,
     return success;
 }
 
+/* Deleting User by ID */
 
-bool Database::deleteUser(const std::string& table, const std::string &id)
+bool Database::deleteUser(const std::string &table, const std::string &id)
 {
-    std::string id_column = (table == "Members") ? "member_id" :
-                            (table == "Users")   ? "user_id"   : "";
+    std::string id_column = (table == "Members") ? "member_id" : (table == "Users") ? "user_id"
+                                                                                    : "";
 
-    if (id_column.empty()) {
+    if (id_column.empty())
+    {
         std::cerr << "Invalid table: " << table << "\n";
         return false;
     }
 
-    if (!std::all_of(id.begin(), id.end(), ::isdigit)) {
+    if (!std::all_of(id.begin(), id.end(), ::isdigit))
+    {
         std::cerr << "Invalid numeric ID: " << id << "\n";
         return false;
     }
 
     std::string query = "DELETE FROM " + table + " WHERE " + id_column + " = ?;";
-    sqlite3_stmt* stmt;
+    sqlite3_stmt *stmt;
 
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
+    {
         std::cerr << "Failed to prepare delete statement: " << sqlite3_errmsg(db) << "\n";
         return false;
     }
@@ -437,9 +470,331 @@ bool Database::deleteUser(const std::string& table, const std::string &id)
     return success;
 }
 
-
-
 /* Operator Terminal End*/
+
+/* Manager Terminal */
+
+void Database::generateMemberReport(const std::string memberID, const std::string bestDate, std::string &filePath)
+{
+    Member member = getMember(memberID);
+    if (member.memberID.empty())
+    {
+        std::cerr << "Member not found.\n";
+        return;
+    }
+
+    std::ostringstream report;
+    report << "[Member Report]\n";
+    report << "Member Name   : " << member.memberName << "\n";
+    report << "Member Number : " << member.memberID << "\n";
+    report << "Street Address: " << member.memberStreetAddress << "\n";
+    report << "City          : " << member.memberCity << "\n";
+    report << "State         : " << member.memberState << "\n";
+    report << "Zip Code      : " << member.memberZipCode << "\n\n";
+    report << "Services Received:\n";
+    report << "----------------------------------------\n";
+
+    // Using Member Report View
+    const char *query = R"SQL(
+        SELECT DateOfService, ProviderName, ServiceName
+        FROM MemberReportView
+        WHERE ID = ? AND DateOfService >=?
+        ORDER BY DateOfService;
+    )SQL";
+
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare member report query: " << sqlite3_errmsg(db) << "\n";
+        return;
+    }
+
+    // Bind as integer for member_id
+    sqlite3_bind_int(stmt, 1, std::stoi(memberID));
+    sqlite3_bind_text(stmt, 2, bestDate.c_str(), -1, SQLITE_STATIC);
+
+    bool hasServices = false;
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        hasServices = true;
+        std::string date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+        std::string providerName = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+        std::string serviceName = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
+
+        report << "Date of Service : " << date << "\n";
+        report << "Provider Name   : " << providerName << "\n";
+        report << "Service Name    : " << serviceName << "\n\n";
+    }
+
+    if (!hasServices)
+    {
+        report << "No services found for this member.\n";
+    }
+
+    sqlite3_finalize(stmt);
+
+    std::ofstream outFile(filePath);
+    if (!outFile)
+    {
+        std::cerr << "Failed to open report file.\n";
+        return;
+    }
+
+    outFile << report.str();
+    outFile.close();
+}
+
+
+void Database::generateProviderReport(const std::string providerID, const std::string bestDate, std::string &filePath)
+{
+    Provider provider = getProvider(providerID);
+    if (provider.providerID.empty())
+    {
+        std::cerr << "Provider not found.\n";
+        return;
+    }
+
+    std::ostringstream report;
+    report << "[Provider Report]\n";
+    report << "Provider Name   : " << provider.providerName << "\n";
+    report << "Provider Number : " << provider.providerID << "\n";
+    report << "Street Address  : " << provider.providerStreetAddress << "\n";
+    report << "City            : " << provider.providerCity << "\n";
+    report << "State           : " << provider.providerState << "\n";
+    report << "Zip Code        : " << provider.providerZipCode << "\n\n";
+    report << "Services Provided:\n";
+    report << "----------------------------------------\n";
+
+    // Convert bestDate from YYYY-MM-DD to MM-DD-YYYY format if needed
+    std::string dbDate = bestDate; // or convert format if necessary
+
+    // Use your exact ProviderReportView
+    const char *query = R"SQL(
+        SELECT DateOfService, 
+               TimeStamp, 
+               MemberName, 
+               MemberID, 
+               ServiceCode, 
+               ServiceFee
+        FROM ProviderReportView
+        WHERE ProviderID = ? AND DateOfService >= ?
+
+        ORDER BY DateOfService;
+    )SQL";
+
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK)
+    {
+        std::cerr << "Failed to prepare provider report query: " << sqlite3_errmsg(db) << "\n";
+        return;
+    }
+
+    // Bind as integer for provider_id
+    sqlite3_bind_int(stmt, 1, std::stoi(providerID));
+    sqlite3_bind_text(stmt, 2, dbDate.c_str(), -1, SQLITE_STATIC);
+
+    int totalConsultations = 0;
+    double totalFee = 0.0;
+    bool hasServices = false;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
+        hasServices = true;
+        std::string date = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
+        std::string timestamp = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 1));
+        std::string memberName = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 2));
+        std::string memberID = std::to_string(sqlite3_column_int(stmt, 3));
+        std::string serviceCode = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 4));
+        double fee = sqlite3_column_double(stmt, 5);
+
+        report << "Date of Service   : " << date << "\n";
+        report << "Record Timestamp  : " << timestamp << "\n";
+        report << "Member Name       : " << memberName << "\n";
+        report << "Member Number     : " << memberID << "\n";
+        report << "Service Code      : " << serviceCode << "\n";
+        report << "Fee               : $" << std::fixed << std::setprecision(2) << fee << "\n\n";
+
+        totalConsultations++;
+        totalFee += fee;
+    }
+
+    sqlite3_finalize(stmt);
+
+    if (!hasServices) {
+        report << "No services found for this provider.\n";
+    }
+
+    report << "----------------------------------------\n";
+    report << "Total Consultations : " << totalConsultations << "\n";
+    report << "Total Fee           : $" << std::fixed << std::setprecision(2) << totalFee << "\n";
+
+   
+
+    std::ofstream outFile(filePath);
+    if (!outFile)
+    {
+        std::cerr << "Failed to open report file: " << filePath << "\n";
+        return;
+    }
+
+    outFile << report.str();
+    outFile.close();
+}
+
+
+
+
+void Database::generateSummaryReport(const std::string bestDate, const std::string& filePath)
+{
+    // Create parent directories if they don't exist
+    //fs::create_directories(fs::path(filePath).parent_path());
+
+    std::ofstream out(filePath);
+    if (!out.is_open()) {
+        std::cerr << "Failed to open summary report file: " << filePath << "\n";
+        return;
+    }
+
+    out << "[Summary Report]\n\n";
+    out << "Provider Name         | Consultations | Total Fee\n";
+    out << "--------------------------------------------------\n";
+    
+    // Using your exact SummaryReportView
+    const char* query = R"SQL(
+        SELECT 
+            ProviderName,
+            NumConsultations,
+            TotalFee
+        FROM SummaryReportView
+        WHERE DateOfService >= ?
+        ORDER BY ProviderName
+    )SQL";
+
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Query preparation error: " << sqlite3_errmsg(db) << "\n";
+        out.close();
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, bestDate.c_str(), -1, SQLITE_STATIC);
+
+    int totalProviders = 0;
+    int totalConsults = 0;
+    double totalFees = 0.0;
+    bool hasData = false;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        hasData = true;
+        std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        int consults = sqlite3_column_int(stmt, 1);
+        double fee = sqlite3_column_double(stmt, 2);
+
+        out << std::left << std::setw(22) << name
+            << "| " << std::setw(14) << consults
+            << "| $" << std::fixed << std::setprecision(2) << fee << "\n";
+
+        totalProviders++;
+        totalConsults += consults;
+        totalFees += fee;
+    }
+
+    sqlite3_finalize(stmt);
+
+    if (!hasData) {
+        out << "No provider data found for the reporting period.\n";
+    }
+
+    out << "--------------------------------------------------\n";
+    out << "Total Providers       : " << totalProviders << "\n";
+    out << "Total Consultations   : " << totalConsults << "\n";
+    out << "Total Fees            : $" << std::fixed << std::setprecision(2) << totalFees << "\n";
+
+    out.close();
+}
+
+/*
+void Database::generateSummaryReport(const std::string cutoffDate, const std::string& filePath)
+{
+    // Debug: Print database path
+    std::cout << "Generating report from database: " << sqlite3_db_filename(db, "main") << "\n";
+
+   // fs::create_directories(fs::path(filePath).parent_path());
+
+    std::ofstream out(filePath);
+    if (!out.is_open()) {
+        std::cerr << "Failed to open summary report file: " << filePath << "\n";
+        return;
+    }
+
+    out << "[Summary Report]\n\n";
+    
+    // First check if view has any data
+    const char* checkQuery = "SELECT COUNT(*) FROM SummaryReportView";
+    sqlite3_stmt* checkStmt;
+    if (sqlite3_prepare_v2(db, checkQuery, -1, &checkStmt, nullptr) == SQLITE_OK) {
+        if (sqlite3_step(checkStmt) == SQLITE_ROW) {
+            int rowCount = sqlite3_column_int(checkStmt, 0);
+            std::cout << "SummaryReportView contains " << rowCount << " rows\n";
+        }
+        sqlite3_finalize(checkStmt);
+    }
+
+    out << "Provider Name         | Consultations | Total Fee\n";
+    out << "--------------------------------------------------\n";
+    
+    const char* query = R"SQL(
+        SELECT 
+            ProviderName,
+            NumConsultations,
+            TotalFee
+        FROM SummaryReportView
+        ORDER BY ProviderName
+    )SQL";
+
+    sqlite3_stmt* stmt;
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Query error: " << sqlite3_errmsg(db) << "\n";
+        out.close();
+        return;
+    }
+
+    int totalProviders = 0;
+    int totalConsults = 0;
+    double totalFees = 0.0;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        int consults = sqlite3_column_int(stmt, 1);
+        double fee = sqlite3_column_double(stmt, 2);
+
+        std::cout << "Found provider: " << name 
+                  << " (" << consults << " consultations, $" << fee << ")\n";
+
+        out << std::left << std::setw(22) << name
+            << "| " << std::setw(14) << consults
+            << "| $" << std::fixed << std::setprecision(2) << fee << "\n";
+
+        totalProviders++;
+        totalConsults += consults;
+        totalFees += fee;
+    }
+
+    sqlite3_finalize(stmt);
+
+    if (totalProviders == 0) {
+        std::cout << "No providers found in SummaryReportView\n";
+        out << "\nNo provider activity in the last 7 days.\n";
+    }
+
+    out << "--------------------------------------------------\n";
+    out << "Total Providers       : " << totalProviders << "\n";
+    out << "Total Consultations   : " << totalConsults << "\n";
+    out << "Total Fees            : $" << std::fixed << std::setprecision(2) << totalFees << "\n";
+
+    out.close();
+}
+*/
+/* Manager Terminal End */
 
 /* Utilities functions*/
 
