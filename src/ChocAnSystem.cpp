@@ -102,7 +102,7 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
             formattedFilename {},   // hold clean filename e.g first_last_2025_05_31.txt
             filePath {};    // file path to the report file src/reports/members/first_last_2025_05_31.txt
 
-    const string format = "%Y-%m-%d";   // Date format for fileName
+    string format = "%Y-%m-%d";   // Date format for fileName
 
     if (member.isEmpty()) {
         printError("Member not found.");
@@ -130,15 +130,20 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
     // subtract 7 days
     chrono::system_clock::time_point cutoffDate = parsedDate - chrono::hours(24 * 7);
 
-    // Format the date back to string
-    bestDate = dateTime(cutoffDate, format);
-    // End of get bestDate //
+    bestDate = dateTime(cutoffDate, format);  // %Y-%m-%d" -> 
 
     // Get Clean filePath for generated report //
     rawFilename = member.memberName + "_" + currentDate;
     formattedFilename = formatFileName(rawFilename);
     filePath = MEMBER_REPORT_FOLDER + formattedFilename + ".txt";
     // End of filePath //
+
+    format = "%m-%d-%Y";
+    // Format the date back to string
+    
+    string date_son = dateTime(cutoffDate, format);
+
+    // End of get bestDate //
 
     // Temporary Ouput - Delete this when database ready
     cout << "\nTemporary output" << endl
@@ -153,6 +158,8 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
     cout << "Best date: " << bestDate << endl;
     cout << "fileName: " << formattedFilename << endl;
     cout << "FilePath: " << filePath << endl;
+
+    cout << "SON date: " << date_son << endl;
     // End of temporary output - delete this when database is ready 
 
     /// @brief Generates and writes a weekly member service report to the specified file.
@@ -163,6 +170,7 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
     /// @param filePath The full path (e.g., "reports/members/John_Doe_2025-05-26.txt") where the report file will be written.
     ///        The file should be opened and written inside this function. 
     //Database::getInstance().generateMemberReport(memberID, bestDate, filePath);   // UNCOMMENTS THIS WHEN DATABASE READY
+    Database::getInstance().generateMemberReport(memberID, date_son, filePath);
     printReport(filePath);
     return;
 }
@@ -197,7 +205,7 @@ void ChocAnSystem::generateProviderReport(const std::string &providerID)
             formattedFilename {},   // hold clean filename e.g first_last_2025_05_31.txt
             filePath {};    // file path to the report file src/reports/members/first_last_2025_05_31.txt
 
-    const string format = "%Y-%m-%d";
+    string format = "%Y-%m-%d";
 
     if (provider.isEmpty()) {
         printError("Provider not found.");
@@ -235,6 +243,12 @@ void ChocAnSystem::generateProviderReport(const std::string &providerID)
     filePath = PROVIDER_REPORT_FOLDER + formattedFilename + ".txt";
     // End of filePath //
 
+
+    //Convert back to format of DB
+    format = "%m-%d-%Y";
+    bestDate = dateTime(cutoffDate, format);
+
+
     // Temporary Ouput - Delete this when database ready
     cout << "\nTemporary output" << endl
          << "Provider Name: " << provider.providerName << endl
@@ -257,7 +271,8 @@ void ChocAnSystem::generateProviderReport(const std::string &providerID)
     /// @param bestDate The lower bound (7 days ago) in YYYY-MM-DD format. Only services on or after this date are included.
     /// @param filePath The full file path (e.g., "reports/providers/Jane_Smith_2025-05-26.txt") where the report will be saved.
     ///        The function should open and write to this file.
-    //Database::getInstance().generateProviderReport(providerID, bestDate, filePath);   // UNCOMMENTS THIS WHEN DATABASE READY
+    Database::getInstance().generateProviderReport(providerID, bestDate, filePath);   // UNCOMMENTS THIS WHEN DATABASE READY
+    cout << bestDate;
     printReport(filePath);
     return;
 }
@@ -269,8 +284,8 @@ void ChocAnSystem::generateSummaryReport()
             rawFilename {},
             formattedFilename{},
             filePath{};
-    
-    const string format {"%Y-%m-%d"};
+
+    string format {"%Y-%m-%d"};
 
     currentDate = getCurrentDate();
 
@@ -282,7 +297,7 @@ void ChocAnSystem::generateSummaryReport()
     chrono::system_clock::time_point lastDate = parsedDate - chrono::hours(24 * 7);
 
     // Format the date back to string
-    cutoffDate = dateTime(lastDate, format);
+    //cutoffDate = dateTime(lastDate, format); // 7 days from current date
     // End of cutoffDate //
 
     // Get Clean filePath for generated report //
@@ -290,6 +305,10 @@ void ChocAnSystem::generateSummaryReport()
     formattedFilename = formatFileName(rawFilename);
     filePath = SUMMARY_REPORT_FOLDER + formattedFilename + ".txt";
     // End of filePath //
+    
+    format = "%m-%d-%Y";
+    cutoffDate = dateTime(lastDate, format);
+
 
     /// @brief Generates and writes a weekly summary report for accounts payable to the specified file.
     ///        The report includes all providers who rendered services during the past 7 days,
@@ -298,8 +317,9 @@ void ChocAnSystem::generateSummaryReport()
     /// @param cutoffDate The lower bound (7 days ago) in YYYY-MM-DD format. Only services on or after this date are included.
     /// @param filePath The full file path (e.g., "reports/SummaryReport_2025-05-26.txt") where the summary report will be written.
     ///        The file should be created and written inside this function.
-    //Database::generateSummaryReport(cutoffDate, filePath); // UNCOMMENT THIS WHEN DATABASE IS READY
-
+    Database::getInstance().generateSummaryReport(cutoffDate, filePath); // UNCOMMENT THIS WHEN DATABASE IS READY
+    cout << filePath; 
+    
     printReport(filePath);
 }
 
