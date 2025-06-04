@@ -8,8 +8,8 @@
 #include <cctype>
 #include <iomanip>
 
-#include <filesystem>
-namespace fs = std::filesystem;
+//#include <filesystem>
+//namespace fs = std::filesystem;
 
 #include "Database.h"
 
@@ -641,9 +641,6 @@ void Database::generateProviderReport(const std::string providerID, const std::s
     outFile.close();
 }
 
-
-
-
 void Database::generateSummaryReport(const std::string bestDate, const std::string& filePath)
 {
     // Create parent directories if they don't exist
@@ -711,89 +708,6 @@ void Database::generateSummaryReport(const std::string bestDate, const std::stri
 
     out.close();
 }
-
-/*
-void Database::generateSummaryReport(const std::string cutoffDate, const std::string& filePath)
-{
-    // Debug: Print database path
-    std::cout << "Generating report from database: " << sqlite3_db_filename(db, "main") << "\n";
-
-   // fs::create_directories(fs::path(filePath).parent_path());
-
-    std::ofstream out(filePath);
-    if (!out.is_open()) {
-        std::cerr << "Failed to open summary report file: " << filePath << "\n";
-        return;
-    }
-
-    out << "[Summary Report]\n\n";
-    
-    // First check if view has any data
-    const char* checkQuery = "SELECT COUNT(*) FROM SummaryReportView";
-    sqlite3_stmt* checkStmt;
-    if (sqlite3_prepare_v2(db, checkQuery, -1, &checkStmt, nullptr) == SQLITE_OK) {
-        if (sqlite3_step(checkStmt) == SQLITE_ROW) {
-            int rowCount = sqlite3_column_int(checkStmt, 0);
-            std::cout << "SummaryReportView contains " << rowCount << " rows\n";
-        }
-        sqlite3_finalize(checkStmt);
-    }
-
-    out << "Provider Name         | Consultations | Total Fee\n";
-    out << "--------------------------------------------------\n";
-    
-    const char* query = R"SQL(
-        SELECT 
-            ProviderName,
-            NumConsultations,
-            TotalFee
-        FROM SummaryReportView
-        ORDER BY ProviderName
-    )SQL";
-
-    sqlite3_stmt* stmt;
-    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
-        std::cerr << "Query error: " << sqlite3_errmsg(db) << "\n";
-        out.close();
-        return;
-    }
-
-    int totalProviders = 0;
-    int totalConsults = 0;
-    double totalFees = 0.0;
-
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
-        std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-        int consults = sqlite3_column_int(stmt, 1);
-        double fee = sqlite3_column_double(stmt, 2);
-
-        std::cout << "Found provider: " << name 
-                  << " (" << consults << " consultations, $" << fee << ")\n";
-
-        out << std::left << std::setw(22) << name
-            << "| " << std::setw(14) << consults
-            << "| $" << std::fixed << std::setprecision(2) << fee << "\n";
-
-        totalProviders++;
-        totalConsults += consults;
-        totalFees += fee;
-    }
-
-    sqlite3_finalize(stmt);
-
-    if (totalProviders == 0) {
-        std::cout << "No providers found in SummaryReportView\n";
-        out << "\nNo provider activity in the last 7 days.\n";
-    }
-
-    out << "--------------------------------------------------\n";
-    out << "Total Providers       : " << totalProviders << "\n";
-    out << "Total Consultations   : " << totalConsults << "\n";
-    out << "Total Fees            : $" << std::fixed << std::setprecision(2) << totalFees << "\n";
-
-    out.close();
-}
-*/
 /* Manager Terminal End */
 
 /* Utilities functions*/
