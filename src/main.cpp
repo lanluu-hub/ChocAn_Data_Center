@@ -98,7 +98,7 @@ main() {
                 session = make_unique<OperatorTerminal>();
                 // check for session == nullptr;
                 if (session == nullptr) {
-                    cerr << "Error: cannot start Operator Terminal!" << endl;
+                    printError("Cannot start Operator Terminal!");
                     return EXIT_FAILURE;
                 }
                 break;
@@ -107,7 +107,7 @@ main() {
                 session = make_unique<ManagerTerminal>();
                 // check for session == nullptr;
                 if (session == nullptr) {
-                    cerr << "Error: cannot start Manager Terminal!" << endl;
+                    printError("Cannot start Manager Terminal!");
                     return EXIT_FAILURE;
                 }
                 break;
@@ -116,18 +116,18 @@ main() {
                 session = make_unique<ProviderTerminal>();
                 // check for session == nullptr;
                 if (session == nullptr) {
-                    cerr << "Error: cannot start Manager Terminal!" << endl;
+                    printError("Cannot start Manager Terminal!");
                     return EXIT_FAILURE;
                 }
 
                 break;
 
             case (-1):
-                cout << "Invalid UserID, no assigned terminal for this role!" << endl;
+                printError("Invalid UserID, no assigned terminal for this role!");
                 break;
 
             default: // other case
-                cerr << "Error: undefined userID cases. End Terminal!" << endl;
+                printError("Undefined userID cases. End Terminal!");
                 exit(EXIT_FAILURE);
             }
                
@@ -141,7 +141,7 @@ main() {
             pressEnterToContinue();
         }
         else
-            cerr << "Error: invalid userID!" <<endl;
+            printError("Invalid user ID.");
     } while (1);
 
     return EXIT_SUCCESS;
@@ -174,7 +174,7 @@ void getInput(T &input, const string &prompt)
     while (!(cin >>input)) {
         cin.clear();
         cin.ignore(1024, '\n');
-
+        
         cout << "Invalid input format. please try again.\n > ";
     }
 }

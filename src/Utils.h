@@ -3,6 +3,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include <limits>
 
 inline void clearScreen() {
@@ -23,4 +24,8 @@ inline void pressEnterToContinue(const std::string& text) {
     std::cout << text;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     clearScreen();
+}
+
+inline void printError(const std::string & message) {
+    std::cerr << "[ERROR] " << message << std::endl;
 }
