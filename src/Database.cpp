@@ -544,7 +544,6 @@ void Database::generateMemberReport(const std::string memberID, const std::strin
     outFile.close();
 }
 
-
 void Database::generateProviderReport(const std::string providerID, const std::string bestDate, std::string &filePath)
 {
     Provider provider = getProvider(providerID);
@@ -620,15 +619,14 @@ void Database::generateProviderReport(const std::string providerID, const std::s
 
     sqlite3_finalize(stmt);
 
-    if (!hasServices) {
+    if (!hasServices)
+    {
         report << "No services found for this provider.\n";
     }
 
     report << "----------------------------------------\n";
     report << "Total Consultations : " << totalConsultations << "\n";
     report << "Total Fee           : $" << std::fixed << std::setprecision(2) << totalFee << "\n";
-
-   
 
     std::ofstream outFile(filePath);
     if (!outFile)
@@ -641,13 +639,14 @@ void Database::generateProviderReport(const std::string providerID, const std::s
     outFile.close();
 }
 
-void Database::generateSummaryReport(const std::string bestDate, const std::string& filePath)
+void Database::generateSummaryReport(const std::string bestDate, const std::string &filePath)
 {
     // Create parent directories if they don't exist
-    //fs::create_directories(fs::path(filePath).parent_path());
+    // fs::create_directories(fs::path(filePath).parent_path());
 
     std::ofstream out(filePath);
-    if (!out.is_open()) {
+    if (!out.is_open())
+    {
         std::cerr << "Failed to open summary report file: " << filePath << "\n";
         return;
     }
@@ -655,24 +654,45 @@ void Database::generateSummaryReport(const std::string bestDate, const std::stri
     out << "[Summary Report]\n\n";
     out << "Provider Name         | Consultations | Total Fee\n";
     out << "--------------------------------------------------\n";
-    
+
+
     // Using your exact SummaryReportView
     const char* query = R"SQL(
-        SELECT 
+        SELECT
             ProviderName,
-            NumConsultations,
-            TotalFee
+            COUNT(NumConsultations),
+            SUM(TotalFee)
         FROM SummaryReportView
         WHERE DateOfService >= ?
+        --AND DateOfService < ?
+        GROUP BY ProviderName
         ORDER BY ProviderName
     )SQL";
-
-    sqlite3_stmt* stmt;
-    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK) {
+    
+    /*
+    const char *query = R"SQL(
+        SELECT
+            u.name AS ProviderName,
+            --u.user_id AS ProviderID,
+            COUNT(s.service_code) AS NumConsultations,
+            SUM(sv.fee) AS TotalFee
+            --s.date_of_service AS DateOfService
+            --s.date_of_service) AS LastServiceDate
+            FROM ServiceLogs s
+                JOIN Users u ON s.provider_id = u.user_id
+                JOIN Services sv ON s.service_code = sv.service_code
+            WHERE s.date_of_service >= ?
+            GROUP BY u.user_id;
+    )SQL";
+    */
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK)
+    {
         std::cerr << "Query preparation error: " << sqlite3_errmsg(db) << "\n";
         out.close();
         return;
     }
+
     sqlite3_bind_text(stmt, 1, bestDate.c_str(), -1, SQLITE_STATIC);
 
     int totalProviders = 0;
@@ -680,9 +700,10 @@ void Database::generateSummaryReport(const std::string bestDate, const std::stri
     double totalFees = 0.0;
     bool hasData = false;
 
-    while (sqlite3_step(stmt) == SQLITE_ROW) {
+    while (sqlite3_step(stmt) == SQLITE_ROW)
+    {
         hasData = true;
-        std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        std::string name = reinterpret_cast<const char *>(sqlite3_column_text(stmt, 0));
         int consults = sqlite3_column_int(stmt, 1);
         double fee = sqlite3_column_double(stmt, 2);
 
@@ -697,7 +718,8 @@ void Database::generateSummaryReport(const std::string bestDate, const std::stri
 
     sqlite3_finalize(stmt);
 
-    if (!hasData) {
+    if (!hasData)
+    {
         out << "No provider data found for the reporting period.\n";
     }
 

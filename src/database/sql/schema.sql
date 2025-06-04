@@ -108,12 +108,14 @@ CREATE VIEW SummaryReportView AS
 SELECT
     u.name AS ProviderName,
     u.user_id AS ProviderID,
-    COUNT(s.service_code) AS NumConsultations,
-    SUM(sv.fee) AS TotalFee,
+    s.service_code AS NumConsultations,
+    sv.fee AS TotalFee,
     s.date_of_service AS DateOfService
     --s.date_of_service) AS LastServiceDate
 FROM ServiceLogs s
 JOIN Users u ON s.provider_id = u.user_id
-JOIN Services sv ON s.service_code = sv.service_code
+JOIN Services sv ON s.service_code = sv.service_code;
 --WHERE u.user_type = 'Provider'
-GROUP BY u.user_id;
+--GROUP BY u.user_id;
+--ORDER BY u.user_id;
+

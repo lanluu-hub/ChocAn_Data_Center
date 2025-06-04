@@ -103,6 +103,7 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
             filePath {};    // file path to the report file src/reports/members/first_last_2025_05_31.txt
 
     string format = "%Y-%m-%d";   // Date format for fileName
+    string format = "%Y-%m-%d";   // Date format for fileName
 
     if (member.isEmpty()) {
         printError("Member not found.");
@@ -184,6 +185,7 @@ void ChocAnSystem::generateProviderReport(const std::string &providerID)
             filePath {};    // file path to the report file src/reports/members/first_last_2025_05_31.txt
 
     string format = "%Y-%m-%d";
+    string format = "%Y-%m-%d";
 
     if (provider.isEmpty()) {
         printError("Provider not found.");
@@ -258,6 +260,10 @@ void ChocAnSystem::generateSummaryReport()
     formattedFilename = formatFileName(rawFilename);
     filePath = SUMMARY_REPORT_FOLDER + formattedFilename + ".txt";
     // End of filePath //
+    
+    format = "%m-%d-%Y";
+    cutoffDate = dateTime(lastDate, format);
+
 
     // Format the date back to string
     format = "%m-%d-%Y";
