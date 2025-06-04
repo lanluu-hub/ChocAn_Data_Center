@@ -1,0 +1,18 @@
+[Member Report]
+Member Name   : NEW PATIENT
+Member Number : 100000039
+Street Address: NEW ST
+City          : NEW CITY
+State         : WA
+Zip Code      : 12345
+
+Services Received:
+----------------------------------------
+Date of Service : 06-01-2025
+Provider Name   : DR PEPPER
+Service Name    : Blood Test Panel
+
+Date of Service : 06-03-2025
+Provider Name   : DR PEPPER
+Service Name    : Allergy Testing
+

@@ -1,0 +1,27 @@
+[Provider Report]
+Provider Name   : DR PEPPER
+Provider Number : 200000013
+Street Address  : PEPPER ST
+City            : PEP CITY
+State           : OR
+Zip Code        : 54321
+
+Services Provided:
+----------------------------------------
+Date of Service   : 06-01-2025
+Record Timestamp  : 06-04-2025 14:10:24
+Member Name       : NEW PATIENT
+Member Number     : 100000039
+Service Code      : 100007
+Fee               : $60.00
+
+Date of Service   : 06-03-2025
+Record Timestamp  : 06-04-2025 14:09:49
+Member Name       : NEW PATIENT
+Member Number     : 100000039
+Service Code      : 100024
+Fee               : $145.00
+
+----------------------------------------
+Total Consultations : 2
+Total Fee           : $205.00
