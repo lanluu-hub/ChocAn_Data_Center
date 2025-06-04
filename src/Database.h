@@ -75,7 +75,6 @@ public:
 
     // Provider Functionalities
 
-
     /**
      * @brief Logs a service provided to a member into the ServiceLog table.
      * @param providerId The ID of the provider.
@@ -204,18 +203,18 @@ public:
     void generateProviderReport(const std::string providerID, const std::string bestDate, std::string &filePath);
 
     /**
- * @brief Generates a weekly summary report of all providers.
- *
- * This function aggregates the number of consultations and total service fees
- * for each provider who has submitted service logs within the last 7 days from
- * the specified cutoff date. It also computes total metrics across all providers.
- *
- * @param cutoffDate The lower-bound date (YYYY-MM-DD) for including service logs.
- *                   Typically set to 7 days before the current date.
- * @param filePath The output file path (e.g., reports/summary/SummaryReport_<date>.txt)
- *                 where the summary report will be written.
- */
-    void generateSummaryReport(const std::string cutoffDate, const std::string& filePath);
+     * @brief Generates a weekly summary report of all providers.
+     *
+     * This function aggregates the number of consultations and total service fees
+     * for each provider who has submitted service logs within the last 7 days from
+     * the specified cutoff date. It also computes total metrics across all providers.
+     *
+     * @param cutoffDate The lower-bound date (YYYY-MM-DD) for including service logs.
+     *                   Typically set to 7 days before the current date.
+     * @param filePath The output file path (e.g., reports/summary/SummaryReport_<date>.txt)
+     *                 where the summary report will be written.
+     */
+    void generateSummaryReport(const std::string cutoffDate, const std::string &filePath);
 
 private:
     Database();
