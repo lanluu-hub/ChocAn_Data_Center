@@ -2,6 +2,7 @@
 #include <cassert>
 #include "ManagerTerminal.h"
 #include "../ChocAnSystem.h"
+#include "../Utils.h"
 
 using namespace std;
 
@@ -63,7 +64,7 @@ void ManagerTerminal::printMemberReport()
         getInput(memberID, "Enter member ID:\n > ");
 
         if (!(isValidateID = validateIDFormat(memberID))) {
-            cout << "Invalid Member ID format (9-digit), please try again.";
+            cout << "Invalid Member ID format (9-digit), please try again." << endl;
         }
     } while (!isValidateID);
 
@@ -80,7 +81,7 @@ void ManagerTerminal::printProviderReport()
         getInput(providerID, "Enter Provider ID:\n > ");
 
         if (!(isValidateID = validateIDFormat(providerID))) {
-            cout << "Invalid Provider ID format (9-digit), please try again.";
+            cout << "Invalid Provider ID format (9-digit), please try again." << endl;
         }
     } while (!isValidateID);
 

@@ -6,13 +6,13 @@
 #include <sstream>
 #include <fstream>
 #include "ChocAnSystem.h"
+#include "Utils.h"
 
 using namespace std;
 
 const string MEMBER_REPORT_FOLDER = "src/reports/members/";
 const string PROVIDER_REPORT_FOLDER = "src/reports/providers/";
 const string SUMMARY_REPORT_FOLDER = "src/reports/summaries/";
-
 const string PROVIDDER_DIRECTORY_PATH = "src/reports/Provider_Directory.txt";
 
 ChocAnSystem::ChocAnSystem()
@@ -86,7 +86,7 @@ void ChocAnSystem::getProviderDirectory()
     if (writeProviderDirectoryToFile(providerDirectory, PROVIDDER_DIRECTORY_PATH)) {
         cout << "\n>> Provider Directory saved, file path: " << PROVIDDER_DIRECTORY_PATH << endl;
     } else {
-        cerr << "Failed to saved Provider Directory." << endl;
+        printError("Failed to save provider directory.");
     }
 }
 
@@ -105,7 +105,7 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
     const string format = "%Y-%m-%d";   // Date format for fileName
 
     if (member.isEmpty()) {
-        cout << "\nMember does not exist" << endl;
+        printError("Member not found.");
         return;
     }
 
@@ -170,9 +170,11 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
 void ChocAnSystem::printReport(const std::string &filePath)
 {
     ifstream file(filePath);
+    string chocan_errmsg{};
 
     if (!file.is_open()) {
-        cerr << "\nFailed to open file " << filePath << endl;
+        chocan_errmsg = "Failed to open file: " + filePath + " due to missing permissions or incorrect path.";
+        printError(chocan_errmsg);
         return;
     }
     
@@ -198,7 +200,7 @@ void ChocAnSystem::generateProviderReport(const std::string &providerID)
     const string format = "%Y-%m-%d";
 
     if (provider.isEmpty()) {
-        cout << "\nProvider does not exist" << endl;
+        printError("Provider not found.");
         return;
     }
 
@@ -433,9 +435,11 @@ void ChocAnSystem::displayProviderDirectory(std::vector<Service> &providerDirect
 bool ChocAnSystem::writeProviderDirectoryToFile(vector<Service> &services, const string & filePath)
 {
     ofstream writeToFile(filePath);
+    string chocan_errmsg{};
 
     if (!writeToFile.is_open()) {
-        cerr << "Error: Could Open file " << filePath << endl;
+        chocan_errmsg = "Failed to open file " + filePath + " due to missing permissions or incorrect path.";
+        printError(chocan_errmsg);
         return false;
     }
 

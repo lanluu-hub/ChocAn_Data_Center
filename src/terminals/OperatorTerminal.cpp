@@ -134,7 +134,7 @@ void OperatorTerminal::addMember()
         cout << "\nMember added successfully." << endl;
     }
     else {
-        cout << "\nFailed to add new Member." << endl;
+        printError("\nFailed to add new Member.");
     }
     return;
 }
@@ -145,6 +145,7 @@ void OperatorTerminal::updateMember()
     bool confirm{ false };
     string memberID{};
     string new_address{}, new_city{}, new_state{}, new_zip{};
+    string chocan_errmsg{};
     bool isValidID{ false };
 
     cout << "[Update Member]" << endl;
@@ -159,7 +160,8 @@ void OperatorTerminal::updateMember()
 
     // check if member exist
     if (!(ChocAnSystem::getInstance().searchMember(memberID))) {
-        cerr << "No Member with memberID " << memberID << " exist." << endl;
+        chocan_errmsg = "Member with ID " + memberID + " not found.";
+        printError(chocan_errmsg);
         return;
     }
 
@@ -190,13 +192,15 @@ void OperatorTerminal::updateMember()
         cout << "\nMember with MemberID " << memberID << " Updated successfully." << endl;
     }
     else {
-        cout << "\nFailed to Update Member " << memberID << endl;
+        chocan_errmsg = "Update failed for member " + memberID; 
+        printError(chocan_errmsg);
     }
 }
 
 void OperatorTerminal::deleteMember()
 {
     string memberID{};
+    string chocan_errmsg{};
     bool isValidMemberID{ false };
 
     cout << "[Delete Member]" << endl;
@@ -209,14 +213,16 @@ void OperatorTerminal::deleteMember()
 
     // Check if memberID is in database
     if (!(ChocAnSystem::getInstance().searchMember(memberID))) {
-        cout << "\nCannot delete member: No such member exist" << endl;
+        chocan_errmsg = "Deletion failed: Member not found.";
+        printError(chocan_errmsg);
     }
     else {
         if ((ChocAnSystem::getInstance().deleteMember(memberID))) {
             cout << "\nMember is deleted successfully" << endl;
         }
         else {
-            cout << "\nCannot deleted Member with MemberID: " << memberID << endl;
+            chocan_errmsg = "Deletion failed: database error. Cannot delete member with Member ID " + memberID; 
+            printError(chocan_errmsg);
         }
     }
 }
@@ -278,7 +284,7 @@ void OperatorTerminal::addProvider()
         cout << "\nProvider added successfully." << endl;
     }
     else {
-        cout << "\nFailed to add new Provider." << endl;
+        printError("Failed to add new provider.");
     }
 }
 
@@ -288,6 +294,7 @@ void OperatorTerminal::updateProvider()
     bool confirm{ false };
     string providerID{};
     string new_address{}, new_city{}, new_state{}, new_zip{};
+    string chocan_errmsg{};
     bool isValidID{ false };
 
     cout << "[Update Provider]" << endl;
@@ -301,7 +308,8 @@ void OperatorTerminal::updateProvider()
 
     // check if provider exist
     if (!(ChocAnSystem::getInstance().searchProvider(providerID))) {
-        cerr << "No Provider with providerID " << providerID << " exist." << endl;
+        chocan_errmsg = "Provider with ID " + providerID + " not found."; 
+        printError(chocan_errmsg);
         return;
     }
 
@@ -332,13 +340,15 @@ void OperatorTerminal::updateProvider()
         cout << "\nProvider with ID " << providerID << " updated successfully." << endl;
     }
     else {
-        cout << "\nFailed to update provider with ID " << providerID << endl;
+        chocan_errmsg = "Failed to update provider with ID " + providerID;
+        printError(chocan_errmsg);
     }
 }
 
 void OperatorTerminal::deleteProvider()
 {
     string providerID{};
+    string Chocan_errmsg{};
     bool isValidProviderID{ false };
 
     cout << "[Delete Provider]" << endl;
@@ -351,14 +361,16 @@ void OperatorTerminal::deleteProvider()
 
     // Check if providerID is in database
     if (!(ChocAnSystem::getInstance().searchProvider(providerID))) {
-        cout << "\nCannot delete provider: No such provider exists" << endl;
+        Chocan_errmsg = "Deletion failed: Provider not found.";
+        printError(Chocan_errmsg);
     }
     else {
         if ((ChocAnSystem::getInstance().deleteProvider(providerID))) {
             cout << "\nProvider is deleted successfully" << endl;
         }
         else {
-            cout << "\nCannot delete Provider with ProviderID: " << providerID << endl;
+            Chocan_errmsg = "\nFailed to delete provider with ProviderID: " + providerID + " due to database error.";
+            printError(Chocan_errmsg);
         }
     }
 }

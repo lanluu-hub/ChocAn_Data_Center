@@ -245,7 +245,7 @@ float ProviderTerminal::billService()
         cout << "\nService Logged Successfully" << endl;
     } else {
         // If false: output "Error: Failed to Log current service!"
-        cerr << "\nFailed to log current service" << endl;
+        printError("\nFailed to log current service");
         exit(EXIT_FAILURE);
     }
 
