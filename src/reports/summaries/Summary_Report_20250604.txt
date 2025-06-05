@@ -1,0 +1,20 @@
+[Summary Report]
+
+Provider Name         | Consultations | Total Fee
+--------------------------------------------------
+DR PEPPER             | 2             | $205.00
+DR Son                | 1             | $70.00
+DR new                | 1             | $65.00
+Provider Eight        | 9             | $1895.00
+Provider Five         | 10            | $1100.00
+Provider Four         | 15            | $1595.00
+Provider Nine         | 9             | $1285.00
+Provider One          | 5             | $665.00
+Provider Seven        | 11            | $1435.00
+Provider Six          | 21            | $3695.00
+Provider Three        | 19            | $3080.00
+Provider Two          | 11            | $1120.00
+--------------------------------------------------
+Total Providers       : 12
+Total Consultations   : 114
+Total Fees            : $16210.00

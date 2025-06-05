@@ -136,13 +136,21 @@ class ChocAnSystem {
          */
         void generateMemberReport(const std::string & memberID);
 
-        // [comments]
+        /**
+         * @brief Prints the contents of a report file to the terminal.
+         * @param filePath The full file path to the report file.
+         */
         void printReport(const std::string & filePath);
         
-        // [comments]
+        /**
+         * @brief Generates a weekly report for a specific provider.
+         * @param providerID The 9-digit ID of the provider.
+         */
         void generateProviderReport(const std::string & providerID);
 
-        // [comments]
+        /**
+         * @brief Generates a weekly summary report for accounts payable.
+         */
         void generateSummaryReport();
 
         // ---------------- Operator Terminal - Member Management ---------------- //

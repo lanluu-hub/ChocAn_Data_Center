@@ -8,8 +8,8 @@
 #include <cctype>
 #include <iomanip>
 
-#include <filesystem>
-namespace fs = std::filesystem;
+//#include <filesystem>
+//namespace fs = std::filesystem;
 
 #include "Database.h"
 
@@ -655,7 +655,6 @@ void Database::generateSummaryReport(const std::string bestDate, const std::stri
     out << "Provider Name         | Consultations | Total Fee\n";
     out << "--------------------------------------------------\n";
 
-
     // Using your exact SummaryReportView
     const char* query = R"SQL(
         SELECT
@@ -669,22 +668,6 @@ void Database::generateSummaryReport(const std::string bestDate, const std::stri
         ORDER BY ProviderName
     )SQL";
     
-    /*
-    const char *query = R"SQL(
-        SELECT
-            u.name AS ProviderName,
-            --u.user_id AS ProviderID,
-            COUNT(s.service_code) AS NumConsultations,
-            SUM(sv.fee) AS TotalFee
-            --s.date_of_service AS DateOfService
-            --s.date_of_service) AS LastServiceDate
-            FROM ServiceLogs s
-                JOIN Users u ON s.provider_id = u.user_id
-                JOIN Services sv ON s.service_code = sv.service_code
-            WHERE s.date_of_service >= ?
-            GROUP BY u.user_id;
-    )SQL";
-    */
     sqlite3_stmt *stmt;
     if (sqlite3_prepare_v2(db, query, -1, &stmt, nullptr) != SQLITE_OK)
     {
