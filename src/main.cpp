@@ -153,12 +153,12 @@ main() {
 
 void intro()
 {
-    cout << "\n\t***************************************\n";
-    cout << "\t*    Welcome to the ChocAn System    *\n";
-    cout << "\t*    Developed by Team WhiteSpace    *\n";
-    cout << "\t***************************************\n\n";
-    cout << "\t   ChocAn Data Processing Portal\n";
-    cout << "\t   ----------------------------\n\n";
+    cout << "\n\t\t***************************************\n";
+    cout << "\t\t*    Welcome to the ChocAn System    *\n";
+    cout << "\t\t*    Developed by Team WhiteSpace    *\n";
+    cout << "\t\t***************************************\n\n";
+    cout << "\t\t   ChocAn Data Processing Portal\n";
+    cout << "\t\t   -----------------------------\n\n";
     cout << "   This system allows registered users to log in and access the\n";
     cout << "   appropriate terminal based on their role: Operator, Manager, or Provider.\n\n";
 
