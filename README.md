@@ -6,12 +6,12 @@ A simplified data processing system developed for Chocoholics Anonymous (ChocAn)
 
 This project simulates a real-world service management system that allows ChocAn providers and managers to:
 
-- Validate members
-- Log services provided
-- View the provider directory
+- Validate member IDs
+- Log services and generate billing data
+- Access the provider directory
 - Generate weekly reports for members, providers, and management
 
-The system uses a **terminal-based interface** and integrates with an **SQLite-backed database** for secure and persistent data storage.
+The system features a modular terminal-based interface and uses an SQLite-backed database for persistent and secure data management.
 
 ## 👥 Team Whitespace
 
@@ -28,8 +28,12 @@ ChocAn_Data_Center/
 | ├── reports/
 | | ├── members/
 | | ├── providers/
+| | ├── summaries/
 | | └── provider_directory.txt
 │ ├── database/
+| | ├── sql/
+| | |  ├── schema.sql
+│ │ |  └── seed.sql
 │ │ └── chocan.db
 │ ├── models/
 │ │ ├── Member.h / Member.cpp
@@ -47,7 +51,8 @@ ChocAn_Data_Center/
 │ │ └── OperatorTerminal.h / OperatorTerminal.cpp
 │ ├── ChocAnSystem.h / ChocAnSystem.cpp
 │ ├── Database.h / Database.cpp
-│ └── main.cpp
+│ ├── main.cpp
+│ └── Utils.h
 ├── Makefile
 └── README.md
 ```
@@ -55,9 +60,9 @@ ChocAn_Data_Center/
 ## 🧩 Features
 
 - **Terminal Interface** for providers, managers, and operators
-- **Member Validation** against status in the database
+- **Member Validation** against database records
 - **Service Logging** with automatic fee calculation
-- **Weekly Reports**: member, provider, and summary.
+- **Weekly Reports**: member, provider, and summary (for accounts payable).
 - **SQLite Integration** for efficient data storage and querying
 - **Modular Architecture** using OOP and design patterns (Singleton, Facade)
 
@@ -67,6 +72,8 @@ ChocAn_Data_Center/
 
 - C++17 or later
 - `sqlite3` development libraries installed
+- `make` (Optional) for complied source code
+- `g++` (Optional) if using make to complie
 
 ### 🧪 Build
 1. Ensure a C++ compiler (e.g., `g++`) is installed.
