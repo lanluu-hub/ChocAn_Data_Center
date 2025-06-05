@@ -91,7 +91,7 @@ void OperatorTerminal::addMember()
 
     cout << "[Add Member]" << endl;
 
-    cout << "\nPlease enter new Member Information" << endl;
+    cout << "Please enter new Member Information" << endl;
     do {
         {   // Scope for user input //
             // member name
@@ -124,17 +124,19 @@ void OperatorTerminal::addMember()
 
             if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
                 clearScreen();
-                cout << "\nPlease try again with add new Member" << endl;
+                cout << "Please try again with add new Member" << endl;
             }
         }
     } while (!confirm);
 
+    clearScreen();
+
     // Called to ChocAn to add new member, a bool is being return, true = successfull, false otherwise
     if (ChocAnSystem::getInstance().addNewMember(new_name, new_address, new_city, new_state, new_zip)) {
-        cout << "\nMember added successfully." << endl;
+        cout << "Member added successfully." << endl;
     }
     else {
-        printError("\nFailed to add new Member.");
+        printError("Failed to add new Member.");
     }
     return;
 }
@@ -151,10 +153,10 @@ void OperatorTerminal::updateMember()
     cout << "[Update Member]" << endl;
 
     do {
-        getInput(memberID, "\nEnter member ID for update:\n > ");
+        getInput(memberID, "Enter member ID for update:\n > ");
 
         if (!(isValidID = validateIDFormat(memberID))) {
-            cout << "\nInvalid ID format (9-digit), please try again." << endl;
+            cout << "Invalid ID format (9-digit), please try again." << endl;
         }
     } while (!isValidID);
 
@@ -165,16 +167,20 @@ void OperatorTerminal::updateMember()
         return;
     }
 
+    clearScreen();
+
     // Actual update input field
-    cout << "\nPlease Enter update information here" << endl;
+    cout << "Please Enter update information here" << endl;
     do {
         {
             // Scope for user input
             getAddressInput(new_address, new_city, new_state, new_zip, "Member");
         } // end of input scope
 
+        clearScreen();
+
         {   // Member Information confirmation scope
-            cout << "\nPlease make sure the following information is correct: " << endl;
+            cout << "Please make sure the following information is correct: " << endl;
             cout << "MemberID: " << memberID << endl
                 << "New Address: " << new_address << endl
                 << "New City: " << new_city << endl
@@ -182,14 +188,17 @@ void OperatorTerminal::updateMember()
                 << "New Zipcode: " << new_zip << endl;
 
             if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
-                cout << "\nPlease try again with new information" << endl;
+                clearScreen();
+                cout << "Please try again with new information" << endl;
             }
         }
     } while (!confirm);
 
+    clearScreen();
+
     // Call actual update function from chocan
     if (ChocAnSystem::getInstance().updateMember(memberID, new_address, new_city, new_state, new_zip)) {
-        cout << "\nMember with MemberID " << memberID << " Updated successfully." << endl;
+        cout << "Member with MemberID " << memberID << " Updated successfully." << endl;
     }
     else {
         chocan_errmsg = "Update failed for member " + memberID; 
@@ -205,11 +214,13 @@ void OperatorTerminal::deleteMember()
 
     cout << "[Delete Member]" << endl;
     do {
-        getInput(memberID, "\nEnter member id: ");
+        getInput(memberID, "Enter member id: ");
         if (!(isValidMemberID = validateIDFormat(memberID))) {
             cout << "Invalid member id format (9-digit), please try again." << endl;
         }
     } while (!isValidMemberID);
+
+    clearScreen();
 
     // Check if memberID is in database
     if (!(ChocAnSystem::getInstance().searchMember(memberID))) {
@@ -218,7 +229,7 @@ void OperatorTerminal::deleteMember()
     }
     else {
         if ((ChocAnSystem::getInstance().deleteMember(memberID))) {
-            cout << "\nMember is deleted successfully" << endl;
+            cout << "Member is deleted successfully" << endl;
         }
         else {
             chocan_errmsg = "Deletion failed: database error. Cannot delete member with Member ID " + memberID; 
@@ -239,7 +250,7 @@ void OperatorTerminal::addProvider()
 
     cout << "[Add Provider]" << endl;
 
-    cout << "\nPlease enter new Provider Information" << endl;
+    cout << "Please enter new Provider Information" << endl;
 
     do {
         {   // Scope for user input //
@@ -273,15 +284,16 @@ void OperatorTerminal::addProvider()
 
             if (!(confirm = confirmPrompt("\nIs this information correct?"))) {
                 clearScreen();
-                cout << "\nPlease try again with new information" << endl;
+                cout << "Please try again with new information" << endl;
             }
         }
     } while (!confirm);
 
+    clearScreen();
 
     // Call to ChocAnSystem to add the new provider
     if (ChocAnSystem::getInstance().addNewProvider(new_name, new_address, new_city, new_state, new_zip)) {
-        cout << "\nProvider added successfully." << endl;
+        cout << "Provider added successfully." << endl;
     }
     else {
         printError("Failed to add new provider.");
@@ -302,7 +314,7 @@ void OperatorTerminal::updateProvider()
     do {
         getInput(providerID, "\nEnter provider Id for update:\n > ");
         if (!(isValidID = validateIDFormat(providerID))) {
-            cout << "\nInvalid ID format (9-digit), please try again." << endl;
+            cout << "Invalid ID format (9-digit), please try again." << endl;
         }
     } while (!isValidID);
 
@@ -313,13 +325,17 @@ void OperatorTerminal::updateProvider()
         return;
     }
 
-    cout << "\nPlease Enter update information here" << endl;
+    clearScreen();
+
+    cout << "Please Enter update information here" << endl;
 
     do {
         {
             // input scope, get Provider input
             getAddressInput(new_address, new_city, new_state, new_zip, "Provider");
         }
+
+        clearScreen();
 
         {   // Member Information confirmation scope
             cout << "\nPlease make sure the following information is correct: " << endl;
@@ -335,9 +351,11 @@ void OperatorTerminal::updateProvider()
         }
     } while (!confirm);
 
+    clearScreen();
+
     // Update provider info in system
     if (ChocAnSystem::getInstance().updateProvider(providerID, new_address, new_city, new_state, new_zip)) {
-        cout << "\nProvider with ID " << providerID << " updated successfully." << endl;
+        cout << "Provider with ID " << providerID << " updated successfully." << endl;
     }
     else {
         chocan_errmsg = "Failed to update provider with ID " + providerID;
@@ -359,6 +377,8 @@ void OperatorTerminal::deleteProvider()
         }
     } while (!isValidProviderID);
 
+    clearScreen();
+
     // Check if providerID is in database
     if (!(ChocAnSystem::getInstance().searchProvider(providerID))) {
         Chocan_errmsg = "Deletion failed: Provider not found.";
@@ -366,10 +386,10 @@ void OperatorTerminal::deleteProvider()
     }
     else {
         if ((ChocAnSystem::getInstance().deleteProvider(providerID))) {
-            cout << "\nProvider is deleted successfully" << endl;
+            cout << "Provider is deleted successfully" << endl;
         }
         else {
-            Chocan_errmsg = "\nFailed to delete provider with ProviderID: " + providerID + " due to database error.";
+            Chocan_errmsg = "Failed to delete provider with ProviderID: " + providerID + " due to database error.";
             printError(Chocan_errmsg);
         }
     }
