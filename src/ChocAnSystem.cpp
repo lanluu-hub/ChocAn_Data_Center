@@ -205,6 +205,8 @@ void ChocAnSystem::generateProviderReport(const std::string &providerID)
         return;
     }
 
+    clearScreen();
+
     currentDate = getCurrentDate();
 
     // Get the bestDate //
