@@ -121,6 +121,8 @@ void ChocAnSystem::generateMemberReport(const std::string &memberID)
         return;
     }
 
+    clearScreen();
+
     currentDate = getCurrentDate();
 
     // Get the bestDate //
@@ -169,6 +171,7 @@ void ChocAnSystem::printReport(const std::string &filePath)
     while(getline(file, line)) {
         cout << line << endl;
     }
+    cin.ignore(1024, '\n');
 
     file.close();
 }

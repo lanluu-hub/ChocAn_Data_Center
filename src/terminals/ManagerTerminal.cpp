@@ -16,7 +16,7 @@ int ManagerTerminal::showMenu()
 {
     int numOfOption {};
     // show menu option
-    cout << "\n[Manager Terminal]" << endl;
+    cout << "[Manager Terminal]" << endl;
     cout << "Possible Operatrion: " << endl;
     cout << "/--------------------" << endl;
     cout << "|  1. Print Member Report" << endl;
@@ -34,14 +34,17 @@ void ManagerTerminal::commandHandler(int input)
     switch (input) {
     case 1: // Member Report
         printMemberReport();
+        pressEnterToContinue();
         break;
 
     case 2: // Provider Report
         printProviderReport();
+        pressEnterToContinue();
         break;
 
     case 3: // Summary Report
         printSummaryReport();
+        pressEnterToContinue();
         break;
 
     case 0: // exit
